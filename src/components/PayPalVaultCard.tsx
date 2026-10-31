@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { TaskContract } from '@/types/escrow';
-import { Lock, Unlock, ShieldAlert, CheckCircle, ExternalLink, Zap } from 'lucide-react';
+import { Lock, Unlock, ShieldAlert, CheckCircle, ExternalLink, Zap, Shield } from 'lucide-react';
 
 interface PayPalVaultCardProps {
   contract: TaskContract;
@@ -17,16 +17,17 @@ export const PayPalVaultCard: React.FC<PayPalVaultCardProps> = ({ contract, onSi
   const isWaitingDeposit = contract.status === 'WAITING_DEPOSIT';
 
   return (
-    <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-xs flex flex-col gap-4">
+    <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col gap-4">
+      
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-[#EBF3FB] border border-[#C5DDF5] flex items-center justify-center">
-            <span className="font-extrabold italic text-sm text-[#003087]">P</span>
+          <div className="w-8 h-8 rounded-lg bg-[#F0F5FA] border border-[#D0E2F2] flex items-center justify-center text-[#003087]">
+            <Shield className="w-4 h-4 fill-[#0070BA]/20 stroke-[#003087]" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-slate-900">PayPal Programmable Vault</h3>
-            <p className="text-[11px] text-slate-500 font-medium">Smart Conditional Escrow Contract</p>
+            <h3 className="text-sm font-bold text-slate-900">Conditional Escrow Vault</h3>
+            <p className="text-[11px] text-slate-500 font-medium">Programmable Milestone Release</p>
           </div>
         </div>
 
@@ -43,7 +44,7 @@ export const PayPalVaultCard: React.FC<PayPalVaultCardProps> = ({ contract, onSi
             </span>
           )}
           {isLocked && (
-            <span className="flex items-center gap-1.5 text-xs text-[#003087] font-semibold bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
+            <span className="flex items-center gap-1.5 text-xs text-[#003087] font-semibold bg-[#F0F5FA] px-3 py-1 rounded-full border border-[#D0E2F2]">
               <Lock className="w-3.5 h-3.5 text-[#0070BA]" /> Funds Secured
             </span>
           )}
@@ -55,8 +56,8 @@ export const PayPalVaultCard: React.FC<PayPalVaultCardProps> = ({ contract, onSi
         </div>
       </div>
 
-      {/* Vault Balance Display (Clean PayPal Tint) */}
-      <div className="bg-[#F6F9FC] border border-[#E3E8EE] rounded-xl p-4 flex items-center justify-between">
+      {/* Vault Balance Display (Clean Signature Blue Tint) */}
+      <div className="bg-[#F0F5FA]/80 border border-[#D0E2F2] rounded-xl p-4 flex items-center justify-between">
         <div>
           <span className="text-[11px] text-slate-500 block uppercase tracking-wider font-semibold">
             Escrow Locked Balance
@@ -71,16 +72,16 @@ export const PayPalVaultCard: React.FC<PayPalVaultCardProps> = ({ contract, onSi
           <span className="text-[11px] text-slate-500 block uppercase tracking-wider font-semibold">
             Release Gate
           </span>
-          <span className="text-xs font-mono font-bold text-[#0070BA] bg-white px-2 py-0.5 rounded border border-slate-200 mt-0.5 inline-block">
+          <span className="text-xs font-mono font-bold text-[#0070BA] bg-white px-2.5 py-1 rounded border border-[#D0E2F2] mt-0.5 inline-block shadow-2xs">
             Arbiter Score ≥ 95%
           </span>
         </div>
       </div>
 
-      {/* PayPal Telemetry Info */}
+      {/* Protocol Telemetry Info */}
       <div className="space-y-2 text-xs font-mono bg-slate-50/80 rounded-xl p-3.5 border border-slate-200/80">
         <div className="flex items-center justify-between text-slate-600">
-          <span className="font-sans font-medium text-slate-500">PayPal Order ID:</span>
+          <span className="font-sans font-medium text-slate-500">Order ID:</span>
           <span className="text-slate-800 font-semibold">{meta.orderId || 'PENDING_CREATION'}</span>
         </div>
         <div className="flex items-center justify-between text-slate-600">
@@ -95,24 +96,25 @@ export const PayPalVaultCard: React.FC<PayPalVaultCardProps> = ({ contract, onSi
         </div>
       </div>
 
-      {/* Interactive Trigger if awaiting deposit - Styled in Classic PayPal Gold */}
+      {/* High-Intent Action Button Styled in Classic Gold */}
       {isWaitingDeposit && (
         <button
           onClick={onSimulateApproveDeposit}
-          className="w-full py-2.5 px-4 rounded-full bg-[#FFC439] hover:bg-[#F4B41A] text-[#003087] font-bold text-xs flex items-center justify-center gap-2 shadow-xs transition-all active:scale-98 cursor-pointer"
+          className="w-full py-2.5 px-4 rounded-full bg-[#FFC439] hover:bg-[#F4B41A] text-[#003087] font-extrabold text-xs flex items-center justify-center gap-2 shadow-xs transition-all active:scale-98 cursor-pointer"
         >
           <Zap className="w-3.5 h-3.5 fill-current" />
-          <span>Authorize Escrow via PayPal Sandbox</span>
+          <span>Authorize Conditional Escrow Hold</span>
         </button>
       )}
 
       {/* Developer note */}
       <div className="text-[11px] text-slate-500 flex items-center justify-between pt-1 border-t border-slate-200/60 font-medium">
-        <span>PayPal REST v2 Engine</span>
+        <span>REST v2 Orders & Authorizations Engine</span>
         <span className="flex items-center gap-1 text-[#0070BA] hover:underline cursor-pointer">
           Sandbox Node <ExternalLink className="w-2.5 h-2.5" />
         </span>
       </div>
+
     </div>
   );
 };

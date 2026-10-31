@@ -118,7 +118,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#F5F7FA] text-[#0C2340] flex flex-col font-sans selection:bg-[#0070BA]/20 selection:text-[#003087]">
-      {/* PayPal Style Header */}
+      {/* Header */}
       <Header
         currentPreset={SIMULATION_PRESETS[presetKey]}
         onSelectPreset={handleSelectPreset}
@@ -131,11 +131,11 @@ export default function Home() {
         isSimulated={true}
       />
 
-      {/* Main Grid */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+      {/* Main Grid: Spacious 3-Column Layout with generous max-width */}
+      <main className="flex-1 max-w-[1440px] w-full mx-auto p-6 grid grid-cols-1 lg:grid-cols-12 gap-5">
         
-        {/* Left Column (Contract + PayPal Vault): 4 Cols */}
-        <div className="lg:col-span-4 flex flex-col gap-6">
+        {/* Left Column (Contract + Escrow Vault): 4 Cols */}
+        <div className="lg:col-span-4 flex flex-col gap-5">
           <ContractCard contract={contract} />
           <PayPalVaultCard
             contract={contract}
@@ -143,7 +143,7 @@ export default function Home() {
           />
         </div>
 
-        {/* Center Column (Agent Thought & Event Stream): 4 Cols */}
+        {/* Center Column (Agent Thought & Activity Log): 4 Cols */}
         <div className="lg:col-span-4 flex flex-col">
           <AgentTerminal messages={messages} />
         </div>
@@ -155,15 +155,17 @@ export default function Home() {
 
       </main>
 
-      {/* Clean PayPal Enterprise Footer */}
-      <footer className="border-t border-slate-200 bg-white px-6 py-3.5 text-center text-xs text-slate-500 font-medium flex items-center justify-between max-w-7xl mx-auto w-full">
-        <div className="flex items-center gap-2">
-          <span className="font-bold text-[#003087]">PayPal</span>
-          <span>•</span>
-          <span>AgentEscrow Autonomous Commerce Protocol</span>
-        </div>
-        <div className="text-slate-400">
-          Built for PayPal AI Hackathon 2026 • Orders v2, Authorizations, Captures & Payouts Engine
+      {/* Clean Enterprise Footer */}
+      <footer className="border-t border-slate-200 bg-white px-6 py-3.5 text-xs text-slate-500 font-medium">
+        <div className="max-w-[1440px] mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="font-extrabold text-[#003087]">AgentEscrow</span>
+            <span>•</span>
+            <span>Autonomous Multi-Agent Commerce Protocol</span>
+          </div>
+          <div className="text-slate-400">
+            Programmable Milestone Escrow & Dispute Arbitration Engine (REST v2)
+          </div>
         </div>
       </footer>
     </div>

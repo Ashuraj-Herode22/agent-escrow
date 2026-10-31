@@ -24,7 +24,7 @@ export const CodeInspector: React.FC<CodeInspectorProps> = ({ contract }) => {
       title: contract.title,
       timestamp: new Date().toISOString(),
       status: contract.status,
-      paypalMetadata: contract.paypalMetadata,
+      protocolMetadata: contract.paypalMetadata,
       artifactHash: artifact?.sha256Hash,
       testSuiteResults: allTests,
       arbiterSignature: `SIG_${Math.random().toString(36).substring(2, 12).toUpperCase()}_ECDSA_SECP256K1`,
@@ -34,63 +34,69 @@ export const CodeInspector: React.FC<CodeInspectorProps> = ({ contract }) => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `PayPal_AgentEscrow_Audit_${contract.id}.json`;
+    a.download = `AgentEscrow_Audit_${contract.id}.json`;
     a.click();
     URL.revokeObjectURL(url);
   };
 
   return (
-    <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-xs flex flex-col h-[580px]">
-      {/* Tab Navigation */}
-      <div className="flex items-center justify-between pb-3.5 border-b border-slate-200 mb-3.5">
-        <div className="flex items-center gap-1.5">
-          <button
-            onClick={() => setActiveTab('CODE')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
-              activeTab === 'CODE'
-                ? 'bg-blue-50 text-[#003087] border border-blue-200 font-bold'
-                : 'text-slate-500 hover:text-slate-900'
-            }`}
-          >
-            <Code2 className="w-3.5 h-3.5" />
-            <span>Delivered Artifact</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('TESTS')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
-              activeTab === 'TESTS'
-                ? 'bg-blue-50 text-[#003087] border border-blue-200 font-bold'
-                : 'text-slate-500 hover:text-slate-900'
-            }`}
-          >
-            <Terminal className="w-3.5 h-3.5" />
-            <span>Arbiter Test Suite ({allTests.length})</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('AUDIT')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
-              activeTab === 'AUDIT'
-                ? 'bg-blue-50 text-[#003087] border border-blue-200 font-bold'
-                : 'text-slate-500 hover:text-slate-900'
-            }`}
-          >
-            <ShieldCheck className="w-3.5 h-3.5" />
-            <span>Audit Proof</span>
-          </button>
+    <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col h-[600px]">
+      
+      {/* Title & Export Row */}
+      <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
+        <div className="flex items-center gap-2">
+          <Code2 className="w-4 h-4 text-[#0070BA]" />
+          <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+            Verification Sandbox
+          </h3>
         </div>
 
         {artifact && (
           <button
             onClick={downloadAuditReport}
-            className="text-[11px] font-mono text-[#0070BA] hover:text-[#003087] font-semibold flex items-center gap-1 transition-colors cursor-pointer"
+            className="text-[11px] font-medium text-[#0070BA] hover:text-[#003087] flex items-center gap-1 transition-colors cursor-pointer"
             title="Download signed JSON report"
           >
             <Download className="w-3.5 h-3.5" />
             <span>Export Proof</span>
           </button>
         )}
+      </div>
+
+      {/* Full-Width Segmented Tab Control */}
+      <div className="grid grid-cols-3 bg-slate-100 p-0.5 rounded-lg text-center text-xs mb-3 font-medium">
+        <button
+          onClick={() => setActiveTab('CODE')}
+          className={`py-1 rounded-md transition-all cursor-pointer ${
+            activeTab === 'CODE'
+              ? 'bg-white text-[#003087] font-bold shadow-2xs'
+              : 'text-slate-500 hover:text-slate-900'
+          }`}
+        >
+          Artifact Code
+        </button>
+
+        <button
+          onClick={() => setActiveTab('TESTS')}
+          className={`py-1 rounded-md transition-all cursor-pointer ${
+            activeTab === 'TESTS'
+              ? 'bg-white text-[#003087] font-bold shadow-2xs'
+              : 'text-slate-500 hover:text-slate-900'
+          }`}
+        >
+          Tests ({allTests.length})
+        </button>
+
+        <button
+          onClick={() => setActiveTab('AUDIT')}
+          className={`py-1 rounded-md transition-all cursor-pointer ${
+            activeTab === 'AUDIT'
+              ? 'bg-white text-[#003087] font-bold shadow-2xs'
+              : 'text-slate-500 hover:text-slate-900'
+          }`}
+        >
+          Audit Proof
+        </button>
       </div>
 
       {/* Content Area */}
@@ -114,7 +120,7 @@ export const CodeInspector: React.FC<CodeInspectorProps> = ({ contract }) => {
               <div className="h-full flex flex-col items-center justify-center text-slate-400 text-xs gap-2">
                 <Code2 className="w-8 h-8 text-slate-300" />
                 <span className="font-medium text-slate-600">Worker Agent has not yet committed digital artifacts.</span>
-                <span className="text-[11px] text-slate-400">Locked in PayPal Escrow until delivery.</span>
+                <span className="text-[11px] text-slate-400">Locked in Escrow Vault until delivery.</span>
               </div>
             )}
           </div>
@@ -164,14 +170,14 @@ export const CodeInspector: React.FC<CodeInspectorProps> = ({ contract }) => {
           <div className="space-y-3.5 text-xs font-mono">
             <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
               <div className="text-[#003087] font-bold mb-2 flex items-center gap-1.5 text-sm">
-                <ShieldCheck className="w-4 h-4 text-[#0070BA]" /> PayPal AgentEscrow Certificate
+                <ShieldCheck className="w-4 h-4 text-[#0070BA]" /> AgentEscrow Proof-of-Arbitration
               </div>
               <div className="text-slate-600">Contract ID: <span className="text-slate-900 font-bold">{contract.id}</span></div>
               <div className="text-slate-600">Buyer Agent: <span className="text-slate-800">{contract.buyerAgentId}</span></div>
               <div className="text-slate-600">Worker Agent: <span className="text-slate-800">{contract.workerAgentId}</span></div>
               <div className="text-slate-600">Arbiter Agent: <span className="text-slate-800">{contract.arbiterAgentId}</span></div>
-              <div className="text-slate-600">PayPal Order: <span className="text-slate-800">{contract.paypalMetadata.orderId || 'N/A'}</span></div>
-              <div className="text-slate-600">PayPal Auth ID: <span className="text-[#0070BA] font-bold">{contract.paypalMetadata.authorizationId || 'N/A'}</span></div>
+              <div className="text-slate-600">Order ID: <span className="text-slate-800">{contract.paypalMetadata.orderId || 'N/A'}</span></div>
+              <div className="text-slate-600">Auth ID: <span className="text-[#0070BA] font-bold">{contract.paypalMetadata.authorizationId || 'N/A'}</span></div>
               <div className="text-slate-600">Status: <span className="text-slate-900 font-bold">{contract.status}</span></div>
             </div>
 
@@ -194,6 +200,7 @@ export const CodeInspector: React.FC<CodeInspectorProps> = ({ contract }) => {
           </div>
         )}
       </div>
+
     </div>
   );
 };
