@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { TaskContract } from '@/types/escrow';
-import { FileCode, CheckCircle2, XCircle, Clock, Cpu, Users } from 'lucide-react';
+import { FileCode, CheckCircle2, XCircle, Clock, Cpu, Users, ShieldAlert, Award } from 'lucide-react';
 
 interface ContractCardProps {
   contract: TaskContract;
@@ -25,10 +25,10 @@ export const ContractCard: React.FC<ContractCardProps> = ({ contract }) => {
   };
 
   return (
-    <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col gap-4">
+    <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col h-[580px]">
       
       {/* Top Header Row: ID & Status */}
-      <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-3">
+      <div className="flex items-center justify-between gap-2 pb-3 border-b border-slate-100 mb-3">
         <div className="flex items-center gap-2">
           <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-slate-100 text-[#003087] border border-slate-200">
             {contract.id}
@@ -39,13 +39,13 @@ export const ContractCard: React.FC<ContractCardProps> = ({ contract }) => {
       </div>
 
       {/* Contract Title & Description */}
-      <div>
-        <h2 className="text-base font-bold text-slate-900 leading-snug">{contract.title}</h2>
+      <div className="mb-3">
+        <h2 className="text-sm font-bold text-slate-900 leading-snug">{contract.title}</h2>
         <p className="text-xs text-slate-600 mt-1 leading-relaxed">{contract.description}</p>
       </div>
 
-      {/* Agents & Bounty (Clean 2-Row Layout, No Truncation) */}
-      <div className="bg-[#F0F5FA]/60 border border-[#D0E2F2]/70 rounded-xl p-3.5 flex flex-col gap-2.5 text-xs">
+      {/* Agents Card */}
+      <div className="bg-[#F0F5FA]/80 border border-[#D0E2F2] rounded-xl p-3 flex flex-col gap-2 text-xs mb-3.5">
         <div className="flex items-center justify-between">
           <span className="text-slate-500 flex items-center gap-1.5 font-medium">
             <Users className="w-3.5 h-3.5 text-[#0070BA]" /> Buyer Agent:
@@ -59,62 +59,64 @@ export const ContractCard: React.FC<ContractCardProps> = ({ contract }) => {
           </span>
           <span className="font-mono text-slate-800 font-semibold">{contract.workerAgentId}</span>
         </div>
-
-        <div className="flex items-center justify-between pt-2 border-t border-[#D0E2F2]/60">
-          <span className="text-slate-700 font-bold">Total Escrow Bounty:</span>
-          <span className="font-extrabold text-[#003087] text-sm">${contract.totalBudgetUSD.toFixed(2)} USD</span>
-        </div>
       </div>
 
-      {/* Programmable Milestones */}
-      <div>
-        <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
+      {/* Programmable Milestones (Scrollable Area) */}
+      <div className="flex-1 overflow-y-auto space-y-2 pr-1 mb-3">
+        <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 flex items-center gap-1.5 sticky top-0 bg-white py-1">
           <FileCode className="w-3.5 h-3.5 text-[#0070BA]" /> Programmable Milestones
         </h3>
-        <div className="space-y-2">
-          {contract.milestones.map((m) => (
-            <div
-              key={m.id}
-              className={`p-3.5 rounded-xl border text-xs transition-all ${
-                m.status === 'PASSED'
-                  ? 'bg-emerald-50/50 border-emerald-200'
-                  : m.status === 'FAILED'
-                  ? 'bg-rose-50/50 border-rose-200'
-                  : m.status === 'IN_REVIEW'
-                  ? 'bg-amber-50/50 border-amber-200'
-                  : 'bg-white border-slate-200'
-              }`}
-            >
-              <div className="flex items-center justify-between mb-1">
-                <span className="font-bold text-slate-900 flex items-center gap-1.5">
-                  <span className="px-1.5 py-0.5 rounded bg-slate-100 text-[10px] font-mono text-slate-600 border border-slate-200">
-                    {m.id}
-                  </span>
-                  {m.title}
+        
+        {contract.milestones.map((m) => (
+          <div
+            key={m.id}
+            className={`p-3 rounded-xl border text-xs transition-all ${
+              m.status === 'PASSED'
+                ? 'bg-emerald-50/50 border-emerald-200'
+                : m.status === 'FAILED'
+                ? 'bg-rose-50/50 border-rose-200'
+                : m.status === 'IN_REVIEW'
+                ? 'bg-amber-50/50 border-amber-200'
+                : 'bg-[#F8FAFC] border-slate-200'
+            }`}
+          >
+            <div className="flex items-center justify-between mb-1">
+              <span className="font-bold text-slate-900 flex items-center gap-1.5">
+                <span className="px-1.5 py-0.5 rounded bg-slate-100 text-[10px] font-mono text-slate-600 border border-slate-200">
+                  {m.id}
                 </span>
-                <span className="font-mono font-bold text-[#003087]">${m.amountUSD.toFixed(2)}</span>
-              </div>
-              <p className="text-[11px] text-slate-500 mb-2">{m.description}</p>
-
-              {/* Status footer */}
-              <div className="flex items-center justify-between pt-2 border-t border-slate-200/60 text-[11px]">
-                <div className="flex items-center gap-1.5">
-                  {m.status === 'PASSED' && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />}
-                  {m.status === 'FAILED' && <XCircle className="w-3.5 h-3.5 text-rose-600" />}
-                  {m.status === 'PENDING' && <Clock className="w-3.5 h-3.5 text-slate-400" />}
-                  <span className="font-medium text-slate-700">
-                    {m.status === 'PASSED' ? 'Arbiter Approved' : m.status === 'FAILED' ? 'Arbiter Rejected' : 'Awaiting Delivery'}
-                  </span>
-                </div>
-                {m.testSuite.total > 0 && (
-                  <span className="font-mono text-slate-600 font-semibold">
-                    {m.testSuite.passed}/{m.testSuite.total} Tests Passed
-                  </span>
-                )}
-              </div>
+                {m.title}
+              </span>
+              <span className="font-mono font-bold text-[#003087]">${m.amountUSD.toFixed(2)}</span>
             </div>
-          ))}
-        </div>
+            <p className="text-[11px] text-slate-500 mb-2">{m.description}</p>
+
+            {/* Status footer */}
+            <div className="flex items-center justify-between pt-1.5 border-t border-slate-200/60 text-[11px]">
+              <div className="flex items-center gap-1.5">
+                {m.status === 'PASSED' && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />}
+                {m.status === 'FAILED' && <XCircle className="w-3.5 h-3.5 text-rose-600" />}
+                {m.status === 'PENDING' && <Clock className="w-3.5 h-3.5 text-slate-400" />}
+                <span className="font-medium text-slate-700">
+                  {m.status === 'PASSED' ? 'Arbiter Approved' : m.status === 'FAILED' ? 'Arbiter Rejected' : 'Awaiting Delivery'}
+                </span>
+              </div>
+              {m.testSuite.total > 0 && (
+                <span className="font-mono text-slate-600 font-semibold">
+                  {m.testSuite.passed}/{m.testSuite.total} Tests Passed
+                </span>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Bottom Smart Contract Guarantee Bar: Symmetrical Base */}
+      <div className="bg-[#F8FAFC] border border-slate-200 rounded-xl p-3 text-[11px] text-slate-600 flex items-center justify-between mt-auto">
+        <span className="flex items-center gap-1.5 font-medium">
+          <Award className="w-3.5 h-3.5 text-[#0070BA]" /> Escrow Protection Guarantee
+        </span>
+        <span className="font-bold text-[#003087]">Zero Fraud Risk</span>
       </div>
 
     </div>

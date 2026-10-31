@@ -3,8 +3,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import { Header } from '@/components/Header';
+import { EscrowRibbon } from '@/components/EscrowRibbon';
 import { ContractCard } from '@/components/ContractCard';
-import { PayPalVaultCard } from '@/components/PayPalVaultCard';
 import { AgentTerminal } from '@/components/AgentTerminal';
 import { CodeInspector } from '@/components/CodeInspector';
 import { TaskContract, AgentMessage } from '@/types/escrow';
@@ -131,32 +131,31 @@ export default function Home() {
         isSimulated={true}
       />
 
-      {/* Main Grid: Spacious 3-Column Layout with generous max-width */}
-      <main className="flex-1 max-w-[1440px] w-full mx-auto p-6 grid grid-cols-1 lg:grid-cols-12 gap-5">
+      {/* Main Workspace */}
+      <main className="flex-1 max-w-[1440px] w-full mx-auto p-6 flex flex-col gap-5">
         
-        {/* Left Column (Contract + Escrow Vault): 4 Cols */}
-        <div className="lg:col-span-4 flex flex-col gap-5">
+        {/* Top: Balanced Horizontal Escrow Protocol Ribbon */}
+        <EscrowRibbon
+          contract={contract}
+          onSimulateApproveDeposit={handleNextStep}
+        />
+
+        {/* 3 Perfectly Symmetrical Equal-Height Columns (580px Each) */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+          {/* Column 1: Contract & Milestones */}
           <ContractCard contract={contract} />
-          <PayPalVaultCard
-            contract={contract}
-            onSimulateApproveDeposit={handleNextStep}
-          />
-        </div>
 
-        {/* Center Column (Agent Thought & Activity Log): 4 Cols */}
-        <div className="lg:col-span-4 flex flex-col">
+          {/* Column 2: Agent Activity Stream */}
           <AgentTerminal messages={messages} />
-        </div>
 
-        {/* Right Column (Delivered Code + Arbiter Test Suite): 4 Cols */}
-        <div className="lg:col-span-4 flex flex-col">
+          {/* Column 3: Verification Sandbox & Audit */}
           <CodeInspector contract={contract} />
         </div>
 
       </main>
 
       {/* Clean Enterprise Footer */}
-      <footer className="border-t border-slate-200 bg-white px-6 py-3.5 text-xs text-slate-500 font-medium">
+      <footer className="border-t border-slate-200 bg-white px-6 py-3.5 text-xs text-slate-500 font-medium mt-auto">
         <div className="max-w-[1440px] mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="font-extrabold text-[#003087]">AgentEscrow</span>
