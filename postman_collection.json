@@ -1,0 +1,124 @@
+{
+  "info": {
+    "_postman_id": "c1f7b889-4981-4203-b1d6-47b2c0dfb5c1",
+    "name": "AgentEscrow REST v2 API Collection",
+    "description": "Postman Collection for AgentEscrow — Autonomous Multi-Agent Commerce Protocol with Programmable Milestones, AI Arbitration & PayPal Escrow. Built for the PayPal AI Hackathon 2026.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Protocol Gateway Status",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/escrow/requisition",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "escrow", "requisition"]
+        },
+        "description": "Returns status, version, and protocol capability of AgentEscrow."
+      }
+    },
+    {
+      "name": "Dispatch Escrow Requisition (Clean Task -> Capture)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"task\": \"Build Luhn Credit Card Validator\",\n  \"description\": \"Clean Python module with checksum verification and card network detection.\",\n  \"bountyUSD\": 45.00,\n  \"autoSettle\": true\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/escrow/requisition",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "escrow", "requisition"]
+        },
+        "description": "Dispatches an autonomous multi-agent escrow contract. AI Worker synthesizes code, AI Arbiter runs AST security checks, and PayPal captures authorization."
+      }
+    },
+    {
+      "name": "Dispatch Escrow Requisition (Flawed Task -> Void/Refund)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"task\": \"Build User Authentication with SQL and Token\",\n  \"description\": \"Flawed specification testing Arbiter CWE-89 security detection and void refund.\",\n  \"bountyUSD\": 80.00,\n  \"autoSettle\": true\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/escrow/requisition",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "escrow", "requisition"]
+        },
+        "description": "Tests the Arbiter security gate. Detects CWE-89 SQL injection, masks secrets, and triggers PayPal Void Authorization refund."
+      }
+    },
+    {
+      "name": "Create PayPal Escrow Order",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"amountUSD\": 75.00,\n  \"taskTitle\": \"Build Scalable Sentiment Analysis REST Microservice\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/paypal/create-order",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "paypal", "create-order"]
+        },
+        "description": "Creates a PayPal v2 order with intent=AUTHORIZE."
+      }
+    },
+    {
+      "name": "Authorize PayPal Escrow Hold",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"orderId\": \"ORD-SAMPLE-SANDBOX\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/paypal/authorize-order",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "paypal", "authorize-order"]
+        },
+        "description": "Authorizes and locks buyer funds in the PayPal Escrow hold."
+      }
+    },
+    {
+      "name": "Capture PayPal Escrow Payment",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"authorizationId\": \"AUTH-SAMPLE-ESCROW\",\n  \"amountUSD\": 75.00\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/paypal/capture-order",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "paypal", "capture-order"]
+        },
+        "description": "Conditionally captures PayPal authorization once AI Arbiter signs compliance certificate."
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    }
+  ]
+}
