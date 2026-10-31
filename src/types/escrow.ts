@@ -85,3 +85,4 @@ export interface SimulationPreset {
   budgetUSD: number;
   targetOutcome: '100% PASS -> PAYOUT' | 'SECURITY FLAW -> REFUND';
 }
+

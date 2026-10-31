@@ -117,8 +117,8 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-cyan-500/20 selection:text-cyan-200">
-      {/* Header */}
+    <div className="min-h-screen bg-[#F5F7FA] text-[#0C2340] flex flex-col font-sans selection:bg-[#0070BA]/20 selection:text-[#003087]">
+      {/* PayPal Style Header */}
       <Header
         currentPreset={SIMULATION_PRESETS[presetKey]}
         onSelectPreset={handleSelectPreset}
@@ -143,7 +143,7 @@ export default function Home() {
           />
         </div>
 
-        {/* Center Column (Agent Thought & Terminal Stream): 4 Cols */}
+        {/* Center Column (Agent Thought & Event Stream): 4 Cols */}
         <div className="lg:col-span-4 flex flex-col">
           <AgentTerminal messages={messages} />
         </div>
@@ -155,9 +155,16 @@ export default function Home() {
 
       </main>
 
-      {/* Footer Info */}
-      <footer className="border-t border-slate-900 bg-slate-950/80 px-6 py-3 text-center text-xs text-slate-500 font-mono">
-        <span>AgentEscrow • Built for PayPal AI Hackathon 2026 • Orders v2, Authorizations, Captures & Payouts Engine</span>
+      {/* Clean PayPal Enterprise Footer */}
+      <footer className="border-t border-slate-200 bg-white px-6 py-3.5 text-center text-xs text-slate-500 font-medium flex items-center justify-between max-w-7xl mx-auto w-full">
+        <div className="flex items-center gap-2">
+          <span className="font-bold text-[#003087]">PayPal</span>
+          <span>•</span>
+          <span>AgentEscrow Autonomous Commerce Protocol</span>
+        </div>
+        <div className="text-slate-400">
+          Built for PayPal AI Hackathon 2026 • Orders v2, Authorizations, Captures & Payouts Engine
+        </div>
       </footer>
     </div>
   );
