@@ -1,69 +1,164 @@
-import Image from "next/image";
+'use client';
+
+import React, { useState, useEffect, useRef } from 'react';
+import confetti from 'canvas-confetti';
+import { Header } from '@/components/Header';
+import { ContractCard } from '@/components/ContractCard';
+import { PayPalVaultCard } from '@/components/PayPalVaultCard';
+import { AgentTerminal } from '@/components/AgentTerminal';
+import { CodeInspector } from '@/components/CodeInspector';
+import { TaskContract, AgentMessage } from '@/types/escrow';
+import { SIMULATION_PRESETS, createInitialContract, getStepDetails } from '@/lib/agent-engine';
 
 export default function Home() {
+  const [presetKey, setPresetKey] = useState<'SUCCESS_FLOW' | 'DISPUTE_FLOW'>('SUCCESS_FLOW');
+  const [contract, setContract] = useState<TaskContract>(() => createInitialContract('SUCCESS_FLOW').contract);
+  const [messages, setMessages] = useState<AgentMessage[]>(() => createInitialContract('SUCCESS_FLOW').messages);
+  const [currentStep, setCurrentStep] = useState<number>(0);
+  const [isRunning, setIsRunning] = useState<boolean>(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  const totalSteps = 6;
+
+  // Reset or change preset
+  const handleSelectPreset = (key: 'SUCCESS_FLOW' | 'DISPUTE_FLOW') => {
+    if (isRunning) return;
+    setPresetKey(key);
+    const { contract: initContract, messages: initMessages } = createInitialContract(key);
+    setContract(initContract);
+    setMessages(initMessages);
+    setCurrentStep(0);
+  };
+
+  const handleReset = () => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    setIsRunning(false);
+    const { contract: initContract, messages: initMessages } = createInitialContract(presetKey);
+    setContract(initContract);
+    setMessages(initMessages);
+    setCurrentStep(0);
+  };
+
+  // Perform single step transition
+  const executeStep = (stepNumber: number) => {
+    const stepData = getStepDetails(stepNumber, presetKey, {
+      orderId: contract.paypalMetadata.orderId,
+      authId: contract.paypalMetadata.authorizationId,
+      captureId: contract.paypalMetadata.captureId,
+    });
+
+    setContract((prev) => {
+      const updated: TaskContract = {
+        ...prev,
+        status: stepData.nextStatus,
+        milestones: stepData.milestoneUpdates || prev.milestones,
+        codeArtifact: stepData.codeArtifact || prev.codeArtifact,
+      };
+
+      if (stepNumber === 2) {
+        // Order created
+        updated.paypalMetadata.orderId = `ORD-${Math.random().toString(36).substring(2, 8).toUpperCase()}-SANDBOX`;
+      }
+      if (stepNumber === 3) {
+        // Auth hold
+        updated.paypalMetadata.authorizationId = `AUTH-${Math.random().toString(36).substring(2, 8).toUpperCase()}-ESCROW`;
+        updated.paypalMetadata.escrowLockedAt = new Date().toISOString();
+      }
+      if (stepNumber === 6) {
+        if (presetKey === 'SUCCESS_FLOW') {
+          updated.paypalMetadata.captureId = `CAP-${Math.random().toString(36).substring(2, 8).toUpperCase()}-RELEASE`;
+          updated.paypalMetadata.releasedAt = new Date().toISOString();
+          // Trigger victory confetti!
+          confetti({
+            particleCount: 80,
+            spread: 70,
+            origin: { y: 0.6 },
+          });
+        } else {
+          updated.paypalMetadata.captureId = 'VOIDED_AUTHORIZATION';
+        }
+      }
+
+      return updated;
+    });
+
+    setMessages((prev) => [...prev, stepData.message]);
+    setCurrentStep(stepNumber);
+  };
+
+  // Manual next step
+  const handleNextStep = () => {
+    if (currentStep < totalSteps) {
+      executeStep(currentStep + 1);
+    }
+  };
+
+  // Auto-run simulation
+  const handleStartSimulation = () => {
+    if (isRunning || currentStep >= totalSteps) return;
+    setIsRunning(true);
+
+    let next = currentStep;
+    intervalRef.current = setInterval(() => {
+      next += 1;
+      if (next <= totalSteps) {
+        executeStep(next);
+      } else {
+        if (intervalRef.current) clearInterval(intervalRef.current);
+        setIsRunning(false);
+      }
+    }, 1800);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, []);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-cyan-500/20 selection:text-cyan-200">
+      {/* Header */}
+      <Header
+        currentPreset={SIMULATION_PRESETS[presetKey]}
+        onSelectPreset={handleSelectPreset}
+        isRunning={isRunning}
+        onStartSimulation={handleStartSimulation}
+        onNextStep={handleNextStep}
+        onReset={handleReset}
+        currentStep={currentStep}
+        totalSteps={totalSteps}
+        isSimulated={true}
+      />
+
+      {/* Main Grid */}
+      <main className="flex-1 max-w-7xl w-full mx-auto p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        {/* Left Column (Contract + PayPal Vault): 4 Cols */}
+        <div className="lg:col-span-4 flex flex-col gap-6">
+          <ContractCard contract={contract} />
+          <PayPalVaultCard
+            contract={contract}
+            onSimulateApproveDeposit={handleNextStep}
+          />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        {/* Center Column (Agent Thought & Terminal Stream): 4 Cols */}
+        <div className="lg:col-span-4 flex flex-col">
+          <AgentTerminal messages={messages} />
         </div>
+
+        {/* Right Column (Delivered Code + Arbiter Test Suite): 4 Cols */}
+        <div className="lg:col-span-4 flex flex-col">
+          <CodeInspector contract={contract} />
+        </div>
+
       </main>
+
+      {/* Footer Info */}
+      <footer className="border-t border-slate-900 bg-slate-950/80 px-6 py-3 text-center text-xs text-slate-500 font-mono">
+        <span>AgentEscrow • Built for PayPal AI Hackathon 2026 • Orders v2, Authorizations, Captures & Payouts Engine</span>
+      </footer>
     </div>
   );
 }
