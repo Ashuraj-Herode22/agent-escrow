@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { AgentMessage, AgentRole } from '@/types/escrow';
-import { Terminal, Users, Cpu, ShieldCheck, DollarSign, ChevronDown, ChevronRight } from 'lucide-react';
+import { Terminal, Users, Cpu, ShieldCheck, DollarSign } from 'lucide-react';
 
 interface AgentTerminalProps {
   messages: AgentMessage[];
@@ -10,7 +10,6 @@ interface AgentTerminalProps {
 
 export const AgentTerminal: React.FC<AgentTerminalProps> = ({ messages }) => {
   const [filter, setFilter] = useState<AgentRole | 'ALL'>('ALL');
-  const [expandedPayloads, setExpandedPayloads] = useState<Record<string, boolean>>({});
   const [mounted, setMounted] = useState<boolean>(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -24,10 +23,6 @@ export const AgentTerminal: React.FC<AgentTerminalProps> = ({ messages }) => {
       scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
     }
   }, [messages]);
-
-  const togglePayload = (id: string) => {
-    setExpandedPayloads((prev) => ({ ...prev, [id]: !prev[id] }));
-  };
 
   const filteredMessages = filter === 'ALL' ? messages : messages.filter((m) => m.sender === filter);
 
@@ -117,7 +112,6 @@ export const AgentTerminal: React.FC<AgentTerminalProps> = ({ messages }) => {
       <div ref={scrollContainerRef} className="flex-1 overflow-y-auto space-y-2.5 pr-1.5">
         {filteredMessages.map((msg) => {
           const badge = getAgentBadge(msg.sender);
-          const isExpanded = Boolean(expandedPayloads[msg.id]);
 
           return (
             <div
@@ -136,25 +130,6 @@ export const AgentTerminal: React.FC<AgentTerminalProps> = ({ messages }) => {
 
               <div className="font-bold text-slate-900 mt-0.5">{msg.title}</div>
               <p className="text-slate-600 leading-relaxed font-sans">{msg.content}</p>
-
-              {/* Collapsible JSON payload */}
-              {msg.dataPayload && (
-                <div className="mt-1">
-                  <button
-                    onClick={() => togglePayload(msg.id)}
-                    className="flex items-center gap-1 text-xs text-[#0070BA] hover:text-[#003087] font-semibold transition-colors cursor-pointer"
-                  >
-                    {isExpanded ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
-                    <span>{isExpanded ? 'Hide Payload' : 'Inspect Signed Payload'}</span>
-                  </button>
-
-                  {isExpanded && (
-                    <pre className="mt-1.5 p-2.5 rounded-lg bg-white text-slate-800 text-xs font-mono overflow-x-auto leading-relaxed border border-slate-200 shadow-2xs">
-                      {JSON.stringify(msg.dataPayload, null, 2)}
-                    </pre>
-                  )}
-                </div>
-              )}
             </div>
           );
         })}
