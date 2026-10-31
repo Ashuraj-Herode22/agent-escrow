@@ -7,7 +7,7 @@ import { TaskContract, AgentMessage } from '@/types/escrow';
 interface CustomTaskModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onApplyCustomTask: (contract: TaskContract, messages: AgentMessage[]) => void;
+  onApplyCustomTask: (contract: TaskContract, messages: AgentMessage[], result?: any) => void;
 }
 
 const QUICK_SUGGESTIONS = [
@@ -54,7 +54,7 @@ export const CustomTaskModal: React.FC<CustomTaskModalProps> = ({ isOpen, onClos
 
       if (res.ok) {
         const data = await res.json();
-        onApplyCustomTask(data.contract, data.messages);
+        onApplyCustomTask(data.contract, data.messages, data.result);
         onClose();
       }
     } catch (err) {

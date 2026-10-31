@@ -12,6 +12,12 @@ import { DevDocsModal } from '@/components/DevDocsModal';
 import { TaskContract, AgentMessage } from '@/types/escrow';
 import { SIMULATION_PRESETS, createInitialContract, getStepDetails } from '@/lib/agent-engine';
 
+interface CustomFlowState {
+  finalContract: TaskContract;
+  allMessages: AgentMessage[];
+  result: any;
+}
+
 export default function MainApp() {
   const [presetKey, setPresetKey] = useState<'SUCCESS_FLOW' | 'DISPUTE_FLOW'>('SUCCESS_FLOW');
   const [contract, setContract] = useState<TaskContract>(() => createInitialContract('SUCCESS_FLOW').contract);
@@ -20,48 +26,220 @@ export default function MainApp() {
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [isCustomTaskOpen, setIsCustomTaskOpen] = useState<boolean>(false);
   const [isDevDocsOpen, setIsDevDocsOpen] = useState<boolean>(false);
+  const [customFlow, setCustomFlow] = useState<CustomFlowState | null>(null);
+
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const customFlowRef = useRef<CustomFlowState | null>(null);
+  customFlowRef.current = customFlow;
 
-  const totalSteps = 6;
+  const totalSteps = customFlow ? 5 : 6;
 
-  // Apply custom task synthesized by AI agents
-  const handleApplyCustomTask = (customContract: TaskContract, customMessages: AgentMessage[]) => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    setIsRunning(false);
-    setContract(customContract);
-    setMessages(customMessages);
-    setCurrentStep(totalSteps);
+  // Execute a single step in custom flow
+  const executeCustomStep = (stepNumber: number, flow: CustomFlowState) => {
+    const { finalContract, result } = flow;
+    const isPassed = finalContract.status === 'PAYOUT_COMPLETED' || result?.verdict === 'RELEASE_FUNDS_AUTHORIZED';
+    const now = new Date().toISOString();
 
-    if (customContract.status === 'PAYOUT_COMPLETED') {
-      confetti({
-        particleCount: 80,
-        spread: 70,
-        origin: { y: 0.6 },
-      });
+    if (stepNumber === 1) {
+      // Step 1: PayPal Order Created (intent: AUTHORIZE)
+      setContract((prev) => ({
+        ...prev,
+        status: 'WAITING_DEPOSIT',
+        paypalMetadata: {
+          ...prev.paypalMetadata,
+          orderId: finalContract.paypalMetadata.orderId || `ORD-${Math.random().toString(36).substring(2, 8).toUpperCase()}-SANDBOX`,
+        },
+      }));
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `msg-${Date.now()}-2`,
+          timestamp: now,
+          sender: 'PAYPAL_ESCROW',
+          title: 'PayPal Requisition Order Created',
+          content: `Protocol Order created with intent=AUTHORIZE. Order ID: ${finalContract.paypalMetadata.orderId || 'ORD-98213'}. Awaiting cryptographic authorization hold.`,
+          stepIndex: 2,
+          type: 'PAYPAL_ORDER_CREATED',
+          dataPayload: {
+            event_type: 'CHECKOUT.ORDER.APPROVED',
+            order_id: finalContract.paypalMetadata.orderId,
+            intent: 'AUTHORIZE',
+            amount: { total: finalContract.totalBudgetUSD.toFixed(2), currency: 'USD' },
+            status: 'APPROVED',
+          },
+        },
+      ]);
+    } else if (stepNumber === 2) {
+      // Step 2: Escrow Locked in PayPal Authorization Hold
+      const authId = finalContract.paypalMetadata.authorizationId || `AUTH-${Math.random().toString(36).substring(2, 8).toUpperCase()}-ESCROW`;
+      setContract((prev) => ({
+        ...prev,
+        status: 'ESCROW_LOCKED',
+        paypalMetadata: {
+          ...prev.paypalMetadata,
+          authorizationId: authId,
+          escrowLockedAt: now,
+        },
+      }));
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `msg-${Date.now()}-3`,
+          timestamp: now,
+          sender: 'PAYPAL_ESCROW',
+          title: 'Escrow Vault Locked (Funds On Hold)',
+          content: `Authorization confirmed (${authId}). $${finalContract.totalBudgetUSD.toFixed(2)} USD locked in Escrow Vault. Worker agent authorized to begin execution.`,
+          stepIndex: 3,
+          type: 'PAYPAL_AUTH_HOLD',
+          dataPayload: {
+            event_type: 'PAYMENT.AUTHORIZATION.CREATED',
+            resource_type: 'authorization',
+            authorization_id: authId,
+            amount: { total: finalContract.totalBudgetUSD.toFixed(2), currency: 'USD' },
+            state: 'authorized',
+            valid_until: '72h',
+            hmac_signature: 'VERIFIED_ECDSA_SHA256',
+          },
+        },
+      ]);
+    } else if (stepNumber === 3) {
+      // Step 3: Worker Delivers Code Artifact
+      setContract((prev) => ({
+        ...prev,
+        status: 'DELIVERED_AUDITING',
+        codeArtifact: finalContract.codeArtifact,
+      }));
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `msg-${Date.now()}-4`,
+          timestamp: now,
+          sender: 'WORKER_AGENT',
+          title: 'Digital Artifact Delivered to Sandbox',
+          content: `Source code delivered (${finalContract.codeArtifact?.filename || 'service.py'}). Deliverable signed with SHA-256 hash. Requesting AI Arbiter inspection.`,
+          stepIndex: 4,
+          type: 'CODE_SUBMITTED',
+          dataPayload: {
+            filename: finalContract.codeArtifact?.filename,
+            sha256Hash: finalContract.codeArtifact?.sha256Hash,
+            loc: finalContract.codeArtifact?.code.split('\n').length,
+          },
+        },
+      ]);
+    } else if (stepNumber === 4) {
+      // Step 4: AI Arbiter Inspection
+      setContract((prev) => ({
+        ...prev,
+        status: isPassed ? 'ARBITRATION_PASSED' : 'ARBITRATION_FAILED',
+        milestones: finalContract.milestones,
+      }));
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `msg-${Date.now()}-5`,
+          timestamp: now,
+          sender: 'ARBITER_AGENT',
+          title: isPassed
+            ? 'Arbiter Verdict: All Dynamic Tests Passed'
+            : 'Arbiter Verdict: Security Flaw Intercepted & Quarantined',
+          content: isPassed
+            ? `Executed test assertions with ${result?.score || 100}% compliance score. Zero vulnerabilities detected. Cryptographic release token signed.`
+            : `Inspection halted. Security policy flagged critical vulnerability (${result?.securityFindings?.[0] || 'CWE-89 SQL Injection'}). Escrow release rejected.`,
+          stepIndex: 5,
+          type: 'ARBITER_AUDIT',
+          dataPayload: {
+            verdict: isPassed ? 'RELEASE_FUNDS_AUTHORIZED' : 'PAYOUT_DENIED_VOID_ESCROW',
+            score: `${result?.score || (isPassed ? 100 : 25)}%`,
+            testsPassed: finalContract.milestones[0]?.testSuite.passed,
+            testsTotal: finalContract.milestones[0]?.testSuite.total,
+            securityGate: isPassed ? 'PASSED_CLEAN' : 'BLOCKED_QUARANTINED',
+          },
+        },
+      ]);
+    } else if (stepNumber === 5) {
+      // Step 5: Final Settlement (Capture or Void)
+      if (isPassed) {
+        const captureId = finalContract.paypalMetadata.captureId || `CAP-${Math.random().toString(36).substring(2, 8).toUpperCase()}-RELEASE`;
+        setContract((prev) => ({
+          ...prev,
+          status: 'PAYOUT_COMPLETED',
+          paypalMetadata: {
+            ...prev.paypalMetadata,
+            captureId,
+            releasedAt: now,
+          },
+        }));
+
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: `msg-${Date.now()}-6`,
+            timestamp: now,
+            sender: 'PAYPAL_ESCROW',
+            title: 'Capture & Instant Payout Executed',
+            content: `Escrow Authorization captured (${captureId}). Payout of $${finalContract.totalBudgetUSD.toFixed(2)} USD disbursed to Worker Agent. Transaction audited and finalized.`,
+            stepIndex: 6,
+            type: 'PAYPAL_PAYOUT',
+            dataPayload: {
+              event_type: 'PAYMENT.CAPTURE.COMPLETED',
+              resource_type: 'capture',
+              capture_id: captureId,
+              amount: { total: finalContract.totalBudgetUSD.toFixed(2), currency: 'USD' },
+              payout_status: 'DISBURSED_TO_WORKER',
+              is_final_capture: true,
+              hmac_signature: 'VERIFIED_ECDSA_SHA256',
+            },
+          },
+        ]);
+
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.6 },
+        });
+      } else {
+        setContract((prev) => ({
+          ...prev,
+          status: 'DISPUTE_REFUNDED',
+          paypalMetadata: {
+            ...prev.paypalMetadata,
+            captureId: 'VOIDED_AUTHORIZATION',
+          },
+        }));
+
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: `msg-${Date.now()}-6`,
+            timestamp: now,
+            sender: 'PAYPAL_ESCROW',
+            title: 'Void Authorization: 100% Refunded to Buyer',
+            content: `Authorization voided. $${finalContract.totalBudgetUSD.toFixed(2)} USD escrow hold cancelled. 100% of funds returned to Buyer Agent. Zero loss incurred due to AI Arbiter escrow protection.`,
+            stepIndex: 6,
+            type: 'DISPUTE_REFUND',
+            dataPayload: {
+              event_type: 'PAYMENT.AUTHORIZATION.VOIDED',
+              resource_type: 'authorization',
+              authorization_id: finalContract.paypalMetadata.authorizationId || 'AUTH-77312',
+              state: 'voided',
+              reason: 'AI_ARBITER_CWE_SECURITY_VIOLATION',
+              refund_amount: { total: finalContract.totalBudgetUSD.toFixed(2), currency: 'USD' },
+              buyer_protected: true,
+            },
+          },
+        ]);
+      }
     }
+
+    setCurrentStep(stepNumber);
   };
 
-  // Reset or change preset
-  const handleSelectPreset = (key: 'SUCCESS_FLOW' | 'DISPUTE_FLOW') => {
-    if (isRunning) return;
-    setPresetKey(key);
-    const { contract: initContract, messages: initMessages } = createInitialContract(key);
-    setContract(initContract);
-    setMessages(initMessages);
-    setCurrentStep(0);
-  };
-
-  const handleReset = () => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    setIsRunning(false);
-    const { contract: initContract, messages: initMessages } = createInitialContract(presetKey);
-    setContract(initContract);
-    setMessages(initMessages);
-    setCurrentStep(0);
-  };
-
-  // Perform single step transition
-  const executeStep = (stepNumber: number) => {
+  // Perform preset step transition
+  const executePresetStep = (stepNumber: number) => {
     const stepData = getStepDetails(stepNumber, presetKey, {
       orderId: contract.paypalMetadata.orderId,
       authId: contract.paypalMetadata.authorizationId,
@@ -104,6 +282,138 @@ export default function MainApp() {
     setCurrentStep(stepNumber);
   };
 
+  const executeStep = (stepNumber: number) => {
+    if (customFlowRef.current) {
+      executeCustomStep(stepNumber, customFlowRef.current);
+    } else {
+      executePresetStep(stepNumber);
+    }
+  };
+
+  // Apply custom task synthesized by AI agents & automatically kick off smooth sequential playback
+  const handleApplyCustomTask = (customContract: TaskContract, customMessages: AgentMessage[], result?: any) => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    setIsRunning(false);
+
+    const flowData: CustomFlowState = {
+      finalContract: customContract,
+      allMessages: customMessages,
+      result,
+    };
+
+    setCustomFlow(flowData);
+    customFlowRef.current = flowData;
+
+    // Initialize custom task at Step 0
+    const initialContract: TaskContract = {
+      id: customContract.id,
+      title: customContract.title,
+      description: customContract.description,
+      totalBudgetUSD: customContract.totalBudgetUSD,
+      currency: 'USD',
+      buyerAgentId: 'agent_buyer_alpha_9',
+      workerAgentId: 'agent_synth_coder_x4',
+      arbiterAgentId: 'agent_arbiter_sentinel_01',
+      status: 'INITIALIZING',
+      createdAt: new Date().toISOString(),
+      milestones: [
+        {
+          id: 'M1',
+          title: 'Custom Architecture & Logic Implementation',
+          description: customContract.description.substring(0, 80),
+          amountUSD: customContract.totalBudgetUSD,
+          status: 'PENDING',
+          testSuite: {
+            total: result?.tests?.length || 4,
+            passed: 0,
+            failed: 0,
+            tests: [],
+          },
+        },
+      ],
+      paypalMetadata: {
+        isSimulated: true,
+      },
+    };
+
+    const initialMessage: AgentMessage = customMessages[0] || {
+      id: `msg-${Date.now()}-1`,
+      timestamp: new Date().toISOString(),
+      sender: 'BUYER_AGENT',
+      title: 'Custom Task Requisition Dispatched',
+      content: `I am commissioning custom task: "${customContract.title}". Budget: $${customContract.totalBudgetUSD.toFixed(2)} USD.`,
+      stepIndex: 1,
+      type: 'TASK_SPEC',
+      dataPayload: { budgetUSD: customContract.totalBudgetUSD },
+    };
+
+    setContract(initialContract);
+    setMessages([initialMessage]);
+    setCurrentStep(0);
+    setIsRunning(true);
+
+    // Automatically transition through all steps with smooth 1.5s animated intervals
+    let step = 0;
+    intervalRef.current = setInterval(() => {
+      step += 1;
+      if (step <= 5) {
+        executeCustomStep(step, flowData);
+      } else {
+        if (intervalRef.current) clearInterval(intervalRef.current);
+        setIsRunning(false);
+      }
+    }, 1500);
+  };
+
+  // Reset or change preset
+  const handleSelectPreset = (key: 'SUCCESS_FLOW' | 'DISPUTE_FLOW') => {
+    if (isRunning) return;
+    setCustomFlow(null);
+    customFlowRef.current = null;
+    setPresetKey(key);
+    const { contract: initContract, messages: initMessages } = createInitialContract(key);
+    setContract(initContract);
+    setMessages(initMessages);
+    setCurrentStep(0);
+  };
+
+  const handleReset = () => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    setIsRunning(false);
+
+    if (customFlow) {
+      // Reset custom task back to Step 0
+      const initialContract: TaskContract = {
+        ...customFlow.finalContract,
+        status: 'INITIALIZING',
+        codeArtifact: undefined,
+        milestones: [
+          {
+            ...customFlow.finalContract.milestones[0],
+            status: 'PENDING',
+            testSuite: {
+              ...customFlow.finalContract.milestones[0].testSuite,
+              passed: 0,
+              failed: 0,
+              tests: [],
+            },
+          },
+        ],
+        paypalMetadata: {
+          isSimulated: true,
+        },
+      };
+      setContract(initialContract);
+      setMessages([customFlow.allMessages[0]]);
+      setCurrentStep(0);
+    } else {
+      const { contract: initContract, messages: initMessages } = createInitialContract(presetKey);
+      setContract(initContract);
+      setMessages(initMessages);
+      setCurrentStep(0);
+    }
+  };
+
   // Manual next step
   const handleNextStep = () => {
     if (currentStep < totalSteps) {
@@ -125,7 +435,7 @@ export default function MainApp() {
         if (intervalRef.current) clearInterval(intervalRef.current);
         setIsRunning(false);
       }
-    }, 1800);
+    }, 1500);
   };
 
   useEffect(() => {

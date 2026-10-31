@@ -35,20 +35,12 @@ export const Header: React.FC<HeaderProps> = ({
     <header className="border-b border-slate-200/80 bg-white sticky top-0 z-50">
       <div className="max-w-[1440px] mx-auto px-6 h-14 flex items-center justify-between gap-4">
         
-        {/* Brand: Tier 3 (18px) Logo + Tier 1 (12px) Pill */}
+        {/* Brand: Tier 3 (18px) Logo */}
         <div className="flex items-center gap-2.5 shrink-0">
           <div className="w-7 h-7 rounded-lg bg-[#F0F5FA] border border-[#D0E2F2] flex items-center justify-center text-[#003087]">
             <Shield className="w-4 h-4 fill-[#0070BA]/20 stroke-[#003087]" />
           </div>
-
-          <div className="flex items-center gap-2">
-            <span className="font-extrabold text-lg tracking-tight text-[#003087]">AgentEscrow</span>
-            <span className="text-slate-300 font-light text-sm">|</span>
-            <span className="text-xs font-medium text-slate-500 flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              {isSimulated ? 'Sandbox v2 Ready' : 'Live Gateway Active'}
-            </span>
-          </div>
+          <span className="font-extrabold text-lg tracking-tight text-[#003087]">AgentEscrow</span>
         </div>
 
         {/* Center: Tier 1 (12px) Sleek Toggle */}
