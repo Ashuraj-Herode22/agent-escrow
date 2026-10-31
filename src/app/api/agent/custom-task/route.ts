@@ -21,9 +21,9 @@ export async function POST(req: NextRequest) {
       description: taskDescription,
       totalBudgetUSD: Number(budgetUSD),
       currency: 'USD',
-      buyerAgentId: 'agent_buyer_alpha_9',
-      workerAgentId: 'agent_synth_coder_x4',
-      arbiterAgentId: 'agent_arbiter_sentinel_01',
+      buyerAgentId: 'Buyer-01',
+      workerAgentId: 'Coder-01',
+      arbiterAgentId: 'Arbiter-01',
       status: isPassed ? 'PAYOUT_COMPLETED' : 'DISPUTE_REFUNDED',
       createdAt: new Date().toISOString(),
       codeArtifact: {

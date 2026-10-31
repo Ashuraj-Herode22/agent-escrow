@@ -103,9 +103,9 @@ export function createInitialContract(presetId: 'SUCCESS_FLOW' | 'DISPUTE_FLOW')
     description: preset.taskDescription,
     totalBudgetUSD: preset.budgetUSD,
     currency: 'USD',
-    buyerAgentId: 'agent_buyer_alpha_9',
-    workerAgentId: 'agent_synth_coder_x4',
-    arbiterAgentId: 'agent_arbiter_sentinel_01',
+    buyerAgentId: 'Buyer-01',
+    workerAgentId: 'Coder-01',
+    arbiterAgentId: 'Arbiter-01',
     status: 'INITIALIZING',
     createdAt: '2026-11-01T12:00:00.000Z',
     milestones: [
@@ -179,7 +179,7 @@ export function getStepDetails(
           stepIndex: 2,
           type: 'AGENT_BID',
           dataPayload: {
-            workerId: 'agent_synth_coder_x4',
+            workerId: 'Coder-01',
             slaMinutes: 5,
             bidAmountUSD: isSuccess ? 75.00 : 120.00,
           },

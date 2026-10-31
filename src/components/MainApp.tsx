@@ -311,9 +311,9 @@ export default function MainApp() {
       description: customContract.description,
       totalBudgetUSD: customContract.totalBudgetUSD,
       currency: 'USD',
-      buyerAgentId: 'agent_buyer_alpha_9',
-      workerAgentId: 'agent_synth_coder_x4',
-      arbiterAgentId: 'agent_arbiter_sentinel_01',
+      buyerAgentId: 'Buyer-01',
+      workerAgentId: 'Coder-01',
+      arbiterAgentId: 'Arbiter-01',
       status: 'INITIALIZING',
       createdAt: new Date().toISOString(),
       milestones: [
