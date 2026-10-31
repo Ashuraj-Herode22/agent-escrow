@@ -12,14 +12,17 @@ export const AgentTerminal: React.FC<AgentTerminalProps> = ({ messages }) => {
   const [filter, setFilter] = useState<AgentRole | 'ALL'>('ALL');
   const [expandedPayloads, setExpandedPayloads] = useState<Record<string, boolean>>({});
   const [mounted, setMounted] = useState<boolean>(false);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  // Internal-only container scroll: NEVER scrolls the outer browser window!
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
+    }
   }, [messages]);
 
   const togglePayload = (id: string) => {
@@ -70,7 +73,7 @@ export const AgentTerminal: React.FC<AgentTerminalProps> = ({ messages }) => {
   };
 
   return (
-    <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col h-[600px]">
+    <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col h-[580px]">
       
       {/* Title & Count Row */}
       <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
@@ -85,8 +88,8 @@ export const AgentTerminal: React.FC<AgentTerminalProps> = ({ messages }) => {
         </span>
       </div>
 
-      {/* Full-Width Segmented Control (Never Overflows!) */}
-      <div className="grid grid-cols-5 bg-slate-100 p-0.5 rounded-lg text-center text-xs mb-3 font-medium">
+      {/* Full-Width Segmented Control */}
+      <div className="grid grid-cols-5 bg-slate-100/80 p-0.5 rounded-lg text-center text-xs mb-3 font-medium border border-slate-200/50">
         {(['ALL', 'BUYER_AGENT', 'WORKER_AGENT', 'ARBITER_AGENT', 'PAYPAL_ESCROW'] as const).map((role) => {
           const shortLabel = 
             role === 'ALL' ? 'All' :
@@ -110,8 +113,8 @@ export const AgentTerminal: React.FC<AgentTerminalProps> = ({ messages }) => {
         })}
       </div>
 
-      {/* Messages Scroll Area */}
-      <div className="flex-1 overflow-y-auto space-y-2.5 pr-1.5">
+      {/* Messages Scroll Area with Internal-Only Scroll Ref */}
+      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto space-y-2.5 pr-1.5">
         {filteredMessages.map((msg) => {
           const badge = getAgentBadge(msg.sender);
           const isExpanded = Boolean(expandedPayloads[msg.id]);
@@ -155,7 +158,6 @@ export const AgentTerminal: React.FC<AgentTerminalProps> = ({ messages }) => {
             </div>
           );
         })}
-        <div ref={bottomRef} />
       </div>
 
     </div>
