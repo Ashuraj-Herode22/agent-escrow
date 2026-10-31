@@ -35,3 +35,13 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
+
+/* Suppress dev indicator overlay badges */
+nextjs-portal,
+[data-nextjs-dev-overlay],
+[data-nextjs-toast] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
