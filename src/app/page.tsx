@@ -7,6 +7,8 @@ import { EscrowRibbon } from '@/components/EscrowRibbon';
 import { ContractCard } from '@/components/ContractCard';
 import { AgentTerminal } from '@/components/AgentTerminal';
 import { CodeInspector } from '@/components/CodeInspector';
+import { CustomTaskModal } from '@/components/CustomTaskModal';
+import { DevDocsModal } from '@/components/DevDocsModal';
 import { TaskContract, AgentMessage } from '@/types/escrow';
 import { SIMULATION_PRESETS, createInitialContract, getStepDetails } from '@/lib/agent-engine';
 
@@ -16,9 +18,28 @@ export default function Home() {
   const [messages, setMessages] = useState<AgentMessage[]>(() => createInitialContract('SUCCESS_FLOW').messages);
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [isRunning, setIsRunning] = useState<boolean>(false);
+  const [isCustomTaskOpen, setIsCustomTaskOpen] = useState<boolean>(false);
+  const [isDevDocsOpen, setIsDevDocsOpen] = useState<boolean>(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const totalSteps = 6;
+
+  // Apply custom task synthesized by AI agents
+  const handleApplyCustomTask = (customContract: TaskContract, customMessages: AgentMessage[]) => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    setIsRunning(false);
+    setContract(customContract);
+    setMessages(customMessages);
+    setCurrentStep(totalSteps);
+
+    if (customContract.status === 'PAYOUT_COMPLETED') {
+      confetti({
+        particleCount: 80,
+        spread: 70,
+        origin: { y: 0.6 },
+      });
+    }
+  };
 
   // Reset or change preset
   const handleSelectPreset = (key: 'SUCCESS_FLOW' | 'DISPUTE_FLOW') => {
@@ -129,6 +150,8 @@ export default function Home() {
         currentStep={currentStep}
         totalSteps={totalSteps}
         isSimulated={true}
+        onOpenCustomTask={() => setIsCustomTaskOpen(true)}
+        onOpenSdkDocs={() => setIsDevDocsOpen(true)}
       />
 
       {/* Main Workspace */}
@@ -167,6 +190,17 @@ export default function Home() {
           </div>
         </div>
       </footer>
+      {/* Modals */}
+      <CustomTaskModal
+        isOpen={isCustomTaskOpen}
+        onClose={() => setIsCustomTaskOpen(false)}
+        onApplyCustomTask={handleApplyCustomTask}
+      />
+
+      <DevDocsModal
+        isOpen={isDevDocsOpen}
+        onClose={() => setIsDevDocsOpen(false)}
+      />
     </div>
   );
 }

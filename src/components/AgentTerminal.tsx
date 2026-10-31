@@ -149,7 +149,7 @@ export const AgentTerminal: React.FC<AgentTerminalProps> = ({ messages }) => {
                   </button>
 
                   {isExpanded && (
-                    <pre className="mt-1.5 p-3 rounded-lg bg-slate-900 text-slate-100 text-xs font-mono overflow-x-auto leading-relaxed border border-slate-800">
+                    <pre className="mt-1.5 p-2.5 rounded-lg bg-white text-slate-800 text-xs font-mono overflow-x-auto leading-relaxed border border-slate-200 shadow-2xs">
                       {JSON.stringify(msg.dataPayload, null, 2)}
                     </pre>
                   )}

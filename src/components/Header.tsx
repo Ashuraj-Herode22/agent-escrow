@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Play, RotateCcw, ArrowRight, ShieldCheck, CheckCircle2, Shield } from 'lucide-react';
+import { Play, RotateCcw, ArrowRight, ShieldCheck, CheckCircle2, Shield, Sparkles, Code2 } from 'lucide-react';
 import { SimulationPreset } from '@/types/escrow';
 
 interface HeaderProps {
@@ -14,6 +14,8 @@ interface HeaderProps {
   currentStep: number;
   totalSteps: number;
   isSimulated: boolean;
+  onOpenCustomTask?: () => void;
+  onOpenSdkDocs?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -26,6 +28,8 @@ export const Header: React.FC<HeaderProps> = ({
   currentStep,
   totalSteps,
   isSimulated,
+  onOpenCustomTask,
+  onOpenSdkDocs,
 }) => {
   return (
     <header className="border-b border-slate-200/80 bg-white sticky top-0 z-50">
@@ -78,6 +82,32 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Right Actions: Tier 1 (12px) Pill Buttons */}
         <div className="flex items-center gap-2 shrink-0">
+          {onOpenCustomTask && (
+            <button
+              onClick={onOpenCustomTask}
+              disabled={isRunning}
+              className="h-8 px-3 rounded-full text-xs font-semibold bg-[#F0F5FA] hover:bg-[#E2EDF8] text-[#003087] border border-[#D0E2F2] flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs active:scale-98"
+              title="Dispatch dynamic prompt to AI agents"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-[#0070BA]" />
+              <span>+ Custom Task</span>
+            </button>
+          )}
+
+          {onOpenSdkDocs && (
+            <button
+              onClick={onOpenSdkDocs}
+              disabled={isRunning}
+              className="h-8 px-2.5 rounded-full text-xs font-medium bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 flex items-center gap-1 transition-all cursor-pointer active:scale-98"
+              title="Inspect Python / TypeScript SDK & cURL"
+            >
+              <Code2 className="w-3.5 h-3.5 text-slate-500" />
+              <span>SDK & API</span>
+            </button>
+          )}
+
+          <div className="h-4 w-px bg-slate-200 mx-0.5" />
+
           <button
             onClick={onStartSimulation}
             disabled={isRunning || currentStep >= totalSteps}
