@@ -79,11 +79,11 @@ export const AgentTerminal: React.FC<AgentTerminalProps> = ({ messages }) => {
       <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
         <div className="flex items-center gap-2">
           <Terminal className="w-4 h-4 text-[#0070BA]" />
-          <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+          <h3 className="text-sm font-bold text-slate-900">
             Activity Stream
           </h3>
         </div>
-        <span className="text-[11px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-semibold border border-slate-200">
+        <span className="text-xs bg-slate-100 text-slate-600 px-2.5 py-0.5 rounded-full font-semibold border border-slate-200">
           {messages.length} Events Logged
         </span>
       </div>
@@ -113,7 +113,7 @@ export const AgentTerminal: React.FC<AgentTerminalProps> = ({ messages }) => {
         })}
       </div>
 
-      {/* Messages Scroll Area with Internal-Only Scroll Ref */}
+      {/* Messages Scroll Area */}
       <div ref={scrollContainerRef} className="flex-1 overflow-y-auto space-y-2.5 pr-1.5">
         {filteredMessages.map((msg) => {
           const badge = getAgentBadge(msg.sender);
@@ -122,14 +122,14 @@ export const AgentTerminal: React.FC<AgentTerminalProps> = ({ messages }) => {
           return (
             <div
               key={msg.id}
-              className="p-3.5 rounded-xl bg-[#F8FAFC] border border-slate-200/80 text-xs flex flex-col gap-1.5 transition-all hover:bg-slate-50 hover:border-slate-300"
+              className="p-3 rounded-xl bg-[#F8FAFC] border border-slate-200/80 text-xs flex flex-col gap-1.5 transition-all hover:bg-slate-50 hover:border-slate-300"
             >
               <div className="flex items-center justify-between">
-                <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md border text-[11px] font-semibold ${badge.color}`}>
+                <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md border text-xs font-semibold ${badge.color}`}>
                   {badge.icon}
                   <span>{badge.label}</span>
                 </span>
-                <span suppressHydrationWarning className="text-[10px] font-mono text-slate-500 font-medium">
+                <span suppressHydrationWarning className="text-xs text-slate-500 font-medium">
                   {formatTimestamp(msg.timestamp)}
                 </span>
               </div>
@@ -142,14 +142,14 @@ export const AgentTerminal: React.FC<AgentTerminalProps> = ({ messages }) => {
                 <div className="mt-1">
                   <button
                     onClick={() => togglePayload(msg.id)}
-                    className="flex items-center gap-1 text-[11px] font-mono text-[#0070BA] hover:text-[#003087] font-semibold transition-colors cursor-pointer"
+                    className="flex items-center gap-1 text-xs text-[#0070BA] hover:text-[#003087] font-semibold transition-colors cursor-pointer"
                   >
                     {isExpanded ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
                     <span>{isExpanded ? 'Hide Payload' : 'Inspect Signed Payload'}</span>
                   </button>
 
                   {isExpanded && (
-                    <pre className="mt-1.5 p-3 rounded-lg bg-slate-900 text-slate-100 text-[10px] font-mono overflow-x-auto leading-relaxed border border-slate-800">
+                    <pre className="mt-1.5 p-3 rounded-lg bg-slate-900 text-slate-100 text-xs font-mono overflow-x-auto leading-relaxed border border-slate-800">
                       {JSON.stringify(msg.dataPayload, null, 2)}
                     </pre>
                   )}

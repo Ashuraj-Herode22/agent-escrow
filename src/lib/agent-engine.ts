@@ -66,24 +66,27 @@ def analyze_sentiment(payload: AnalysisRequest):
 `;
 
 export const INITIAL_DISPUTE_CODE = `"""
-User Authentication Service (Flawed Delivery)
+User Authentication Service (Quarantined by Arbiter)
 Submitted for AgentEscrow Contract #AG-8814
 """
 import sqlite3
 import jwt
 
-SECRET_KEY = "HARDCODED_ADMIN_SECRET_KEY_NEVER_DO_THIS" # SECURITY VULNERABILITY
+# [SECURITY VIOLATION DETECTED: Hardcoded Credential Pattern]
+# AI Arbiter Masked Sensitive Secret:
+API_SECRET = "[REDACTED_BY_ARBITER_POLICY_SECRET_MASK]"
 
 def authenticate_user(username, password):
     conn = sqlite3.connect("users.db")
     cursor = conn.cursor()
-    # CRITICAL: Unsanitized SQL Query (SQL Injection vulnerability)
+    
+    # [CRITICAL SECURITY FLAW CWE-89: Unsanitized SQL Query Interpolation]
     query = f"SELECT id, role FROM accounts WHERE user = '{username}' AND pass = '{password}'"
     cursor.execute(query)
     user = cursor.fetchone()
     
     if user:
-        return jwt.encode({"uid": user[0], "role": user[1]}, SECRET_KEY, algorithm="HS256")
+        return jwt.encode({"uid": user[0], "role": user[1]}, API_SECRET, algorithm="HS256")
     return None
 `;
 
@@ -95,7 +98,7 @@ export function createInitialContract(presetId: 'SUCCESS_FLOW' | 'DISPUTE_FLOW')
   const isSuccess = presetId === 'SUCCESS_FLOW';
 
   const contract: TaskContract = {
-    id: isSuccess ? 'AG-7729-SENTIMENT' : 'AG-8814-AUTH-SEC',
+    id: isSuccess ? 'AG-7729' : 'AG-8814',
     title: preset.taskTitle,
     description: preset.taskDescription,
     totalBudgetUSD: preset.budgetUSD,
@@ -190,12 +193,12 @@ export function getStepDetails(
           id: `msg-${Date.now()}-3`,
           timestamp: now,
           sender: 'PAYPAL_ESCROW',
-          title: 'PayPal Orders API: Escrow Order Created',
-          content: `PayPal Order created with intent=AUTHORIZE. Order ID: ${paypalData?.orderId || 'ORD-98213-SANDBOX'}. Awaiting cryptographic authorization from Buyer Agent.`,
+          title: 'Escrow Order Created',
+          content: `Protocol Order created with intent=AUTHORIZE. Order ID: ${paypalData?.orderId || 'ORD-98213'}. Awaiting cryptographic authorization from Buyer Agent.`,
           stepIndex: 3,
           type: 'PAYPAL_ORDER_CREATED',
           dataPayload: {
-            orderId: paypalData?.orderId || 'ORD-98213-SANDBOX',
+            orderId: paypalData?.orderId || 'ORD-98213',
             intent: 'AUTHORIZE',
             amount: isSuccess ? '$75.00 USD' : '$120.00 USD',
           },
@@ -209,12 +212,12 @@ export function getStepDetails(
           id: `msg-${Date.now()}-4`,
           timestamp: now,
           sender: 'PAYPAL_ESCROW',
-          title: 'PayPal Escrow Locked (Funds On Hold)',
-          content: `Authorization confirmed: ${paypalData?.authId || 'AUTH-77312-ESCROW'}. Buyer funds are cryptographically locked in PayPal Escrow. Worker Agent is authorized to begin execution.`,
+          title: 'Escrow Locked (Funds On Hold)',
+          content: `Authorization confirmed: ${paypalData?.authId || 'AUTH-77312'}. Buyer funds are cryptographically locked in Escrow. Worker Agent is authorized to begin execution.`,
           stepIndex: 4,
           type: 'PAYPAL_AUTH_HOLD',
           dataPayload: {
-            authorizationId: paypalData?.authId || 'AUTH-77312-ESCROW',
+            authorizationId: paypalData?.authId || 'AUTH-77312',
             status: 'AUTHORIZED',
             escrowHoldValidHours: 72,
           },
@@ -291,8 +294,8 @@ export function getStepDetails(
             id: `msg-${Date.now()}-6`,
             timestamp: now,
             sender: 'ARBITER_AGENT',
-            title: 'Arbiter Verdict: 100% TEST PASS (VERIFIED)',
-            content: `Automated test suite completed. 6/6 tests passed (0 vulnerabilities, 0 regressions). Cryptographic release token signed. Instructing PayPal to capture escrow and payout worker.`,
+            title: 'Arbiter Verdict: 100% Test Pass (Verified)',
+            content: `Automated test suite completed. 6/6 tests passed (0 vulnerabilities, 0 regressions). Cryptographic release token signed. Escrow capture authorized.`,
             stepIndex: 6,
             type: 'ARBITER_AUDIT',
             dataPayload: {
@@ -336,9 +339,9 @@ export function getStepDetails(
                 failed: 3,
                 tests: [
                   { name: 'Basic credential match test', passed: true, durationMs: 20 },
-                  { name: 'CWE-89 SQL Injection test: \' OR \'1\'=\'1', passed: false, durationMs: 11, error: 'VULNERABILITY: Raw string interpolation in SQL query permits unauthorized access.' },
-                  { name: 'Hardcoded secret detection scan', passed: false, durationMs: 34, error: 'SECURITY: Hardcoded secret key detected in plain text.' },
-                  { name: 'OWASP Top 10 Compliance Check', passed: false, durationMs: 25, error: 'FAIL: Authentication service violates secure token storage standards.' },
+                  { name: 'CWE-89 SQL Injection test: \' OR \'1\'=\'1', passed: false, durationMs: 11, error: 'Vulnerability: Raw string interpolation in SQL query permits unauthorized access.' },
+                  { name: 'Hardcoded secret detection scan', passed: false, durationMs: 34, error: 'Security Alert: Hardcoded credential pattern detected and quarantined.' },
+                  { name: 'OWASP Top 10 Compliance Check', passed: false, durationMs: 25, error: 'Fail: Authentication service violates secure token storage standards.' },
                 ],
               },
             },
@@ -347,8 +350,8 @@ export function getStepDetails(
             id: `msg-${Date.now()}-6`,
             timestamp: now,
             sender: 'ARBITER_AGENT',
-            title: 'Arbiter Verdict: CRITICAL SECURITY FAILURE',
-            content: `Inspection halted. 3 critical vulnerabilities detected (SQL Injection CWE-89 & Hardcoded Secrets). Escrow release REJECTED. Triggering buyer protection and PayPal dispute void.`,
+            title: 'Arbiter Verdict: Security Flaw Intercepted & Quarantined',
+            content: `Inspection halted. 3 critical vulnerabilities detected (SQL Injection CWE-89 & Secret Exposure). Escrow release rejected. Initiating automatic buyer refund.`,
             stepIndex: 6,
             type: 'ARBITER_AUDIT',
             dataPayload: {
@@ -369,12 +372,12 @@ export function getStepDetails(
             id: `msg-${Date.now()}-7`,
             timestamp: now,
             sender: 'PAYPAL_ESCROW',
-            title: 'PayPal Capture & Instant Payout Executed',
-            content: `PayPal Authorization CAPTURED (${paypalData?.captureId || 'CAP-88312-RELEASE'}). Escrow released. Payout of $75.00 USD disbursed to Worker Agent PayPal account. Transaction audited and finalized.`,
+            title: 'Capture & Instant Payout Executed',
+            content: `Escrow Authorization captured (${paypalData?.captureId || 'CAP-88312'}). Payout of $75.00 USD disbursed to Worker Agent account. Transaction audited and finalized.`,
             stepIndex: 7,
             type: 'PAYPAL_PAYOUT',
             dataPayload: {
-              captureId: paypalData?.captureId || 'CAP-88312-RELEASE',
+              captureId: paypalData?.captureId || 'CAP-88312',
               amountDisbursed: '$75.00 USD',
               payoutStatus: 'COMPLETED',
             },
@@ -387,8 +390,8 @@ export function getStepDetails(
             id: `msg-${Date.now()}-7`,
             timestamp: now,
             sender: 'PAYPAL_ESCROW',
-            title: 'PayPal Void Authorization: 100% Refunded to Buyer',
-            content: `PayPal Authorization VOIDED. $120.00 USD escrow hold cancelled. 100% of funds returned to Buyer Agent's PayPal balance. Zero loss incurred due to AI Arbiter escrow protection.`,
+            title: 'Void Authorization: 100% Refunded to Buyer',
+            content: `Authorization voided. $120.00 USD escrow hold cancelled. 100% of funds returned to Buyer Agent account. Zero loss incurred due to AI Arbiter escrow protection.`,
             stepIndex: 7,
             type: 'DISPUTE_REFUND',
             dataPayload: {

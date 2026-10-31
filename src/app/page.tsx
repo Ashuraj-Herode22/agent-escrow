@@ -140,7 +140,7 @@ export default function Home() {
           onSimulateApproveDeposit={handleNextStep}
         />
 
-        {/* 3 Perfectly Symmetrical Equal-Height Columns (580px Each) */}
+        {/* 3 Symmetrical Equal-Height Columns (580px Each) */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
           {/* Column 1: Contract & Milestones */}
           <ContractCard contract={contract} />
