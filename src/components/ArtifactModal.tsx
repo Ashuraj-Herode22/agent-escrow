@@ -105,8 +105,8 @@ export const ArtifactModal: React.FC<ArtifactModalProps> = ({
         {/* Modal Header */}
         <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-[#F8FAFC]">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-[#F0F5FA] border border-[#D0E2F2] flex items-center justify-center text-[#003087]">
-              <Code2 className="w-4 h-4 text-[#0070BA]" />
+            <div className="w-8 h-8 rounded-lg bg-[#003087] flex items-center justify-center text-white shadow-2xs">
+              <Code2 className="w-4 h-4 text-white" />
             </div>
             <div>
               <div className="flex items-center gap-2">
@@ -129,7 +129,7 @@ export const ArtifactModal: React.FC<ArtifactModalProps> = ({
             {artifact && (
               <button
                 onClick={downloadAuditReport}
-                className="text-xs font-semibold px-3 py-1.5 rounded-full bg-white hover:bg-slate-50 border border-slate-200 text-[#0070BA] hover:text-[#003087] flex items-center gap-1.5 transition-colors cursor-pointer shadow-2xs"
+                className="text-xs font-semibold px-3 py-1.5 rounded-full bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 hover:text-slate-900 flex items-center gap-1.5 transition-colors cursor-pointer shadow-2xs"
               >
                 <Download className="w-3.5 h-3.5" />
                 <span>Export Audit JSON</span>
@@ -149,10 +149,10 @@ export const ArtifactModal: React.FC<ArtifactModalProps> = ({
         <div className="px-5 pt-3 pb-2 border-b border-slate-100 flex items-center gap-2 bg-white">
           <button
             onClick={() => setActiveTab('CODE')}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
               activeTab === 'CODE'
-                ? 'bg-[#F0F5FA] text-[#003087] border border-[#D0E2F2]'
-                : 'text-slate-500 hover:text-slate-900'
+                ? 'bg-slate-900 text-white shadow-2xs'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             <Code2 className="w-3.5 h-3.5" />
@@ -161,10 +161,10 @@ export const ArtifactModal: React.FC<ArtifactModalProps> = ({
 
           <button
             onClick={() => setActiveTab('TESTS')}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
               activeTab === 'TESTS'
-                ? 'bg-[#F0F5FA] text-[#003087] border border-[#D0E2F2]'
-                : 'text-slate-500 hover:text-slate-900'
+                ? 'bg-slate-900 text-white shadow-2xs'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             <FileCheck className="w-3.5 h-3.5" />
@@ -173,10 +173,10 @@ export const ArtifactModal: React.FC<ArtifactModalProps> = ({
 
           <button
             onClick={() => setActiveTab('AUDIT')}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
               activeTab === 'AUDIT'
-                ? 'bg-[#F0F5FA] text-[#003087] border border-[#D0E2F2]'
-                : 'text-slate-500 hover:text-slate-900'
+                ? 'bg-slate-900 text-white shadow-2xs'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             <ShieldCheck className="w-3.5 h-3.5" />
@@ -430,7 +430,7 @@ export const ArtifactModal: React.FC<ArtifactModalProps> = ({
           </span>
           <button
             onClick={onClose}
-            className="px-4 py-1.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold transition-all cursor-pointer shadow-2xs"
+            className="px-4 py-1.5 rounded-full bg-[#003087] hover:bg-[#002266] text-white text-xs font-semibold transition-all cursor-pointer shadow-2xs"
           >
             Close Inspector
           </button>

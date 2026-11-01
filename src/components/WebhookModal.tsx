@@ -80,8 +80,8 @@ export const WebhookModal: React.FC<WebhookModalProps> = ({ isOpen, onClose, con
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-[#F0F5FA] border border-[#D0E2F2] flex items-center justify-center text-[#003087]">
-              <Webhook className="w-4 h-4 text-[#0070BA]" />
+            <div className="w-7 h-7 rounded-lg bg-[#003087] flex items-center justify-center text-white">
+              <Webhook className="w-4 h-4 text-white" />
             </div>
             <div>
               <h3 className="text-sm font-bold text-slate-900">PayPal Webhook Event Telemetry</h3>
@@ -94,12 +94,12 @@ export const WebhookModal: React.FC<WebhookModalProps> = ({ isOpen, onClose, con
         </div>
 
         {/* Verification Status Banner */}
-        <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5 flex items-center justify-between">
-          <span className="flex items-center gap-1.5 font-semibold text-emerald-800">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+        <div className="bg-slate-100 border border-slate-200 rounded-xl p-2.5 flex items-center justify-between text-slate-800 text-xs">
+          <span className="flex items-center gap-1.5 font-semibold">
+            <CheckCircle2 className="w-4 h-4 text-slate-900" />
             <span>HMAC-SHA256 Signature Verified (200 OK)</span>
           </span>
-          <span className="text-[11px] font-mono text-emerald-700">CERT: PP-SANDBOX-AUTH</span>
+          <span className="text-[11px] font-mono text-slate-600 font-bold">CERT: PP-SANDBOX-AUTH</span>
         </div>
 
         {/* Event Selectors */}
@@ -107,7 +107,7 @@ export const WebhookModal: React.FC<WebhookModalProps> = ({ isOpen, onClose, con
           <button
             onClick={() => setSelectedEvent('CAPTURE')}
             className={`py-1 rounded-md transition-all cursor-pointer ${
-              selectedEvent === 'CAPTURE' ? 'bg-white text-[#003087] font-bold shadow-2xs' : 'text-slate-500 hover:text-slate-900'
+              selectedEvent === 'CAPTURE' ? 'bg-white text-slate-900 font-bold shadow-2xs' : 'text-slate-500 hover:text-slate-900'
             }`}
           >
             CAPTURE.COMPLETED
@@ -116,7 +116,7 @@ export const WebhookModal: React.FC<WebhookModalProps> = ({ isOpen, onClose, con
           <button
             onClick={() => setSelectedEvent('AUTH')}
             className={`py-1 rounded-md transition-all cursor-pointer ${
-              selectedEvent === 'AUTH' ? 'bg-white text-[#003087] font-bold shadow-2xs' : 'text-slate-500 hover:text-slate-900'
+              selectedEvent === 'AUTH' ? 'bg-white text-slate-900 font-bold shadow-2xs' : 'text-slate-500 hover:text-slate-900'
             }`}
           >
             AUTH.CREATED
@@ -125,7 +125,7 @@ export const WebhookModal: React.FC<WebhookModalProps> = ({ isOpen, onClose, con
           <button
             onClick={() => setSelectedEvent('VOID')}
             className={`py-1 rounded-md transition-all cursor-pointer ${
-              selectedEvent === 'VOID' ? 'bg-white text-[#003087] font-bold shadow-2xs' : 'text-slate-500 hover:text-slate-900'
+              selectedEvent === 'VOID' ? 'bg-white text-slate-900 font-bold shadow-2xs' : 'text-slate-500 hover:text-slate-900'
             }`}
           >
             AUTH.VOIDED

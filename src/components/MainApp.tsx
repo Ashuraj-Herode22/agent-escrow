@@ -455,7 +455,7 @@ export default function MainApp() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#F5F7FA] text-[#0C2340] flex flex-col font-sans selection:bg-[#0070BA]/20 selection:text-[#003087]">
+    <div className="min-h-screen bg-[#F5F7FA] text-[#0C2340] flex flex-col font-sans selection:bg-[#003087] selection:text-white">
       {/* 1. Minimalist Top Navigation */}
       <Header
         currentPreset={SIMULATION_PRESETS[presetKey]}
@@ -511,16 +511,16 @@ export default function MainApp() {
 
       </main>
 
-      {/* Clean Enterprise Footer */}
-      <footer className="border-t border-slate-200 bg-white px-6 py-4 text-xs text-slate-500 font-medium mt-auto">
-        <div className="max-w-[1400px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <span className="font-extrabold text-slate-900">AgentEscrow</span>
-            <span>•</span>
-            <span>Autonomous Multi-Agent Commerce Protocol</span>
+      {/* Clean Enterprise Footer in PayPal Deep Navy */}
+      <footer className="border-t border-[#002466] bg-[#003087] px-6 py-6 text-xs text-blue-100 font-medium mt-auto">
+        <div className="max-w-[1400px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <span className="font-extrabold text-white text-sm">AgentEscrow</span>
+            <span className="text-blue-300">•</span>
+            <span className="text-blue-100">Autonomous Multi-Agent Commerce Protocol</span>
           </div>
-          <div className="text-slate-500">
-            Programmable Milestone Escrow, Self-Healing Cure Loops & Dispute Arbitration
+          <div className="text-blue-200/90 text-xs">
+            Programmable Milestone Escrow, Self-Healing Cure Loops & Autonomous Settlement
           </div>
         </div>
       </footer>

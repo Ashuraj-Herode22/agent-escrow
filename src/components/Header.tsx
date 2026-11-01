@@ -63,12 +63,12 @@ export const Header: React.FC<HeaderProps> = ({
   }, []);
 
   return (
-    <header className="border-b border-slate-200/90 bg-white sticky top-0 z-50">
+    <header className="border-t-3 border-t-[#003087] border-b border-slate-200/90 bg-white sticky top-0 z-50">
       <div className="max-w-[1400px] mx-auto px-6 h-15 flex items-center justify-between gap-4">
         
         {/* Left: Clean Brand */}
         <div className="flex items-center gap-3 shrink-0">
-          <div className="w-8 h-8 rounded-xl bg-slate-900 flex items-center justify-center text-white shadow-2xs">
+          <div className="w-8 h-8 rounded-xl bg-[#003087] flex items-center justify-center text-white shadow-2xs">
             <Shield className="w-4 h-4 fill-white/20 stroke-white" />
           </div>
           <span className="font-extrabold text-base tracking-tight text-slate-900">AgentEscrow</span>
@@ -233,18 +233,18 @@ export const Header: React.FC<HeaderProps> = ({
 
           <div className="h-4 w-px bg-slate-200 mx-1" />
 
-          {/* Execute Flow (Primary CTA) */}
+          {/* Execute Contract (Primary CTA in PayPal Deep Navy) */}
           <button
             onClick={onStartSimulation}
             disabled={isRunning || currentStep >= totalSteps}
             className={`h-9 px-4 rounded-full text-xs font-bold flex items-center gap-2 transition-all cursor-pointer ${
               currentStep >= totalSteps
                 ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
-                : 'bg-slate-900 hover:bg-slate-800 text-white shadow-xs active:scale-98'
+                : 'bg-[#003087] hover:bg-[#002266] text-white shadow-xs active:scale-98'
             }`}
           >
             <Play className="w-3.5 h-3.5 fill-current" />
-            <span>{isRunning ? 'Executing...' : 'Execute Flow'}</span>
+            <span>{isRunning ? 'Executing...' : 'Execute Contract'}</span>
           </button>
 
           {/* Step Button */}
