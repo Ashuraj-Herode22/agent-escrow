@@ -10,6 +10,7 @@ import { CodeInspector } from '@/components/CodeInspector';
 import { CustomTaskModal } from '@/components/CustomTaskModal';
 import { DevDocsModal } from '@/components/DevDocsModal';
 import { PolicyModal } from '@/components/PolicyModal';
+import { ArtifactModal } from '@/components/ArtifactModal';
 import { TaskContract, AgentMessage } from '@/types/escrow';
 import { SIMULATION_PRESETS, createInitialContract, getStepDetails } from '@/lib/agent-engine';
 
@@ -28,6 +29,8 @@ export default function MainApp() {
   const [isCustomTaskOpen, setIsCustomTaskOpen] = useState<boolean>(false);
   const [isDevDocsOpen, setIsDevDocsOpen] = useState<boolean>(false);
   const [isPolicyModalOpen, setIsPolicyModalOpen] = useState<boolean>(false);
+  const [isArtifactModalOpen, setIsArtifactModalOpen] = useState<boolean>(false);
+  const [artifactModalTab, setArtifactModalTab] = useState<'CODE' | 'TESTS' | 'AUDIT'>('CODE');
   const [customFlow, setCustomFlow] = useState<CustomFlowState | null>(null);
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -35,12 +38,12 @@ export default function MainApp() {
   customFlowRef.current = customFlow;
 
   const totalSteps = customFlow
-    ? 5
-    : presetKey === 'SUCCESS_FLOW'
     ? 6
+    : presetKey === 'SUCCESS_FLOW'
+    ? 7
     : presetKey === 'HEALING_FLOW'
-    ? 8
-    : 7;
+    ? 9
+    : 8;
 
   // Execute a single step in custom flow
   const executeCustomStep = (stepNumber: number, flow: CustomFlowState) => {
@@ -49,6 +52,20 @@ export default function MainApp() {
     const now = new Date().toISOString();
 
     if (stepNumber === 1) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `msg-${Date.now()}-1`,
+          timestamp: now,
+          sender: 'BUYER_AGENT',
+          title: 'Custom Task Requisition Dispatched',
+          content: `I am commissioning custom task: "${finalContract.title}". Budget allocated: $${finalContract.totalBudgetUSD.toFixed(2)} USD. Cure policy: 3 revision attempts.`,
+          stepIndex: 1,
+          type: 'TASK_SPEC',
+          dataPayload: { budgetUSD: finalContract.totalBudgetUSD },
+        },
+      ]);
+    } else if (stepNumber === 2) {
       setContract((prev) => ({
         ...prev,
         status: 'WAITING_DEPOSIT',
@@ -77,7 +94,7 @@ export default function MainApp() {
           },
         },
       ]);
-    } else if (stepNumber === 2) {
+    } else if (stepNumber === 3) {
       const authId = finalContract.paypalMetadata.authorizationId || `AUTH-${Math.random().toString(36).substring(2, 8).toUpperCase()}-ESCROW`;
       setContract((prev) => ({
         ...prev,
@@ -110,7 +127,7 @@ export default function MainApp() {
           },
         },
       ]);
-    } else if (stepNumber === 3) {
+    } else if (stepNumber === 4) {
       setContract((prev) => ({
         ...prev,
         status: 'DELIVERED_AUDITING',
@@ -134,7 +151,7 @@ export default function MainApp() {
           },
         },
       ]);
-    } else if (stepNumber === 4) {
+    } else if (stepNumber === 5) {
       setContract((prev) => ({
         ...prev,
         status: isPassed ? 'ARBITRATION_PASSED' : 'ARBITRATION_FAILED',
@@ -164,7 +181,7 @@ export default function MainApp() {
           },
         },
       ]);
-    } else if (stepNumber === 5) {
+    } else if (stepNumber === 6) {
       if (isPassed) {
         const captureId = finalContract.paypalMetadata.captureId || `CAP-${Math.random().toString(36).substring(2, 8).toUpperCase()}-RELEASE`;
         setContract((prev) => ({
@@ -259,17 +276,17 @@ export default function MainApp() {
         isPatched: stepData.isPatched ?? prev.isPatched,
       };
 
-      if (stepNumber === 2) {
+      if (stepNumber === 3) {
         updated.paypalMetadata.orderId = `ORD-${Math.random().toString(36).substring(2, 8).toUpperCase()}-SANDBOX`;
       }
-      if (stepNumber === 3) {
+      if (stepNumber === 4) {
         updated.paypalMetadata.authorizationId = `AUTH-${Math.random().toString(36).substring(2, 8).toUpperCase()}-ESCROW`;
         updated.paypalMetadata.escrowLockedAt = new Date().toISOString();
       }
 
       const isFinalSuccess =
-        (presetKey === 'SUCCESS_FLOW' && stepNumber === 6) ||
-        (presetKey === 'HEALING_FLOW' && stepNumber === 8);
+        (presetKey === 'SUCCESS_FLOW' && stepNumber === 7) ||
+        (presetKey === 'HEALING_FLOW' && stepNumber === 9);
 
       if (isFinalSuccess) {
         updated.paypalMetadata.captureId = `CAP-${Math.random().toString(36).substring(2, 8).toUpperCase()}-RELEASE`;
@@ -279,7 +296,7 @@ export default function MainApp() {
           spread: 70,
           origin: { y: 0.6 },
         });
-      } else if (presetKey === 'DISPUTE_FLOW' && stepNumber === 7) {
+      } else if (presetKey === 'DISPUTE_FLOW' && stepNumber === 8) {
         updated.paypalMetadata.captureId = 'VOIDED_AUTHORIZATION';
       }
 
@@ -345,26 +362,15 @@ export default function MainApp() {
       },
     };
 
-    const initialMessage: AgentMessage = customMessages[0] || {
-      id: `msg-${Date.now()}-1`,
-      timestamp: new Date().toISOString(),
-      sender: 'BUYER_AGENT',
-      title: 'Custom Task Requisition Dispatched',
-      content: `I am commissioning custom task: "${customContract.title}". Budget: $${customContract.totalBudgetUSD.toFixed(2)} USD. Cure policy: 3 revision attempts.`,
-      stepIndex: 1,
-      type: 'TASK_SPEC',
-      dataPayload: { budgetUSD: customContract.totalBudgetUSD },
-    };
-
     setContract(initialContract);
-    setMessages([initialMessage]);
+    setMessages([]);
     setCurrentStep(0);
     setIsRunning(true);
 
     let step = 0;
     intervalRef.current = setInterval(() => {
       step += 1;
-      if (step <= 5) {
+      if (step <= 6) {
         executeCustomStep(step, flowData);
       } else {
         if (intervalRef.current) clearInterval(intervalRef.current);
@@ -410,7 +416,7 @@ export default function MainApp() {
         },
       };
       setContract(initialContract);
-      setMessages([customFlow.allMessages[0]]);
+      setMessages([]);
       setCurrentStep(0);
     } else {
       const { contract: initContract, messages: initMessages } = createInitialContract(presetKey);
@@ -478,13 +484,22 @@ export default function MainApp() {
         {/* Primary Stage: 2 Spacious Equal-Height Columns (50% / 50%) */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
           
-          {/* Column 1: Live Agent Activity Stream (~670px Wide, Generous Padding) */}
-          <AgentTerminal messages={messages} />
+          {/* Column 1: Live Agent Activity Stream with Purposeful Staged Ready State */}
+          <AgentTerminal
+            messages={messages}
+            contract={contract}
+            onStartSimulation={handleStartSimulation}
+            isRunning={isRunning}
+          />
 
-          {/* Column 2: Verification Sandbox & Code Inspector (~670px Wide) */}
+          {/* Column 2: Continuous Verification Sandbox Pipeline (Never Disappears!) */}
           <CodeInspector
             contract={contract}
             onOpenPolicyModal={() => setIsPolicyModalOpen(true)}
+            onOpenArtifactModal={(tab) => {
+              setArtifactModalTab(tab || 'CODE');
+              setIsArtifactModalOpen(true);
+            }}
           />
 
         </div>
@@ -525,6 +540,13 @@ export default function MainApp() {
       <PolicyModal
         isOpen={isPolicyModalOpen}
         onClose={() => setIsPolicyModalOpen(false)}
+      />
+
+      <ArtifactModal
+        isOpen={isArtifactModalOpen}
+        onClose={() => setIsArtifactModalOpen(false)}
+        contract={contract}
+        initialTab={artifactModalTab}
       />
     </div>
   );

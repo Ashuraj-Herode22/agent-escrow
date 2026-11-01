@@ -1,14 +1,22 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { AgentMessage, AgentRole } from '@/types/escrow';
-import { Terminal, Users, Cpu, ShieldCheck, DollarSign } from 'lucide-react';
+import { AgentMessage, AgentRole, TaskContract } from '@/types/escrow';
+import { Terminal, Users, Cpu, ShieldCheck, DollarSign, Radio, Sparkles, Play, ShieldAlert } from 'lucide-react';
 
 interface AgentTerminalProps {
   messages: AgentMessage[];
+  contract?: TaskContract;
+  onStartSimulation?: () => void;
+  isRunning?: boolean;
 }
 
-export const AgentTerminal: React.FC<AgentTerminalProps> = ({ messages }) => {
+export const AgentTerminal: React.FC<AgentTerminalProps> = ({
+  messages,
+  contract,
+  onStartSimulation,
+  isRunning,
+}) => {
   const [filter, setFilter] = useState<AgentRole | 'ALL'>('ALL');
   const [mounted, setMounted] = useState<boolean>(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -17,7 +25,7 @@ export const AgentTerminal: React.FC<AgentTerminalProps> = ({ messages }) => {
     setMounted(true);
   }, []);
 
-  // Internal-only container scroll: NEVER scrolls the outer browser window!
+  // Internal-only container scroll
   useEffect(() => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
@@ -57,13 +65,13 @@ export const AgentTerminal: React.FC<AgentTerminalProps> = ({ messages }) => {
 
   const formatTimestamp = (isoString: string) => {
     if (!mounted) {
-      return isoString.substring(11, 19) + ' UTC';
+      return '';
     }
     try {
       const d = new Date(isoString);
       return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     } catch {
-      return isoString.substring(11, 19);
+      return '';
     }
   };
 
@@ -79,7 +87,7 @@ export const AgentTerminal: React.FC<AgentTerminalProps> = ({ messages }) => {
           </h3>
         </div>
         <span className="text-xs bg-slate-100 text-slate-600 px-2.5 py-0.5 rounded-full font-semibold border border-slate-200">
-          {messages.length} Events
+          {messages.length} Events Logged
         </span>
       </div>
 
@@ -108,31 +116,92 @@ export const AgentTerminal: React.FC<AgentTerminalProps> = ({ messages }) => {
         })}
       </div>
 
-      {/* Messages Scroll Area */}
-      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto space-y-2.5 pr-1.5">
-        {filteredMessages.map((msg) => {
-          const badge = getAgentBadge(msg.sender);
+      {/* Messages Scroll Area or Purposeful Staged Ready State */}
+      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto space-y-2.5 pr-1.5 flex flex-col">
+        {messages.length > 0 ? (
+          filteredMessages.map((msg) => {
+            const badge = getAgentBadge(msg.sender);
 
-          return (
-            <div
-              key={msg.id}
-              className="p-3.5 rounded-xl bg-[#F8FAFC] border border-slate-200/80 text-xs flex flex-col gap-1.5 transition-all hover:bg-slate-50 hover:border-slate-300"
-            >
-              <div className="flex items-center justify-between">
-                <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md border text-xs font-semibold ${badge.color}`}>
-                  {badge.icon}
-                  <span>{badge.label}</span>
-                </span>
-                <span suppressHydrationWarning className="text-xs text-slate-500 font-medium">
-                  {formatTimestamp(msg.timestamp)}
-                </span>
+            return (
+              <div
+                key={msg.id}
+                className="p-3.5 rounded-xl bg-[#F8FAFC] border border-slate-200/80 text-xs flex flex-col gap-1.5 transition-all hover:bg-slate-50 hover:border-slate-300 animate-in fade-in duration-200"
+              >
+                <div className="flex items-center justify-between">
+                  <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md border text-xs font-semibold ${badge.color}`}>
+                    {badge.icon}
+                    <span>{badge.label}</span>
+                  </span>
+                  <span suppressHydrationWarning className="text-xs text-slate-500 font-medium font-mono">
+                    {formatTimestamp(msg.timestamp)}
+                  </span>
+                </div>
+
+                <div className="font-bold text-slate-900 mt-0.5">{msg.title}</div>
+                <p className="text-slate-600 leading-relaxed font-sans">{msg.content}</p>
               </div>
-
-              <div className="font-bold text-slate-900 mt-0.5">{msg.title}</div>
-              <p className="text-slate-600 leading-relaxed font-sans">{msg.content}</p>
+            );
+          })
+        ) : (
+          /* PURPOSEFUL STAGED REQUISITION CARD (Eliminates awkward initial empty space!) */
+          <div className="my-auto p-5 rounded-2xl bg-[#F8FAFC] border border-slate-200 flex flex-col gap-4 text-xs">
+            <div className="flex items-center justify-between pb-2.5 border-b border-slate-200/60">
+              <span className="font-bold text-slate-800 flex items-center gap-2">
+                <Radio className="w-4 h-4 text-[#0070BA] animate-pulse" />
+                <span>Requisition Staged & Ready</span>
+              </span>
+              <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                Swarm Standby
+              </span>
             </div>
-          );
-        })}
+
+            <div className="space-y-1.5">
+              <div className="text-sm font-bold text-slate-900">
+                {contract?.title || 'Autonomous Task Commission'}
+              </div>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                {contract?.description || 'Awaiting execution trigger to broadcast task specifications to autonomous worker agents.'}
+              </p>
+            </div>
+
+            {/* Agent Swarm Readiness Checklist */}
+            <div className="grid grid-cols-2 gap-2 text-[11px] bg-white p-3 rounded-xl border border-slate-200">
+              <div className="flex items-center gap-2 text-slate-700">
+                <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                <span><strong>Buyer-01:</strong> Ready to broadcast</span>
+              </div>
+              <div className="flex items-center gap-2 text-slate-700">
+                <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                <span><strong>Coder-01:</strong> Listening for bids</span>
+              </div>
+              <div className="flex items-center gap-2 text-slate-700">
+                <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                <span><strong>Arbiter-01:</strong> AST jail armed</span>
+              </div>
+              <div className="flex items-center gap-2 text-slate-700">
+                <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                <span><strong>PayPal Vault:</strong> Intent=AUTHORIZE</span>
+              </div>
+            </div>
+
+            {/* CTA in the box */}
+            <div className="flex items-center justify-between pt-1">
+              <span className="text-slate-500 text-[11px]">
+                Click <strong>Run Demo</strong> or <strong>Next</strong> to start live execution.
+              </span>
+              {onStartSimulation && (
+                <button
+                  onClick={onStartSimulation}
+                  disabled={isRunning}
+                  className="px-3.5 py-1.5 rounded-full bg-[#0070BA] hover:bg-[#003087] text-white font-bold text-xs flex items-center gap-1.5 shadow-2xs transition-all cursor-pointer active:scale-98"
+                >
+                  <Play className="w-3 h-3 fill-current" />
+                  <span>Start Live Demo</span>
+                </button>
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
     </div>

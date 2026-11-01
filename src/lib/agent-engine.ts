@@ -140,7 +140,7 @@ export function createInitialContract(presetId: 'SUCCESS_FLOW' | 'HEALING_FLOW' 
     workerAgentId: 'Coder-01',
     arbiterAgentId: 'Arbiter-01',
     status: 'INITIALIZING',
-    createdAt: '2026-11-01T12:00:00.000Z',
+    createdAt: new Date().toISOString(),
     revisionAttempt: 1,
     maxRevisions: 3,
     isPatched: false,
@@ -167,23 +167,8 @@ export function createInitialContract(presetId: 'SUCCESS_FLOW' | 'HEALING_FLOW' 
     },
   };
 
-  const initialMessages: AgentMessage[] = [
-    {
-      id: 'msg-init-1',
-      timestamp: '2026-11-01T12:00:00.000Z',
-      sender: 'BUYER_AGENT',
-      title: 'Contract Requisition Broadcasted',
-      content: `I am commissioning autonomous task: "${preset.taskTitle}". Budget allocated: $${preset.budgetUSD.toFixed(2)} USD. Cure period active: up to 3 revision attempts.`,
-      stepIndex: 1,
-      type: 'TASK_SPEC',
-      dataPayload: {
-        budgetUSD: preset.budgetUSD,
-        criteria: ['Zero critical vulnerabilities (CWE-89)', 'Sub-50ms latency', '100% test suite pass', 'Max 3 revisions'],
-      },
-    },
-  ];
-
-  return { contract, messages: initialMessages };
+  // Initially empty at Step 0: The terminal renders the Staged Requisition Waiting State!
+  return { contract, messages: [] };
 }
 
 /**
@@ -201,16 +186,31 @@ export function getStepDetails(
   revisionAttempt?: number;
   isPatched?: boolean;
 } {
+  const preset = SIMULATION_PRESETS[presetId];
   const isSuccess = presetId === 'SUCCESS_FLOW';
   const isHealing = presetId === 'HEALING_FLOW';
   const now = new Date().toISOString();
 
   // -------------------------------------------------------------
-  // FLOW 1: SUCCESS_FLOW (Instant Passing 6 Steps)
+  // FLOW 1: SUCCESS_FLOW (Instant Passing 7 Steps)
   // -------------------------------------------------------------
   if (isSuccess) {
     switch (currentStep) {
       case 1:
+        return {
+          nextStatus: 'NEGOTIATING',
+          message: {
+            id: `msg-${Date.now()}-1`,
+            timestamp: now,
+            sender: 'BUYER_AGENT',
+            title: 'Contract Requisition Broadcasted',
+            content: `I am commissioning autonomous task: "${preset.taskTitle}". Budget allocated: $${preset.budgetUSD.toFixed(2)} USD. Cure period active: up to 3 revision attempts.`,
+            stepIndex: 1,
+            type: 'TASK_SPEC',
+            dataPayload: { budgetUSD: preset.budgetUSD, criteria: ['Sub-50ms latency', '100% PyTest pass'] },
+          },
+        };
+      case 2:
         return {
           nextStatus: 'NEGOTIATING',
           message: {
@@ -224,7 +224,7 @@ export function getStepDetails(
             dataPayload: { workerId: 'Coder-01', slaMinutes: 5, bidAmountUSD: 75.00 },
           },
         };
-      case 2:
+      case 3:
         return {
           nextStatus: 'WAITING_DEPOSIT',
           message: {
@@ -244,7 +244,7 @@ export function getStepDetails(
             },
           },
         };
-      case 3:
+      case 4:
         return {
           nextStatus: 'ESCROW_LOCKED',
           message: {
@@ -266,7 +266,7 @@ export function getStepDetails(
             },
           },
         };
-      case 4:
+      case 5:
         return {
           nextStatus: 'DELIVERED_AUDITING',
           codeArtifact: {
@@ -286,7 +286,7 @@ export function getStepDetails(
             dataPayload: { filename: 'sentiment_engine.py', loc: 42, attempt: 1 },
           },
         };
-      case 5:
+      case 6:
         return {
           nextStatus: 'ARBITRATION_PASSED',
           milestoneUpdates: [
@@ -336,7 +336,7 @@ export function getStepDetails(
             dataPayload: { testsPassed: 6, testsFailed: 0, verdict: 'RELEASE_FUNDS_AUTHORIZED', confidenceScore: 0.998 },
           },
         };
-      case 6:
+      case 7:
         return {
           nextStatus: 'PAYOUT_COMPLETED',
           message: {
@@ -367,11 +367,25 @@ export function getStepDetails(
   }
 
   // -------------------------------------------------------------
-  // FLOW 2: HEALING_FLOW (Self-Healing Revision Loop - 8 Steps)
+  // FLOW 2: HEALING_FLOW (Self-Healing Revision Loop - 9 Steps)
   // -------------------------------------------------------------
   if (isHealing) {
     switch (currentStep) {
       case 1:
+        return {
+          nextStatus: 'NEGOTIATING',
+          message: {
+            id: `msg-${Date.now()}-1`,
+            timestamp: now,
+            sender: 'BUYER_AGENT',
+            title: 'Contract Requisition Broadcasted',
+            content: `I am commissioning autonomous task: "${preset.taskTitle}". Budget allocated: $${preset.budgetUSD.toFixed(2)} USD. Cure period active: up to 3 revision attempts.`,
+            stepIndex: 1,
+            type: 'TASK_SPEC',
+            dataPayload: { budgetUSD: preset.budgetUSD, criteria: ['Zero CWE-89 injection', '3-attempt cure window'] },
+          },
+        };
+      case 2:
         return {
           nextStatus: 'NEGOTIATING',
           message: {
@@ -385,7 +399,7 @@ export function getStepDetails(
             dataPayload: { workerId: 'Coder-01', bidAmountUSD: 120.00, curePeriodAttempts: 3 },
           },
         };
-      case 2:
+      case 3:
         return {
           nextStatus: 'WAITING_DEPOSIT',
           message: {
@@ -399,7 +413,7 @@ export function getStepDetails(
             dataPayload: { order_id: paypalData?.orderId || 'ORD-98213', intent: 'AUTHORIZE', amount: { total: '120.00', currency: 'USD' } },
           },
         };
-      case 3:
+      case 4:
         return {
           nextStatus: 'ESCROW_LOCKED',
           message: {
@@ -413,7 +427,7 @@ export function getStepDetails(
             dataPayload: { authorization_id: paypalData?.authId || 'AUTH-77312', amount: { total: '120.00', currency: 'USD' }, maxRevisions: 3 },
           },
         };
-      case 4:
+      case 5:
         return {
           nextStatus: 'DELIVERED_AUDITING',
           revisionAttempt: 1,
@@ -434,7 +448,7 @@ export function getStepDetails(
             dataPayload: { filename: 'auth_service.py', attempt: 1, maxAttempts: 3 },
           },
         };
-      case 5:
+      case 6:
         return {
           nextStatus: 'REVISION_REQUESTED',
           revisionAttempt: 1,
@@ -490,7 +504,7 @@ export function getStepDetails(
             },
           },
         };
-      case 6:
+      case 7:
         // Coder Agent self-heals by synthesizing parameterized patch!
         return {
           nextStatus: 'DELIVERED_AUDITING',
@@ -517,7 +531,7 @@ export function getStepDetails(
             },
           },
         };
-      case 7:
+      case 8:
         // Arbiter re-evaluates patched code: 100% pass!
         return {
           nextStatus: 'ARBITRATION_PASSED',
@@ -575,7 +589,7 @@ export function getStepDetails(
             },
           },
         };
-      case 8:
+      case 9:
         return {
           nextStatus: 'PAYOUT_COMPLETED',
           revisionAttempt: 2,
@@ -606,10 +620,24 @@ export function getStepDetails(
   }
 
   // -------------------------------------------------------------
-  // FLOW 3: DISPUTE_FLOW (Quota Exhausted -> Void Refund 7 Steps)
+  // FLOW 3: DISPUTE_FLOW (Quota Exhausted -> Void Refund 8 Steps)
   // -------------------------------------------------------------
   switch (currentStep) {
     case 1:
+      return {
+        nextStatus: 'NEGOTIATING',
+        message: {
+          id: `msg-${Date.now()}-1`,
+          timestamp: now,
+          sender: 'BUYER_AGENT',
+          title: 'Contract Requisition Broadcasted',
+          content: `I am commissioning autonomous task: "${preset.taskTitle}". Budget allocated: $${preset.budgetUSD.toFixed(2)} USD. Cure period active: up to 3 revision attempts.`,
+          stepIndex: 1,
+          type: 'TASK_SPEC',
+          dataPayload: { budgetUSD: preset.budgetUSD, criteria: ['Zero CWE-89 injection'] },
+        },
+      };
+    case 2:
       return {
         nextStatus: 'NEGOTIATING',
         message: {
@@ -623,7 +651,7 @@ export function getStepDetails(
           dataPayload: { workerId: 'Coder-01', bidAmountUSD: 120.00 },
         },
       };
-    case 2:
+    case 3:
       return {
         nextStatus: 'WAITING_DEPOSIT',
         message: {
@@ -637,7 +665,7 @@ export function getStepDetails(
           dataPayload: { order_id: paypalData?.orderId || 'ORD-98213', intent: 'AUTHORIZE', amount: { total: '120.00', currency: 'USD' } },
         },
       };
-    case 3:
+    case 4:
       return {
         nextStatus: 'ESCROW_LOCKED',
         message: {
@@ -651,7 +679,7 @@ export function getStepDetails(
           dataPayload: { authorization_id: paypalData?.authId || 'AUTH-77312', amount: { total: '120.00', currency: 'USD' } },
         },
       };
-    case 4:
+    case 5:
       return {
         nextStatus: 'DELIVERED_AUDITING',
         revisionAttempt: 1,
@@ -672,7 +700,7 @@ export function getStepDetails(
           dataPayload: { filename: 'auth_service.py', attempt: 1 },
         },
       };
-    case 5:
+    case 6:
       return {
         nextStatus: 'REVISION_REQUESTED',
         revisionAttempt: 2,
@@ -715,7 +743,7 @@ export function getStepDetails(
           dataPayload: { attempt: 2, maxAttempts: 3, cweDetected: ['CWE-89'] },
         },
       };
-    case 6:
+    case 7:
       return {
         nextStatus: 'ARBITRATION_FAILED',
         revisionAttempt: 3,
@@ -730,7 +758,7 @@ export function getStepDetails(
           dataPayload: { verdict: 'PAYOUT_DENIED_VOID_ESCROW', quotaExhausted: true },
         },
       };
-    case 7:
+    case 8:
       return {
         nextStatus: 'DISPUTE_REFUNDED',
         revisionAttempt: 3,
