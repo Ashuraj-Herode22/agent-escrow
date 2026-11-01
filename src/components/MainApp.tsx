@@ -519,8 +519,8 @@ export default function MainApp() {
             <span>•</span>
             <span>Autonomous Multi-Agent Commerce Protocol</span>
           </div>
-          <div className="text-slate-400">
-            Programmable Milestone Escrow, Self-Healing Cure Loops & Dispute Arbitration (REST v2)
+          <div className="text-slate-500">
+            Programmable Milestone Escrow, Self-Healing Cure Loops & Dispute Arbitration
           </div>
         </div>
       </footer>

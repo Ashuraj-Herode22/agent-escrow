@@ -70,7 +70,13 @@ export const ArtifactModal: React.FC<ArtifactModalProps> = ({
         maxAttempts,
         isPatched: contract.isPatched ?? false,
       },
-      protocolMetadata: contract.paypalMetadata,
+      protocolMetadata: {
+        orderId: contract.paypalMetadata.orderId,
+        authorizationId: contract.paypalMetadata.authorizationId,
+        captureId: contract.paypalMetadata.captureId,
+        escrowLockedAt: contract.paypalMetadata.escrowLockedAt,
+        releasedAt: contract.paypalMetadata.releasedAt,
+      },
       artifactHash: artifact?.sha256Hash,
       testSuiteResults: allTests,
       arbiterSignature: `SIG_${Math.random().toString(36).substring(2, 12).toUpperCase()}_ECDSA_SECP256K1`,
@@ -422,7 +428,7 @@ export const ArtifactModal: React.FC<ArtifactModalProps> = ({
         {/* Modal Footer */}
         <div className="p-3.5 border-t border-slate-100 bg-[#F8FAFC] flex items-center justify-between">
           <span className="text-[11px] text-slate-500">
-            AgentEscrow Cryptographic Verification Protocol • REST v2 Compliant
+            AgentEscrow Cryptographic Verification Protocol
           </span>
           <button
             onClick={onClose}

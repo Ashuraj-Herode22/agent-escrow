@@ -86,7 +86,7 @@ export const PolicyModal: React.FC<PolicyModalProps> = ({ isOpen, onClose }) => 
         {/* Footer */}
         <div className="p-4 border-t border-slate-100 bg-[#F8FAFC] flex items-center justify-between">
           <span className="text-[11px] text-slate-500">
-            Compliant with OWASP Top 10 & REST API v2
+            Compliant with OWASP Top 10 & Zero-Trust Standards
           </span>
           <button
             onClick={onClose}

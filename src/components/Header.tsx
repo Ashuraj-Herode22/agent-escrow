@@ -88,9 +88,6 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
           <div className="flex items-baseline gap-2">
             <span className="font-extrabold text-base tracking-tight text-slate-900">AgentEscrow</span>
-            <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">
-              REST v2
-            </span>
           </div>
         </div>
 

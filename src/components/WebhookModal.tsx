@@ -85,7 +85,7 @@ export const WebhookModal: React.FC<WebhookModalProps> = ({ isOpen, onClose, con
             </div>
             <div>
               <h3 className="text-sm font-bold text-slate-900">PayPal Webhook Event Telemetry</h3>
-              <p className="text-xs text-slate-500">Cryptographically Signed REST v2 Webhook Payloads</p>
+              <p className="text-xs text-slate-500">Cryptographically Signed Webhook Payloads</p>
             </div>
           </div>
           <button onClick={onClose} className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 cursor-pointer">

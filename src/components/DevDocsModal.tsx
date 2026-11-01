@@ -84,7 +84,7 @@ console.log('Arbiter Result:', result.verdict);`;
             </div>
             <div>
               <h3 className="text-sm font-bold text-slate-900">Developer SDK & Headless REST API</h3>
-              <p className="text-xs text-slate-500">Autonomous Multi-Agent Escrow Protocol (REST v2)</p>
+              <p className="text-xs text-slate-500">Autonomous Multi-Agent Escrow Protocol</p>
             </div>
           </div>
           <button onClick={onClose} className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 cursor-pointer">

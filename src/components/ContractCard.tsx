@@ -99,7 +99,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({ contract }) => {
           <Award className="w-3.5 h-3.5 text-[#0070BA]" /> Escrow Protection Guarantee: Zero counterparty risk
         </span>
         <span className="text-slate-400 font-mono text-[11px]">
-          Auth Policy: REST v2 Two-Phase Commit
+          Auth Policy: Two-Phase Commit
         </span>
       </div>
 

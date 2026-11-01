@@ -109,7 +109,7 @@ export const PayPalVaultCard: React.FC<PayPalVaultCardProps> = ({ contract, onSi
 
       {/* Developer note */}
       <div className="text-[11px] text-slate-500 flex items-center justify-between pt-1 border-t border-slate-200/60 font-medium">
-        <span>REST v2 Orders & Authorizations Engine</span>
+        <span>Orders & Authorizations Engine</span>
         <span className="flex items-center gap-1 text-[#0070BA] hover:underline cursor-pointer">
           Sandbox Node <ExternalLink className="w-2.5 h-2.5" />
         </span>
