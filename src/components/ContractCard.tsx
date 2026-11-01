@@ -15,8 +15,8 @@ export const ContractCard: React.FC<ContractCardProps> = ({ contract }) => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 mb-5 gap-2">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-[#F0F5FA] border border-[#D0E2F2] flex items-center justify-center text-[#003087]">
-            <FileCode className="w-4 h-4 text-[#0070BA]" />
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#003087] to-[#0070BA] flex items-center justify-center text-white shadow-2xs">
+            <FileCode className="w-4 h-4 text-white" />
           </div>
           <div>
             <h2 className="text-sm font-bold text-slate-900">Programmable Contract Milestones</h2>
@@ -28,7 +28,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({ contract }) => {
           <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
             Contract #{contract.id}
           </span>
-          <span className="text-xs font-bold text-[#003087] bg-[#F0F5FA] px-2.5 py-1 rounded-full border border-[#D0E2F2]">
+          <span className="text-xs font-bold text-slate-900 bg-[#F0F5FA] px-2.5 py-1 rounded-full border border-[#D0E2F2]">
             Total: ${contract.totalBudgetUSD.toFixed(2)} USD
           </span>
         </div>
@@ -58,7 +58,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({ contract }) => {
                   </span>
                   <span className="truncate">{m.title}</span>
                 </span>
-                <span className="font-extrabold text-[#003087] shrink-0 text-sm">
+                <span className="font-extrabold text-slate-900 shrink-0 text-sm">
                   ${m.amountUSD.toFixed(2)}
                 </span>
               </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { X, Terminal, Code2, Copy, CheckCircle2, ExternalLink } from 'lucide-react';
+import { X, Code2, Copy, CheckCircle2 } from 'lucide-react';
 
 interface DevDocsModalProps {
   isOpen: boolean;
@@ -74,13 +74,13 @@ console.log('Arbiter Result:', result.verdict);`;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4">
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-2xl w-full p-6 text-xs flex flex-col gap-4">
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-2xl w-full p-6 text-xs flex flex-col gap-4">
         
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-[#F0F5FA] border border-[#D0E2F2] flex items-center justify-center text-[#003087]">
-              <Code2 className="w-4 h-4 text-[#0070BA]" />
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#003087] to-[#0070BA] flex items-center justify-center text-white shadow-2xs">
+              <Code2 className="w-4 h-4 text-white" />
             </div>
             <div>
               <h3 className="text-sm font-bold text-slate-900">Developer SDK & Headless REST API</h3>
@@ -92,45 +92,45 @@ console.log('Arbiter Result:', result.verdict);`;
           </button>
         </div>
 
-        {/* Tab Selector */}
-        <div className="grid grid-cols-3 bg-slate-100/80 p-0.5 rounded-lg text-center font-medium border border-slate-200/50">
+        {/* Clean Symmetrical Tab Selector (No Awkward 2-Line Text Wrapping!) */}
+        <div className="grid grid-cols-3 bg-slate-100/90 p-1 rounded-xl text-center font-medium border border-slate-200/60">
           <button
             onClick={() => setActiveTab('PYTHON')}
-            className={`py-1.5 rounded-md transition-all cursor-pointer font-bold ${
+            className={`py-2 rounded-lg transition-all cursor-pointer text-xs font-bold ${
               activeTab === 'PYTHON'
-                ? 'bg-white text-[#003087] shadow-2xs'
+                ? 'bg-white text-slate-900 shadow-2xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            Python (CrewAI / AutoGen)
+            Python SDK
           </button>
           <button
             onClick={() => setActiveTab('TYPESCRIPT')}
-            className={`py-1.5 rounded-md transition-all cursor-pointer font-bold ${
+            className={`py-2 rounded-lg transition-all cursor-pointer text-xs font-bold ${
               activeTab === 'TYPESCRIPT'
-                ? 'bg-white text-[#003087] shadow-2xs'
+                ? 'bg-white text-slate-900 shadow-2xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            TypeScript (LangChain / Vercel AI)
+            TypeScript SDK
           </button>
           <button
             onClick={() => setActiveTab('CURL')}
-            className={`py-1.5 rounded-md transition-all cursor-pointer font-bold ${
+            className={`py-2 rounded-lg transition-all cursor-pointer text-xs font-bold ${
               activeTab === 'CURL'
-                ? 'bg-white text-[#003087] shadow-2xs'
+                ? 'bg-white text-slate-900 shadow-2xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            Headless cURL Endpoint
+            cURL API
           </button>
         </div>
 
         {/* Code Snippet Box */}
-        <div className="relative rounded-xl border border-slate-200 bg-[#F8FAFC] p-4 font-mono text-xs text-slate-800 leading-relaxed overflow-x-auto max-h-[280px]">
+        <div className="relative rounded-xl border border-slate-200 bg-[#F8FAFC] p-4 font-mono text-xs text-slate-900 leading-relaxed overflow-x-auto max-h-[300px]">
           <button
             onClick={handleCopy}
-            className="absolute top-3 right-3 px-2.5 py-1 rounded-md bg-white border border-slate-200 shadow-2xs text-xs font-sans font-semibold text-slate-700 hover:text-[#003087] flex items-center gap-1.5 transition-all cursor-pointer"
+            className="absolute top-3 right-3 px-2.5 py-1 rounded-md bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center gap-1.5 shadow-2xs font-sans text-[11px] font-semibold transition-all cursor-pointer active:scale-98"
           >
             {copied ? (
               <>
@@ -139,7 +139,7 @@ console.log('Arbiter Result:', result.verdict);`;
               </>
             ) : (
               <>
-                <Copy className="w-3.5 h-3.5" />
+                <Copy className="w-3.5 h-3.5 text-slate-500" />
                 <span>Copy</span>
               </>
             )}
@@ -147,19 +147,13 @@ console.log('Arbiter Result:', result.verdict);`;
           <pre>{currentSnippet}</pre>
         </div>
 
-        {/* Integration Notes */}
-        <div className="bg-[#F0F5FA] border border-[#D0E2F2] rounded-xl p-3 flex items-start gap-2.5">
-          <Terminal className="w-4 h-4 text-[#0070BA] shrink-0 mt-0.5" />
-          <div className="space-y-1">
-            <p className="font-bold text-slate-800">Seamless Drop-in Agent Architecture:</p>
-            <p className="text-slate-600">
-              Any external autonomous agent can commission contracts and escrow funds via REST v2 endpoints. Funds remain secured under PayPal buyer authorization until the cryptographic release token is issued by the AI Arbiter.
-            </p>
-          </div>
+        {/* Footer */}
+        <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-[11px] text-slate-500">
+          <span>Production Endpoints: /api/v1/escrow/requisition</span>
+          <span>Zero External Dependencies Required</span>
         </div>
 
       </div>
     </div>
   );
 };
-

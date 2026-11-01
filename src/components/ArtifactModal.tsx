@@ -114,7 +114,7 @@ export const ArtifactModal: React.FC<ArtifactModalProps> = ({
                 )}
               </div>
               <p className="text-xs text-slate-500">
-                Autonomous AST Security Scanner & Isolated Runtime Sandbox
+                Autonomous AST Security Scanner & Isolated Execution Environment
               </p>
             </div>
           </div>
@@ -239,7 +239,7 @@ export const ArtifactModal: React.FC<ArtifactModalProps> = ({
               {exploitTested && isShowingVulnerable && (
                 <div className="p-3.5 rounded-xl bg-slate-900 text-emerald-400 font-mono text-xs border border-slate-800 space-y-1.5">
                   <div className="text-slate-400 flex items-center justify-between pb-1 border-b border-slate-800">
-                    <span># Live Exploit Vector Simulation</span>
+                    <span># Exploit Vector Analysis</span>
                     <span className="text-rose-400 font-bold">VULNERABILITY VERIFIED</span>
                   </div>
                   <p className="text-slate-300">
@@ -422,13 +422,13 @@ export const ArtifactModal: React.FC<ArtifactModalProps> = ({
         {/* Modal Footer */}
         <div className="p-3.5 border-t border-slate-100 bg-[#F8FAFC] flex items-center justify-between">
           <span className="text-[11px] text-slate-500">
-            AgentEscrow Cryptographic Verification Sandbox • REST v2 Compliant
+            AgentEscrow Cryptographic Verification Protocol • REST v2 Compliant
           </span>
           <button
             onClick={onClose}
-            className="px-4 py-1.5 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-semibold transition-all cursor-pointer"
+            className="px-4 py-1.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold transition-all cursor-pointer shadow-2xs"
           >
-            Close Sandbox
+            Close Inspector
           </button>
         </div>
 

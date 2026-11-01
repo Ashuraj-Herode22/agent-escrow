@@ -14,10 +14,8 @@ import {
   AlertOctagon,
   ChevronDown,
   MoreHorizontal,
-  BookOpen,
 } from 'lucide-react';
 import { SimulationPreset } from '@/types/escrow';
-import { SIMULATION_PRESETS } from '@/lib/agent-engine';
 
 interface HeaderProps {
   currentPreset: SimulationPreset;
@@ -53,7 +51,6 @@ export const Header: React.FC<HeaderProps> = ({
   const scenarioRef = useRef<HTMLDivElement>(null);
   const moreRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdowns on outside click
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (scenarioRef.current && !scenarioRef.current.contains(e.target as Node)) {
@@ -84,14 +81,14 @@ export const Header: React.FC<HeaderProps> = ({
     <header className="border-b border-slate-200/90 bg-white sticky top-0 z-50">
       <div className="max-w-[1400px] mx-auto px-6 h-15 flex items-center justify-between gap-4">
         
-        {/* Left: Clean Brand */}
+        {/* Left: Clean Brand with Dual PayPal Blue Background Accent */}
         <div className="flex items-center gap-3 shrink-0">
-          <div className="w-8 h-8 rounded-xl bg-[#F0F5FA] border border-[#D0E2F2] flex items-center justify-center text-[#003087]">
-            <Shield className="w-4 h-4 fill-[#0070BA]/20 stroke-[#003087]" />
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#003087] to-[#0070BA] flex items-center justify-center text-white shadow-2xs">
+            <Shield className="w-4 h-4 fill-white/20 stroke-white" />
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="font-extrabold text-base tracking-tight text-[#003087]">AgentEscrow</span>
-            <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">
+            <span className="font-extrabold text-base tracking-tight text-slate-900">AgentEscrow</span>
+            <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">
               REST v2
             </span>
           </div>
@@ -104,13 +101,13 @@ export const Header: React.FC<HeaderProps> = ({
             disabled={isRunning}
             className={`h-9 px-3.5 rounded-full border text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer shadow-2xs ${
               isScenarioMenuOpen
-                ? 'bg-[#F0F5FA] border-[#0070BA] text-[#003087]'
-                : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-700'
+                ? 'bg-[#F0F5FA] border-[#003087] text-slate-900'
+                : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-800'
             }`}
           >
             {getScenarioIcon(currentPreset.id)}
             <span className="font-bold text-slate-900">{currentPreset.name.split('&')[0].trim()}</span>
-            <span className="text-slate-400 font-normal">(${currentPreset.budgetUSD.toFixed(0)})</span>
+            <span className="text-slate-500 font-normal">(${currentPreset.budgetUSD.toFixed(0)})</span>
             <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform ${isScenarioMenuOpen ? 'rotate-180' : ''}`} />
           </button>
 
@@ -118,7 +115,7 @@ export const Header: React.FC<HeaderProps> = ({
           {isScenarioMenuOpen && (
             <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-80 bg-white rounded-2xl border border-slate-200 shadow-xl p-2 z-50 animate-in fade-in duration-150">
               <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-2.5 py-1.5">
-                Select Simulation Scenario
+                Select Protocol Flow
               </div>
 
               {/* Scenario 1 */}
@@ -190,7 +187,7 @@ export const Header: React.FC<HeaderProps> = ({
           )}
         </div>
 
-        {/* Right: Clean Action Controls */}
+        {/* Right: Clean Action Controls with Dual PayPal Blue Background CTA */}
         <div className="flex items-center gap-2.5 shrink-0">
           
           {/* Custom Task Pill */}
@@ -198,7 +195,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               onClick={onOpenCustomTask}
               disabled={isRunning}
-              className="h-9 px-3 rounded-full text-xs font-semibold bg-[#F0F5FA] hover:bg-[#E2EDF8] text-[#003087] border border-[#D0E2F2] flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs active:scale-98"
+              className="h-9 px-3 rounded-full text-xs font-semibold bg-[#F0F5FA] hover:bg-[#E2EDF8] text-slate-900 border border-[#D0E2F2] flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs active:scale-98"
               title="Commission custom autonomous prompt"
             >
               <Sparkles className="w-3.5 h-3.5 text-[#0070BA]" />
@@ -212,7 +209,7 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={() => setIsMoreMenuOpen(!isMoreMenuOpen)}
               disabled={isRunning}
               className="h-9 w-9 rounded-full bg-white hover:bg-slate-50 border border-slate-200 text-slate-600 flex items-center justify-center transition-all cursor-pointer shadow-2xs"
-              title="Governance, Policies & SDK Docs"
+              title="Governance & SDK Docs"
             >
               <MoreHorizontal className="w-4 h-4" />
             </button>
@@ -225,10 +222,10 @@ export const Header: React.FC<HeaderProps> = ({
                       onOpenPolicyModal();
                       setIsMoreMenuOpen(false);
                     }}
-                    className="w-full text-left px-3 py-2 rounded-xl text-xs font-medium text-slate-700 hover:bg-slate-50 flex items-center gap-2 transition-colors cursor-pointer"
+                    className="w-full text-left px-3 py-2 rounded-xl text-xs font-medium text-slate-800 hover:bg-slate-50 flex items-center gap-2 transition-colors cursor-pointer"
                   >
-                    <ShieldCheck className="w-4 h-4 text-indigo-600" />
-                    <span>Security & Cure Policy</span>
+                    <ShieldCheck className="w-4 h-4 text-slate-600" />
+                    <span>Security & Governance Policy</span>
                   </button>
                 )}
 
@@ -238,9 +235,9 @@ export const Header: React.FC<HeaderProps> = ({
                       onOpenSdkDocs();
                       setIsMoreMenuOpen(false);
                     }}
-                    className="w-full text-left px-3 py-2 rounded-xl text-xs font-medium text-slate-700 hover:bg-slate-50 flex items-center gap-2 transition-colors cursor-pointer"
+                    className="w-full text-left px-3 py-2 rounded-xl text-xs font-medium text-slate-800 hover:bg-slate-50 flex items-center gap-2 transition-colors cursor-pointer"
                   >
-                    <Code2 className="w-4 h-4 text-[#0070BA]" />
+                    <Code2 className="w-4 h-4 text-slate-600" />
                     <span>Python & TypeScript SDK</span>
                   </button>
                 )}
@@ -250,25 +247,25 @@ export const Header: React.FC<HeaderProps> = ({
 
           <div className="h-4 w-px bg-slate-200 mx-1" />
 
-          {/* Run Flow (Primary CTA) */}
+          {/* Execute Flow (Primary CTA with PayPal Dual-Blue Gradient Background) */}
           <button
             onClick={onStartSimulation}
             disabled={isRunning || currentStep >= totalSteps}
             className={`h-9 px-4 rounded-full text-xs font-bold flex items-center gap-2 transition-all cursor-pointer ${
               currentStep >= totalSteps
                 ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
-                : 'bg-[#0070BA] hover:bg-[#003087] text-white shadow-xs active:scale-98'
+                : 'bg-gradient-to-r from-[#003087] to-[#0070BA] text-white shadow-xs hover:opacity-95 active:scale-98'
             }`}
           >
             <Play className="w-3.5 h-3.5 fill-current" />
-            <span>{isRunning ? 'Running...' : 'Run Demo'}</span>
+            <span>{isRunning ? 'Executing...' : 'Execute Flow'}</span>
           </button>
 
           {/* Step Button */}
           <button
             onClick={onNextStep}
             disabled={isRunning || currentStep >= totalSteps}
-            className="h-9 px-3 rounded-full text-xs font-semibold bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 flex items-center gap-1.5 transition-all active:scale-98 disabled:opacity-40 cursor-pointer shadow-2xs"
+            className="h-9 px-3 rounded-full text-xs font-semibold bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 flex items-center gap-1.5 transition-all active:scale-98 disabled:opacity-40 cursor-pointer shadow-2xs"
             title="Step forward manually"
           >
             <span>Next</span>

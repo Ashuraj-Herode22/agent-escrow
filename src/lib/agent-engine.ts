@@ -279,7 +279,7 @@ export function getStepDetails(
             id: `msg-${Date.now()}-5`,
             timestamp: now,
             sender: 'WORKER_AGENT',
-            title: 'Digital Artifact Delivered to Sandbox',
+            title: 'Digital Artifact Delivered to Engine',
             content: 'Source code delivered (sentiment_engine.py). Deliverable signed with SHA-256 hash. Requesting AI Arbiter inspection.',
             stepIndex: 5,
             type: 'CODE_SUBMITTED',

@@ -186,17 +186,17 @@ export const AgentTerminal: React.FC<AgentTerminalProps> = ({
 
             {/* CTA in the box */}
             <div className="flex items-center justify-between pt-1">
-              <span className="text-slate-500 text-[11px]">
-                Click <strong>Run Demo</strong> or <strong>Next</strong> to start live execution.
+              <span className="text-slate-600 text-[11px]">
+                Click <strong>Execute Flow</strong> or <strong>Next</strong> to start autonomous execution.
               </span>
               {onStartSimulation && (
                 <button
                   onClick={onStartSimulation}
                   disabled={isRunning}
-                  className="px-3.5 py-1.5 rounded-full bg-[#0070BA] hover:bg-[#003087] text-white font-bold text-xs flex items-center gap-1.5 shadow-2xs transition-all cursor-pointer active:scale-98"
+                  className="px-4 py-1.5 rounded-full bg-gradient-to-r from-[#003087] to-[#0070BA] hover:opacity-95 text-white font-bold text-xs flex items-center gap-1.5 shadow-2xs transition-all cursor-pointer active:scale-98"
                 >
                   <Play className="w-3 h-3 fill-current" />
-                  <span>Start Live Demo</span>
+                  <span>Execute Contract</span>
                 </button>
               )}
             </div>

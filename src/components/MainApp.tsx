@@ -140,7 +140,7 @@ export default function MainApp() {
           id: `msg-${Date.now()}-4`,
           timestamp: now,
           sender: 'WORKER_AGENT',
-          title: 'Digital Artifact Delivered to Sandbox',
+          title: 'Digital Artifact Delivered to Engine',
           content: `Source code delivered (${finalContract.codeArtifact?.filename || 'service.py'}). Deliverable signed with SHA-256 hash. Requesting AI Arbiter inspection.`,
           stepIndex: 4,
           type: 'CODE_SUBMITTED',
@@ -515,7 +515,7 @@ export default function MainApp() {
       <footer className="border-t border-slate-200 bg-white px-6 py-4 text-xs text-slate-500 font-medium mt-auto">
         <div className="max-w-[1400px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <span className="font-extrabold text-[#003087]">AgentEscrow</span>
+            <span className="font-extrabold text-slate-900">AgentEscrow</span>
             <span>•</span>
             <span>Autonomous Multi-Agent Commerce Protocol</span>
           </div>
