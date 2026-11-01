@@ -189,7 +189,7 @@ export const AgentTerminal: React.FC<AgentTerminalProps> = ({
                 <button
                   onClick={onStartSimulation}
                   disabled={isRunning}
-                  className="px-4 py-1.5 rounded-full bg-[#003087] hover:bg-[#002266] text-white font-bold text-xs flex items-center gap-1.5 shadow-xs transition-all cursor-pointer active:scale-98"
+                  className="px-4 py-1.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center gap-1.5 shadow-xs transition-all cursor-pointer active:scale-98"
                 >
                   <Play className="w-3 h-3 fill-current" />
                   <span>Execute Contract</span>

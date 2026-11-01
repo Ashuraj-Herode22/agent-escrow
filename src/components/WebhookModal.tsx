@@ -80,7 +80,7 @@ export const WebhookModal: React.FC<WebhookModalProps> = ({ isOpen, onClose, con
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-[#003087] flex items-center justify-center text-white">
+            <div className="w-7 h-7 rounded-lg bg-slate-900 flex items-center justify-center text-white">
               <Webhook className="w-4 h-4 text-white" />
             </div>
             <div>

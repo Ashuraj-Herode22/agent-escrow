@@ -77,7 +77,7 @@ export const CustomTaskModal: React.FC<CustomTaskModalProps> = ({ isOpen, onClos
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-[#003087] flex items-center justify-center text-white">
+            <div className="w-7 h-7 rounded-lg bg-slate-900 flex items-center justify-center text-white">
               <Sparkles className="w-4 h-4 text-white" />
             </div>
             <div>
@@ -151,7 +151,7 @@ export const CustomTaskModal: React.FC<CustomTaskModalProps> = ({ isOpen, onClos
           <button
             type="submit"
             disabled={loading || !taskTitle.trim()}
-            className="w-full mt-2 py-2.5 rounded-full bg-[#003087] hover:bg-[#002266] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-xs transition-all active:scale-98 cursor-pointer disabled:opacity-50"
+            className="w-full mt-2 py-2.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-xs transition-all active:scale-98 cursor-pointer disabled:opacity-50"
           >
             {loading ? (
               <>

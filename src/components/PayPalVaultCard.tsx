@@ -22,7 +22,7 @@ export const PayPalVaultCard: React.FC<PayPalVaultCardProps> = ({ contract, onSi
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-[#003087] flex items-center justify-center text-white">
+          <div className="w-8 h-8 rounded-lg bg-slate-900 flex items-center justify-center text-white">
             <Shield className="w-4 h-4 fill-white/20 stroke-white" />
           </div>
           <div>
@@ -100,7 +100,7 @@ export const PayPalVaultCard: React.FC<PayPalVaultCardProps> = ({ contract, onSi
       {isWaitingDeposit && (
         <button
           onClick={onSimulateApproveDeposit}
-          className="w-full py-2.5 px-4 rounded-full bg-[#003087] hover:bg-[#002266] text-white font-extrabold text-xs flex items-center justify-center gap-2 shadow-xs transition-all active:scale-98 cursor-pointer"
+          className="w-full py-2.5 px-4 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs flex items-center justify-center gap-2 shadow-xs transition-all active:scale-98 cursor-pointer"
         >
           <Zap className="w-3.5 h-3.5 fill-current" />
           <span>Authorize Conditional Escrow Hold</span>

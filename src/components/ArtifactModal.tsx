@@ -105,7 +105,7 @@ export const ArtifactModal: React.FC<ArtifactModalProps> = ({
         {/* Modal Header */}
         <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-[#F8FAFC]">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-[#003087] flex items-center justify-center text-white shadow-2xs">
+            <div className="w-8 h-8 rounded-lg bg-slate-900 flex items-center justify-center text-white shadow-2xs">
               <Code2 className="w-4 h-4 text-white" />
             </div>
             <div>
@@ -430,7 +430,7 @@ export const ArtifactModal: React.FC<ArtifactModalProps> = ({
           </span>
           <button
             onClick={onClose}
-            className="px-4 py-1.5 rounded-full bg-[#003087] hover:bg-[#002266] text-white text-xs font-semibold transition-all cursor-pointer shadow-2xs"
+            className="px-4 py-1.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold transition-all cursor-pointer shadow-2xs"
           >
             Close Inspector
           </button>
