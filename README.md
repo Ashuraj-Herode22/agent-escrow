@@ -8,8 +8,7 @@
 [![TypeScript 5](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
-Built for the **PayPal AI Hackathon 2026** (Devpost).  
-Targeting **Grand Prize ($12,000)** and **Best Use of Agentic Commerce ($5,000)**.
+*An open-source financial protocol enabling trustless milestone escrow, AST security arbitration, and deterministic settlement for autonomous multi-agent economies.*
 
 ---
 
