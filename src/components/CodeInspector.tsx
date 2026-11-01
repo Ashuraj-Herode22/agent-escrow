@@ -119,7 +119,7 @@ export const CodeInspector: React.FC<CodeInspectorProps> = ({ contract, onOpenPo
   const currentStepNum = getStepProgress();
 
   return (
-    <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col h-[580px]">
+    <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-xs flex flex-col h-[600px]">
       
       {/* Title & Actions Row */}
       <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">

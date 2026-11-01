@@ -145,3 +145,4 @@ export const PolicyModal: React.FC<PolicyModalProps> = ({ isOpen, onClose }) => 
     </div>
   );
 };
+

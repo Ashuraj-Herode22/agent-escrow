@@ -49,7 +49,6 @@ export default function MainApp() {
     const now = new Date().toISOString();
 
     if (stepNumber === 1) {
-      // Step 1: PayPal Order Created (intent: AUTHORIZE)
       setContract((prev) => ({
         ...prev,
         status: 'WAITING_DEPOSIT',
@@ -79,7 +78,6 @@ export default function MainApp() {
         },
       ]);
     } else if (stepNumber === 2) {
-      // Step 2: Escrow Locked in PayPal Authorization Hold
       const authId = finalContract.paypalMetadata.authorizationId || `AUTH-${Math.random().toString(36).substring(2, 8).toUpperCase()}-ESCROW`;
       setContract((prev) => ({
         ...prev,
@@ -113,7 +111,6 @@ export default function MainApp() {
         },
       ]);
     } else if (stepNumber === 3) {
-      // Step 3: Worker Delivers Code Artifact
       setContract((prev) => ({
         ...prev,
         status: 'DELIVERED_AUDITING',
@@ -138,7 +135,6 @@ export default function MainApp() {
         },
       ]);
     } else if (stepNumber === 4) {
-      // Step 4: AI Arbiter Inspection
       setContract((prev) => ({
         ...prev,
         status: isPassed ? 'ARBITRATION_PASSED' : 'ARBITRATION_FAILED',
@@ -169,7 +165,6 @@ export default function MainApp() {
         },
       ]);
     } else if (stepNumber === 5) {
-      // Step 5: Final Settlement (Capture or Void)
       if (isPassed) {
         const captureId = finalContract.paypalMetadata.captureId || `CAP-${Math.random().toString(36).substring(2, 8).toUpperCase()}-RELEASE`;
         setContract((prev) => ({
@@ -272,7 +267,6 @@ export default function MainApp() {
         updated.paypalMetadata.escrowLockedAt = new Date().toISOString();
       }
 
-      // Final settlement handling across all 3 flows
       const isFinalSuccess =
         (presetKey === 'SUCCESS_FLOW' && stepNumber === 6) ||
         (presetKey === 'HEALING_FLOW' && stepNumber === 8);
@@ -304,7 +298,6 @@ export default function MainApp() {
     }
   };
 
-  // Apply custom task synthesized by AI agents & automatically kick off smooth sequential playback
   const handleApplyCustomTask = (customContract: TaskContract, customMessages: AgentMessage[], result?: any) => {
     if (intervalRef.current) clearInterval(intervalRef.current);
     setIsRunning(false);
@@ -318,7 +311,6 @@ export default function MainApp() {
     setCustomFlow(flowData);
     customFlowRef.current = flowData;
 
-    // Initialize custom task at Step 0
     const initialContract: TaskContract = {
       id: customContract.id,
       title: customContract.title,
@@ -369,7 +361,6 @@ export default function MainApp() {
     setCurrentStep(0);
     setIsRunning(true);
 
-    // Automatically transition through all steps with smooth 1.5s animated intervals
     let step = 0;
     intervalRef.current = setInterval(() => {
       step += 1;
@@ -382,7 +373,6 @@ export default function MainApp() {
     }, 1500);
   };
 
-  // Reset or change preset
   const handleSelectPreset = (key: 'SUCCESS_FLOW' | 'HEALING_FLOW' | 'DISPUTE_FLOW') => {
     if (isRunning) return;
     setCustomFlow(null);
@@ -430,14 +420,12 @@ export default function MainApp() {
     }
   };
 
-  // Manual next step
   const handleNextStep = () => {
     if (currentStep < totalSteps) {
       executeStep(currentStep + 1);
     }
   };
 
-  // Auto-run simulation
   const handleStartSimulation = () => {
     if (isRunning || currentStep >= totalSteps) return;
     setIsRunning(true);
@@ -462,7 +450,7 @@ export default function MainApp() {
 
   return (
     <div className="min-h-screen bg-[#F5F7FA] text-[#0C2340] flex flex-col font-sans selection:bg-[#0070BA]/20 selection:text-[#003087]">
-      {/* Header */}
+      {/* 1. Minimalist Top Navigation */}
       <Header
         currentPreset={SIMULATION_PRESETS[presetKey]}
         onSelectPreset={handleSelectPreset}
@@ -478,35 +466,39 @@ export default function MainApp() {
         onOpenPolicyModal={() => setIsPolicyModalOpen(true)}
       />
 
-      {/* Main Workspace */}
-      <main className="flex-1 max-w-[1440px] w-full mx-auto p-6 flex flex-col gap-5">
+      {/* 2. Main Workspace */}
+      <main className="flex-1 max-w-[1400px] w-full mx-auto p-6 flex flex-col gap-6">
         
-        {/* Top: Balanced Horizontal Escrow Protocol Ribbon */}
+        {/* Unified Escrow Hero with 4-Step Visual Stepper */}
         <EscrowRibbon
           contract={contract}
           onSimulateApproveDeposit={handleNextStep}
         />
 
-        {/* 3 Symmetrical Equal-Height Columns (580px Each) */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-          {/* Column 1: Contract & Milestones */}
-          <ContractCard contract={contract} />
-
-          {/* Column 2: Agent Activity Stream */}
+        {/* Primary Stage: 2 Spacious Equal-Height Columns (50% / 50%) */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+          
+          {/* Column 1: Live Agent Activity Stream (~670px Wide, Generous Padding) */}
           <AgentTerminal messages={messages} />
 
-          {/* Column 3: Verification Sandbox & Audit */}
+          {/* Column 2: Verification Sandbox & Code Inspector (~670px Wide) */}
           <CodeInspector
             contract={contract}
             onOpenPolicyModal={() => setIsPolicyModalOpen(true)}
           />
+
         </div>
+
+        {/* Secondary Stage: Programmable Milestones & Terms (Natural Scroll Below the Fold) */}
+        <section className="pt-2">
+          <ContractCard contract={contract} />
+        </section>
 
       </main>
 
       {/* Clean Enterprise Footer */}
-      <footer className="border-t border-slate-200 bg-white px-6 py-3.5 text-xs text-slate-500 font-medium mt-auto">
-        <div className="max-w-[1440px] mx-auto flex items-center justify-between">
+      <footer className="border-t border-slate-200 bg-white px-6 py-4 text-xs text-slate-500 font-medium mt-auto">
+        <div className="max-w-[1400px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <span className="font-extrabold text-[#003087]">AgentEscrow</span>
             <span>•</span>

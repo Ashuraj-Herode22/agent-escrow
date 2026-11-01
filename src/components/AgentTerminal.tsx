@@ -68,22 +68,22 @@ export const AgentTerminal: React.FC<AgentTerminalProps> = ({ messages }) => {
   };
 
   return (
-    <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col h-[580px]">
+    <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-xs flex flex-col h-[600px]">
       
       {/* Title & Count Row */}
       <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
         <div className="flex items-center gap-2">
           <Terminal className="w-4 h-4 text-[#0070BA]" />
           <h3 className="text-sm font-bold text-slate-900">
-            Activity Stream
+            Agent Activity Stream
           </h3>
         </div>
         <span className="text-xs bg-slate-100 text-slate-600 px-2.5 py-0.5 rounded-full font-semibold border border-slate-200">
-          {messages.length} Events Logged
+          {messages.length} Events
         </span>
       </div>
 
-      {/* Full-Width Segmented Control */}
+      {/* Filter Segmented Control */}
       <div className="grid grid-cols-5 bg-slate-100/80 p-0.5 rounded-lg text-center text-xs mb-3 font-medium border border-slate-200/50">
         {(['ALL', 'BUYER_AGENT', 'WORKER_AGENT', 'ARBITER_AGENT', 'PAYPAL_ESCROW'] as const).map((role) => {
           const shortLabel = 
@@ -116,7 +116,7 @@ export const AgentTerminal: React.FC<AgentTerminalProps> = ({ messages }) => {
           return (
             <div
               key={msg.id}
-              className="p-3 rounded-xl bg-[#F8FAFC] border border-slate-200/80 text-xs flex flex-col gap-1.5 transition-all hover:bg-slate-50 hover:border-slate-300"
+              className="p-3.5 rounded-xl bg-[#F8FAFC] border border-slate-200/80 text-xs flex flex-col gap-1.5 transition-all hover:bg-slate-50 hover:border-slate-300"
             >
               <div className="flex items-center justify-between">
                 <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md border text-xs font-semibold ${badge.color}`}>

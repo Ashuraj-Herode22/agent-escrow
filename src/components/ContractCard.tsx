@@ -2,132 +2,89 @@
 
 import React from 'react';
 import { TaskContract } from '@/types/escrow';
-import { FileCode, CheckCircle2, XCircle, Clock, Cpu, Users, Award, RefreshCw, ShieldCheck } from 'lucide-react';
+import { FileCode, CheckCircle2, XCircle, Clock, ShieldCheck, Award } from 'lucide-react';
 
 interface ContractCardProps {
   contract: TaskContract;
 }
 
 export const ContractCard: React.FC<ContractCardProps> = ({ contract }) => {
-  const getStatusBadge = (status: TaskContract['status']) => {
-    switch (status) {
-      case 'PAYOUT_COMPLETED':
-        return <span className="px-3 py-1 text-xs rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold whitespace-nowrap">Payout Completed</span>;
-      case 'DISPUTE_REFUNDED':
-        return <span className="px-3 py-1 text-xs rounded-full bg-rose-50 text-rose-700 border border-rose-200 font-bold whitespace-nowrap">Refunded to Buyer</span>;
-      case 'ESCROW_LOCKED':
-        return <span className="px-3 py-1 text-xs rounded-full bg-[#F0F5FA] text-[#003087] border border-[#D0E2F2] font-bold whitespace-nowrap">Escrow Locked</span>;
-      case 'DELIVERED_AUDITING':
-        return <span className="px-3 py-1 text-xs rounded-full bg-amber-50 text-amber-800 border border-amber-200 font-bold whitespace-nowrap">AI Arbitration</span>;
-      case 'REVISION_REQUESTED':
-        return <span className="px-3 py-1 text-xs rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 font-bold whitespace-nowrap">Revision Notice</span>;
-      case 'ARBITRATION_PASSED':
-        return <span className="px-3 py-1 text-xs rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold whitespace-nowrap">Audit Passed</span>;
-      case 'ARBITRATION_FAILED':
-        return <span className="px-3 py-1 text-xs rounded-full bg-rose-50 text-rose-700 border border-rose-200 font-bold whitespace-nowrap">Audit Failed</span>;
-      default:
-        return <span className="px-3 py-1 text-xs rounded-full bg-slate-100 text-slate-700 font-bold whitespace-nowrap">{status.replace('_', ' ')}</span>;
-    }
-  };
-
-  const attempt = contract.revisionAttempt || 1;
-  const maxAttempts = contract.maxRevisions || 3;
-
   return (
-    <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col h-[580px]">
+    <div className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-xs">
       
-      {/* Top Header Row: ID & Status */}
-      <div className="flex items-center justify-between gap-2 pb-3 border-b border-slate-100 mb-3">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 mb-5 gap-2">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-lg bg-[#F0F5FA] border border-[#D0E2F2] flex items-center justify-center text-[#003087]">
+            <FileCode className="w-4 h-4 text-[#0070BA]" />
+          </div>
+          <div>
+            <h2 className="text-sm font-bold text-slate-900">Programmable Contract Milestones</h2>
+            <p className="text-xs text-slate-500">Milestone funds release only upon AI Arbiter test verification</p>
+          </div>
+        </div>
+
         <div className="flex items-center gap-2">
-          <span className="text-xs font-bold px-2 py-0.5 rounded bg-slate-100 text-[#003087] border border-slate-200">
-            {contract.id}
+          <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
+            Contract #{contract.id}
           </span>
-          <span className="text-xs text-slate-500 font-medium">Autonomous Contract</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          {contract.isPatched && (
-            <span className="px-2 py-0.5 text-[11px] rounded-full bg-blue-50 text-[#0070BA] border border-blue-200 font-bold flex items-center gap-1">
-              <RefreshCw className="w-2.5 h-2.5" /> Patched
-            </span>
-          )}
-          {getStatusBadge(contract.status)}
-        </div>
-      </div>
-
-      {/* Contract Title & Description */}
-      <div className="mb-3">
-        <h2 className="text-sm font-bold text-slate-900 leading-snug">{contract.title}</h2>
-        <p className="text-xs text-slate-600 mt-1 leading-relaxed">{contract.description}</p>
-      </div>
-
-      {/* Agents Card */}
-      <div className="bg-[#F0F5FA]/80 border border-[#D0E2F2] rounded-xl p-3 flex flex-col gap-2 text-xs mb-3">
-        <div className="flex items-center justify-between">
-          <span className="text-slate-500 flex items-center gap-1.5 font-medium">
-            <Users className="w-3.5 h-3.5 text-[#0070BA]" /> Buyer Agent:
-          </span>
-          <span className="text-slate-800 font-semibold">{contract.buyerAgentId}</span>
-        </div>
-
-        <div className="flex items-center justify-between">
-          <span className="text-slate-500 flex items-center gap-1.5 font-medium">
-            <Cpu className="w-3.5 h-3.5 text-indigo-600" /> Worker Agent:
-          </span>
-          <span className="text-slate-800 font-semibold">{contract.workerAgentId}</span>
-        </div>
-
-        <div className="flex items-center justify-between pt-1 border-t border-[#D0E2F2]/60">
-          <span className="text-slate-500 flex items-center gap-1.5 font-medium">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> Cure Policy:
-          </span>
-          <span className="text-[#003087] font-bold">
-            Attempt {attempt} of {maxAttempts}
+          <span className="text-xs font-bold text-[#003087] bg-[#F0F5FA] px-2.5 py-1 rounded-full border border-[#D0E2F2]">
+            Total: ${contract.totalBudgetUSD.toFixed(2)} USD
           </span>
         </div>
       </div>
 
-      {/* Programmable Milestones */}
-      <div className="flex-1 overflow-y-auto space-y-2 pr-1 mb-3">
-        <h3 className="text-sm font-bold text-slate-800 mb-2 flex items-center gap-1.5 sticky top-0 bg-white py-1">
-          <FileCode className="w-3.5 h-3.5 text-[#0070BA]" /> Programmable Milestones
-        </h3>
-        
+      {/* 2-Column Responsive Milestone Grid (Spacious, No Clipping!) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {contract.milestones.map((m) => (
           <div
             key={m.id}
-            className={`p-3 rounded-xl border text-xs transition-all ${
+            className={`p-4 rounded-xl border text-xs transition-all flex flex-col justify-between gap-3 ${
               m.status === 'PASSED'
-                ? 'bg-emerald-50/50 border-emerald-200'
+                ? 'bg-emerald-50/40 border-emerald-200 text-emerald-950'
                 : m.status === 'FAILED'
-                ? 'bg-rose-50/50 border-rose-200'
+                ? 'bg-rose-50/40 border-rose-200 text-rose-950'
                 : m.status === 'IN_REVIEW'
-                ? 'bg-amber-50/50 border-amber-200'
-                : 'bg-[#F8FAFC] border-slate-200'
+                ? 'bg-amber-50/40 border-amber-200 text-amber-950'
+                : 'bg-[#F8FAFC] border-slate-200 text-slate-700'
             }`}
           >
-            <div className="flex items-center justify-between mb-1">
-              <span className="font-bold text-slate-900 flex items-center gap-1.5">
-                <span className="px-1.5 py-0.5 rounded bg-slate-100 text-xs font-semibold text-slate-600 border border-slate-200">
-                  {m.id}
+            <div>
+              {/* Title & Amount Row with generous spacing */}
+              <div className="flex items-center justify-between gap-3 mb-1.5">
+                <span className="font-bold text-slate-900 flex items-center gap-2 min-w-0">
+                  <span className="px-2 py-0.5 rounded bg-white text-xs font-bold text-slate-700 border border-slate-200 shrink-0">
+                    {m.id}
+                  </span>
+                  <span className="truncate">{m.title}</span>
                 </span>
-                {m.title}
-              </span>
-              <span className="font-bold text-[#003087]">${m.amountUSD.toFixed(2)}</span>
-            </div>
-            <p className="text-xs text-slate-500 mb-2">{m.description}</p>
-
-            {/* Status footer */}
-            <div className="flex items-center justify-between pt-1.5 border-t border-slate-200/60 text-xs">
-              <div className="flex items-center gap-1.5">
-                {m.status === 'PASSED' && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />}
-                {m.status === 'FAILED' && <XCircle className="w-3.5 h-3.5 text-rose-600" />}
-                {m.status === 'PENDING' && <Clock className="w-3.5 h-3.5 text-slate-400" />}
-                <span className="font-medium text-slate-700">
-                  {m.status === 'PASSED' ? 'Arbiter Approved' : m.status === 'FAILED' ? 'Arbiter Rejected' : 'Awaiting Delivery'}
+                <span className="font-extrabold text-[#003087] shrink-0 text-sm">
+                  ${m.amountUSD.toFixed(2)}
                 </span>
               </div>
+
+              <p className="text-xs text-slate-500 leading-relaxed">
+                {m.description}
+              </p>
+            </div>
+
+            {/* Status Footer */}
+            <div className="flex items-center justify-between pt-2.5 border-t border-slate-200/60 text-xs mt-auto">
+              <div className="flex items-center gap-1.5">
+                {m.status === 'PASSED' && <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />}
+                {m.status === 'FAILED' && <XCircle className="w-4 h-4 text-rose-600 shrink-0" />}
+                {m.status === 'PENDING' && <Clock className="w-4 h-4 text-slate-400 shrink-0" />}
+                <span className="font-semibold text-slate-800">
+                  {m.status === 'PASSED'
+                    ? 'Arbiter Approved & Released'
+                    : m.status === 'FAILED'
+                    ? 'Arbiter Rejected'
+                    : 'Awaiting Worker Delivery'}
+                </span>
+              </div>
+
               {m.testSuite.total > 0 && (
-                <span className="text-slate-600 font-semibold">
+                <span className="text-slate-600 font-semibold bg-white/80 px-2 py-0.5 rounded border border-slate-200/80">
                   {m.testSuite.passed}/{m.testSuite.total} Tests Passed
                 </span>
               )}
@@ -136,12 +93,14 @@ export const ContractCard: React.FC<ContractCardProps> = ({ contract }) => {
         ))}
       </div>
 
-      {/* Bottom Guarantee Bar */}
-      <div className="bg-[#F8FAFC] border border-slate-200 rounded-xl p-3 text-xs text-slate-600 flex items-center justify-between mt-auto">
+      {/* Guarantee Badge */}
+      <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
         <span className="flex items-center gap-1.5 font-medium">
-          <Award className="w-3.5 h-3.5 text-[#0070BA]" /> Escrow Protection Guarantee
+          <Award className="w-3.5 h-3.5 text-[#0070BA]" /> Escrow Protection Guarantee: Zero counterparty risk
         </span>
-        <span className="font-bold text-[#003087]">Zero Counterparty Risk</span>
+        <span className="text-slate-400 font-mono text-[11px]">
+          Auth Policy: REST v2 Two-Phase Commit
+        </span>
       </div>
 
     </div>
