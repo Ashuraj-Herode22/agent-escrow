@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Hackathon Submission Assets & Documentation (Kept local & private until final submission)
+README.md
+README_SUBMISSION_READY.md
+DEVPOST_SUBMISSION*.md
+DEMO_VIDEO_SCRIPT.md
+
