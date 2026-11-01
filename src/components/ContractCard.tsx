@@ -15,7 +15,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({ contract }) => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 mb-5 gap-2">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#003087] to-[#0070BA] flex items-center justify-center text-white shadow-2xs">
+          <div className="w-8 h-8 rounded-lg bg-slate-900 flex items-center justify-center text-white shadow-2xs">
             <FileCode className="w-4 h-4 text-white" />
           </div>
           <div>
@@ -28,32 +28,24 @@ export const ContractCard: React.FC<ContractCardProps> = ({ contract }) => {
           <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
             Contract #{contract.id}
           </span>
-          <span className="text-xs font-bold text-slate-900 bg-[#F0F5FA] px-2.5 py-1 rounded-full border border-[#D0E2F2]">
+          <span className="text-xs font-bold text-slate-900 bg-slate-100 px-2.5 py-1 rounded-full border border-slate-200">
             Total: ${contract.totalBudgetUSD.toFixed(2)} USD
           </span>
         </div>
       </div>
 
-      {/* 2-Column Responsive Milestone Grid (Spacious, No Clipping!) */}
+      {/* 2-Column Responsive Milestone Grid (Spacious, Minimalist, No Pastel Colors!) */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {contract.milestones.map((m) => (
           <div
             key={m.id}
-            className={`p-4 rounded-xl border text-xs transition-all flex flex-col justify-between gap-3 ${
-              m.status === 'PASSED'
-                ? 'bg-emerald-50/40 border-emerald-200 text-emerald-950'
-                : m.status === 'FAILED'
-                ? 'bg-rose-50/40 border-rose-200 text-rose-950'
-                : m.status === 'IN_REVIEW'
-                ? 'bg-amber-50/40 border-amber-200 text-amber-950'
-                : 'bg-[#F8FAFC] border-slate-200 text-slate-700'
-            }`}
+            className="p-4 rounded-xl border border-slate-200 bg-white text-slate-900 shadow-2xs hover:border-slate-300 transition-all flex flex-col justify-between gap-3 text-xs"
           >
             <div>
               {/* Title & Amount Row with generous spacing */}
               <div className="flex items-center justify-between gap-3 mb-1.5">
                 <span className="font-bold text-slate-900 flex items-center gap-2 min-w-0">
-                  <span className="px-2 py-0.5 rounded bg-white text-xs font-bold text-slate-700 border border-slate-200 shrink-0">
+                  <span className="px-2 py-0.5 rounded bg-slate-100 text-xs font-bold text-slate-800 border border-slate-200 shrink-0">
                     {m.id}
                   </span>
                   <span className="truncate">{m.title}</span>
@@ -68,11 +60,11 @@ export const ContractCard: React.FC<ContractCardProps> = ({ contract }) => {
               </p>
             </div>
 
-            {/* Status Footer */}
-            <div className="flex items-center justify-between pt-2.5 border-t border-slate-200/60 text-xs mt-auto">
+            {/* Status Footer (Formal Slate) */}
+            <div className="flex items-center justify-between pt-2.5 border-t border-slate-100 text-xs mt-auto">
               <div className="flex items-center gap-1.5">
-                {m.status === 'PASSED' && <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />}
-                {m.status === 'FAILED' && <XCircle className="w-4 h-4 text-rose-600 shrink-0" />}
+                {m.status === 'PASSED' && <CheckCircle2 className="w-4 h-4 text-slate-900 shrink-0" />}
+                {m.status === 'FAILED' && <XCircle className="w-4 h-4 text-slate-900 shrink-0" />}
                 {m.status === 'PENDING' && <Clock className="w-4 h-4 text-slate-400 shrink-0" />}
                 <span className="font-semibold text-slate-800">
                   {m.status === 'PASSED'
@@ -84,7 +76,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({ contract }) => {
               </div>
 
               {m.testSuite.total > 0 && (
-                <span className="text-slate-600 font-semibold bg-white/80 px-2 py-0.5 rounded border border-slate-200/80">
+                <span className="text-slate-700 font-semibold bg-slate-50 px-2 py-0.5 rounded border border-slate-200">
                   {m.testSuite.passed}/{m.testSuite.total} Tests Passed
                 </span>
               )}
@@ -96,7 +88,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({ contract }) => {
       {/* Guarantee Badge */}
       <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
         <span className="flex items-center gap-1.5 font-medium">
-          <Award className="w-3.5 h-3.5 text-[#0070BA]" /> Escrow Protection Guarantee: Zero counterparty risk
+          <Award className="w-3.5 h-3.5 text-slate-700" /> Escrow Protection Guarantee: Zero counterparty risk
         </span>
         <span className="text-slate-400 font-mono text-[11px]">
           Auth Policy: Two-Phase Commit

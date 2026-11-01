@@ -6,14 +6,12 @@ import {
   RotateCcw,
   ArrowRight,
   ShieldCheck,
-  CheckCircle2,
   Shield,
   Sparkles,
   Code2,
-  RefreshCw,
-  AlertOctagon,
   ChevronDown,
   MoreHorizontal,
+  Check,
 } from 'lucide-react';
 import { SimulationPreset } from '@/types/escrow';
 
@@ -64,127 +62,118 @@ export const Header: React.FC<HeaderProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const getScenarioIcon = (id: string) => {
-    switch (id) {
-      case 'SUCCESS_FLOW':
-        return <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />;
-      case 'HEALING_FLOW':
-        return <RefreshCw className="w-3.5 h-3.5 text-indigo-600 shrink-0" />;
-      case 'DISPUTE_FLOW':
-        return <AlertOctagon className="w-3.5 h-3.5 text-rose-600 shrink-0" />;
-      default:
-        return <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />;
-    }
-  };
-
   return (
     <header className="border-b border-slate-200/90 bg-white sticky top-0 z-50">
       <div className="max-w-[1400px] mx-auto px-6 h-15 flex items-center justify-between gap-4">
         
-        {/* Left: Clean Brand with Dual PayPal Blue Background Accent */}
+        {/* Left: Clean Brand */}
         <div className="flex items-center gap-3 shrink-0">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#003087] to-[#0070BA] flex items-center justify-center text-white shadow-2xs">
+          <div className="w-8 h-8 rounded-xl bg-slate-900 flex items-center justify-center text-white shadow-2xs">
             <Shield className="w-4 h-4 fill-white/20 stroke-white" />
           </div>
-          <div className="flex items-baseline gap-2">
-            <span className="font-extrabold text-base tracking-tight text-slate-900">AgentEscrow</span>
-          </div>
+          <span className="font-extrabold text-base tracking-tight text-slate-900">AgentEscrow</span>
         </div>
 
-        {/* Center: Single Elegant Scenario Selector Dropdown */}
+        {/* Center: Clean, Minimalist Protocol Selector (No Rainbow Colors!) */}
         <div className="relative" ref={scenarioRef}>
           <button
             onClick={() => !isRunning && setIsScenarioMenuOpen(!isScenarioMenuOpen)}
             disabled={isRunning}
-            className={`h-9 px-3.5 rounded-full border text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer shadow-2xs ${
+            className={`h-9 px-4 rounded-full border text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer shadow-2xs ${
               isScenarioMenuOpen
-                ? 'bg-[#F0F5FA] border-[#003087] text-slate-900'
+                ? 'bg-slate-100 border-slate-300 text-slate-900'
                 : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-800'
             }`}
           >
-            {getScenarioIcon(currentPreset.id)}
+            <span className="text-slate-500 font-medium">Flow:</span>
             <span className="font-bold text-slate-900">{currentPreset.name.split('&')[0].trim()}</span>
-            <span className="text-slate-500 font-normal">(${currentPreset.budgetUSD.toFixed(0)})</span>
+            <span className="text-slate-500 font-medium">(${currentPreset.budgetUSD.toFixed(0)})</span>
             <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform ${isScenarioMenuOpen ? 'rotate-180' : ''}`} />
           </button>
 
-          {/* Dropdown Menu */}
+          {/* Dropdown Menu (Clean, Formal, No Raw Math Syntax!) */}
           {isScenarioMenuOpen && (
-            <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-80 bg-white rounded-2xl border border-slate-200 shadow-xl p-2 z-50 animate-in fade-in duration-150">
-              <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-2.5 py-1.5">
+            <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-88 bg-white rounded-2xl border border-slate-200 shadow-xl p-2 z-50 animate-in fade-in duration-150">
+              <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-3 py-1.5">
                 Select Protocol Flow
               </div>
 
-              {/* Scenario 1 */}
+              {/* Option 1 */}
               <button
                 onClick={() => {
                   onSelectPreset('SUCCESS_FLOW');
                   setIsScenarioMenuOpen(false);
                 }}
-                className={`w-full text-left p-2.5 rounded-xl transition-all flex items-start gap-2.5 cursor-pointer ${
-                  currentPreset.id === 'SUCCESS_FLOW' ? 'bg-[#F0F5FA] border border-[#D0E2F2]' : 'hover:bg-slate-50'
+                className={`w-full text-left p-3 rounded-xl transition-all flex items-start justify-between gap-3 cursor-pointer ${
+                  currentPreset.id === 'SUCCESS_FLOW' ? 'bg-slate-100/80 border border-slate-200/80' : 'hover:bg-slate-50'
                 }`}
               >
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                <div>
-                  <div className="flex items-center justify-between text-xs font-bold text-slate-900">
-                    <span>1. Verified Payout</span>
-                    <span className="text-emerald-700">$75</span>
+                <div className="space-y-0.5">
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-slate-900 text-xs">1. Verified Payout</span>
+                    <span className="text-slate-600 font-bold text-xs">($75)</span>
                   </div>
-                  <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">
-                    Clean code passes 6/6 tests on Attempt 1 $\rightarrow$ instant release.
+                  <p className="text-[11px] text-slate-600 leading-relaxed">
+                    Code passes all tests on first attempt. Payment released immediately.
                   </p>
                 </div>
+                {currentPreset.id === 'SUCCESS_FLOW' && (
+                  <Check className="w-4 h-4 text-slate-900 shrink-0 mt-0.5" />
+                )}
               </button>
 
-              {/* Scenario 2 */}
+              {/* Option 2 */}
               <button
                 onClick={() => {
                   onSelectPreset('HEALING_FLOW');
                   setIsScenarioMenuOpen(false);
                 }}
-                className={`w-full text-left p-2.5 rounded-xl transition-all flex items-start gap-2.5 cursor-pointer mt-1 ${
-                  currentPreset.id === 'HEALING_FLOW' ? 'bg-[#F0F5FA] border border-[#D0E2F2]' : 'hover:bg-slate-50'
+                className={`w-full text-left p-3 rounded-xl transition-all flex items-start justify-between gap-3 cursor-pointer mt-1 ${
+                  currentPreset.id === 'HEALING_FLOW' ? 'bg-slate-100/80 border border-slate-200/80' : 'hover:bg-slate-50'
                 }`}
               >
-                <RefreshCw className="w-4 h-4 text-indigo-600 shrink-0 mt-0.5" />
-                <div>
-                  <div className="flex items-center justify-between text-xs font-bold text-slate-900">
-                    <span>2. Self-Healing Patch</span>
-                    <span className="text-indigo-700">$120</span>
+                <div className="space-y-0.5">
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-slate-900 text-xs">2. Self-Healing Patch</span>
+                    <span className="text-slate-600 font-bold text-xs">($120)</span>
                   </div>
-                  <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">
-                    CWE-89 caught on Attempt 1 $\rightarrow$ Worker auto-patches on Attempt 2 $\rightarrow$ release.
+                  <p className="text-[11px] text-slate-600 leading-relaxed">
+                    Security flaw caught on Attempt 1. Worker auto-patches on Attempt 2 and funds release.
                   </p>
                 </div>
+                {currentPreset.id === 'HEALING_FLOW' && (
+                  <Check className="w-4 h-4 text-slate-900 shrink-0 mt-0.5" />
+                )}
               </button>
 
-              {/* Scenario 3 */}
+              {/* Option 3 */}
               <button
                 onClick={() => {
                   onSelectPreset('DISPUTE_FLOW');
                   setIsScenarioMenuOpen(false);
                 }}
-                className={`w-full text-left p-2.5 rounded-xl transition-all flex items-start gap-2.5 cursor-pointer mt-1 ${
-                  currentPreset.id === 'DISPUTE_FLOW' ? 'bg-[#F0F5FA] border border-[#D0E2F2]' : 'hover:bg-slate-50'
+                className={`w-full text-left p-3 rounded-xl transition-all flex items-start justify-between gap-3 cursor-pointer mt-1 ${
+                  currentPreset.id === 'DISPUTE_FLOW' ? 'bg-slate-100/80 border border-slate-200/80' : 'hover:bg-slate-50'
                 }`}
               >
-                <AlertOctagon className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
-                <div>
-                  <div className="flex items-center justify-between text-xs font-bold text-slate-900">
-                    <span>3. Quota Exhausted Refund</span>
-                    <span className="text-rose-700">$120</span>
+                <div className="space-y-0.5">
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-slate-900 text-xs">3. Quota Exhausted Refund</span>
+                    <span className="text-slate-600 font-bold text-xs">($120)</span>
                   </div>
-                  <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">
-                    Worker fails 3/3 attempts $\rightarrow$ authorization voided $\rightarrow$ 100% refund.
+                  <p className="text-[11px] text-slate-600 leading-relaxed">
+                    Security policy fails across all 3 attempts. Authorization voided with 100% refund.
                   </p>
                 </div>
+                {currentPreset.id === 'DISPUTE_FLOW' && (
+                  <Check className="w-4 h-4 text-slate-900 shrink-0 mt-0.5" />
+                )}
               </button>
             </div>
           )}
         </div>
 
-        {/* Right: Clean Action Controls with Dual PayPal Blue Background CTA */}
+        {/* Right: Clean Action Controls */}
         <div className="flex items-center gap-2.5 shrink-0">
           
           {/* Custom Task Pill */}
@@ -192,10 +181,10 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               onClick={onOpenCustomTask}
               disabled={isRunning}
-              className="h-9 px-3 rounded-full text-xs font-semibold bg-[#F0F5FA] hover:bg-[#E2EDF8] text-slate-900 border border-[#D0E2F2] flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs active:scale-98"
+              className="h-9 px-3 rounded-full text-xs font-semibold bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs active:scale-98"
               title="Commission custom autonomous prompt"
             >
-              <Sparkles className="w-3.5 h-3.5 text-[#0070BA]" />
+              <Sparkles className="w-3.5 h-3.5 text-slate-600" />
               <span>+ Custom Task</span>
             </button>
           )}
@@ -244,14 +233,14 @@ export const Header: React.FC<HeaderProps> = ({
 
           <div className="h-4 w-px bg-slate-200 mx-1" />
 
-          {/* Execute Flow (Primary CTA with PayPal Dual-Blue Gradient Background) */}
+          {/* Execute Flow (Primary CTA) */}
           <button
             onClick={onStartSimulation}
             disabled={isRunning || currentStep >= totalSteps}
             className={`h-9 px-4 rounded-full text-xs font-bold flex items-center gap-2 transition-all cursor-pointer ${
               currentStep >= totalSteps
                 ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
-                : 'bg-gradient-to-r from-[#003087] to-[#0070BA] text-white shadow-xs hover:opacity-95 active:scale-98'
+                : 'bg-slate-900 hover:bg-slate-800 text-white shadow-xs active:scale-98'
             }`}
           >
             <Play className="w-3.5 h-3.5 fill-current" />

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { X, Code2, Copy, CheckCircle2 } from 'lucide-react';
+import { X, Code2, Copy, Check } from 'lucide-react';
 
 interface DevDocsModalProps {
   isOpen: boolean;
@@ -79,7 +79,7 @@ console.log('Arbiter Result:', result.verdict);`;
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#003087] to-[#0070BA] flex items-center justify-center text-white shadow-2xs">
+            <div className="w-8 h-8 rounded-xl bg-slate-900 flex items-center justify-center text-white shadow-2xs">
               <Code2 className="w-4 h-4 text-white" />
             </div>
             <div>
@@ -134,8 +134,8 @@ console.log('Arbiter Result:', result.verdict);`;
           >
             {copied ? (
               <>
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                <span className="text-emerald-700">Copied</span>
+                <Check className="w-3.5 h-3.5 text-slate-900 stroke-[2.5]" />
+                <span className="text-slate-900">Copied</span>
               </>
             ) : (
               <>

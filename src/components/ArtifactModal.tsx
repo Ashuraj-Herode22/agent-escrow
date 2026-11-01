@@ -190,11 +190,11 @@ export const ArtifactModal: React.FC<ArtifactModalProps> = ({
           {/* TAB 1: CODE & SECURITY */}
           {activeTab === 'CODE' && (
             <div className="flex flex-col gap-3">
-              {/* Revision Switcher Banner */}
+              {/* Revision Switcher Banner (Minimalist, Formal Slate) */}
               {(contract.isPatched || contract.id === 'AG-8814') && (
-                <div className="bg-[#F0F5FA] border border-[#D0E2F2] rounded-xl p-3 flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-[#003087] font-semibold">
-                    <Sparkles className="w-4 h-4 text-[#0070BA]" />
+                <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-slate-900 font-bold text-xs">
+                    <Sparkles className="w-4 h-4 text-slate-700" />
                     <span>Autonomous Self-Healing Revision History:</span>
                   </div>
                   <div className="flex items-center gap-1.5 bg-white p-1 rounded-lg border border-slate-200">
@@ -202,7 +202,7 @@ export const ArtifactModal: React.FC<ArtifactModalProps> = ({
                       onClick={() => setViewVersion('PATCHED')}
                       className={`px-3 py-1 rounded-md text-xs font-semibold transition-all cursor-pointer ${
                         viewVersion === 'PATCHED' || (viewVersion === 'AUTO' && contract.isPatched)
-                          ? 'bg-emerald-600 text-white shadow-2xs'
+                          ? 'bg-slate-900 text-white shadow-2xs'
                           : 'text-slate-600 hover:text-slate-900'
                       }`}
                     >
@@ -212,7 +212,7 @@ export const ArtifactModal: React.FC<ArtifactModalProps> = ({
                       onClick={() => setViewVersion('INITIAL')}
                       className={`px-3 py-1 rounded-md text-xs font-semibold transition-all cursor-pointer ${
                         viewVersion === 'INITIAL' || (viewVersion === 'AUTO' && !contract.isPatched && isShowingVulnerable)
-                          ? 'bg-rose-600 text-white shadow-2xs'
+                          ? 'bg-slate-900 text-white shadow-2xs'
                           : 'text-slate-600 hover:text-slate-900'
                       }`}
                     >
@@ -222,18 +222,18 @@ export const ArtifactModal: React.FC<ArtifactModalProps> = ({
                 </div>
               )}
 
-              {/* Exploit Alert Banner if Flawed */}
+              {/* Exploit Alert Banner if Flawed (Formal High-Contrast) */}
               {isShowingVulnerable && (
-                <div className="bg-rose-50 border border-rose-200 rounded-xl p-3 flex items-center justify-between text-xs text-rose-900">
+                <div className="bg-[#F8FAFC] border border-slate-300 rounded-xl p-3.5 flex items-center justify-between text-xs text-slate-900">
                   <div className="flex items-center gap-2.5">
-                    <ShieldX className="w-5 h-5 text-rose-600 shrink-0" />
+                    <ShieldAlert className="w-5 h-5 text-slate-800 shrink-0" />
                     <div>
                       <strong className="font-bold">CWE-89 SQL Injection Detected on Line 12:</strong> Raw string interpolation permits unauthorized database queries. Payout halted.
                     </div>
                   </div>
                   <button
                     onClick={() => setExploitTested(!exploitTested)}
-                    className="px-3 py-1 rounded-lg bg-rose-200/80 hover:bg-rose-200 text-rose-900 font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shrink-0 ml-3"
+                    className="px-3.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs flex items-center gap-1.5 transition-all cursor-pointer shrink-0 ml-3 shadow-2xs"
                   >
                     <Bug className="w-3.5 h-3.5" />
                     <span>{exploitTested ? 'Hide Exploit Vector' : 'Test Exploit Vector'}</span>
@@ -243,18 +243,18 @@ export const ArtifactModal: React.FC<ArtifactModalProps> = ({
 
               {/* Interactive Exploit Output */}
               {exploitTested && isShowingVulnerable && (
-                <div className="p-3.5 rounded-xl bg-slate-900 text-emerald-400 font-mono text-xs border border-slate-800 space-y-1.5">
+                <div className="p-3.5 rounded-xl bg-slate-950 text-slate-200 font-mono text-xs border border-slate-800 space-y-1.5">
                   <div className="text-slate-400 flex items-center justify-between pb-1 border-b border-slate-800">
                     <span># Exploit Vector Analysis</span>
-                    <span className="text-rose-400 font-bold">VULNERABILITY VERIFIED</span>
+                    <span className="text-white font-bold bg-slate-800 px-2 py-0.5 rounded text-[10px]">VULNERABILITY VERIFIED</span>
                   </div>
                   <p className="text-slate-300">
-                    Injected Payload: <code className="text-amber-300 font-bold">&apos; OR &apos;1&apos;=&apos;1</code>
+                    Injected Payload: <code className="text-white font-bold">&apos; OR &apos;1&apos;=&apos;1</code>
                   </p>
                   <p className="text-slate-300">
-                    Evaluates to: <code className="text-amber-300">SELECT id, role FROM accounts WHERE user = &apos;&apos; OR &apos;1&apos;=&apos;1&apos;</code>
+                    Evaluates to: <code className="text-slate-400">SELECT id, role FROM accounts WHERE user = &apos;&apos; OR &apos;1&apos;=&apos;1&apos;</code>
                   </p>
-                  <p className="text-rose-300">
+                  <p className="text-slate-300 font-medium">
                     &gt; Result: Authentication Bypassed! Returned UID 1 (Role: admin). AI Arbiter blocked payment release.
                   </p>
                 </div>
@@ -274,20 +274,20 @@ export const ArtifactModal: React.FC<ArtifactModalProps> = ({
               </div>
 
               {/* Status Chips */}
-              <div className="grid grid-cols-3 gap-3 bg-[#F0F5FA]/80 border border-[#D0E2F2] rounded-xl p-3 text-xs">
+              <div className="grid grid-cols-3 gap-3 bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs">
                 <div>
                   <span className="text-slate-500 block">Runtime Environment</span>
-                  <span className="font-bold text-slate-800">Python 3.12-slim (Alpine Jail)</span>
+                  <span className="font-bold text-slate-900">Python 3.12-slim (Alpine Jail)</span>
                 </div>
                 <div>
                   <span className="text-slate-500 block">Security Policy</span>
-                  <span className={isShowingVulnerable ? 'font-bold text-rose-700' : 'font-bold text-emerald-700'}>
+                  <span className="font-bold text-slate-900">
                     {isShowingVulnerable ? 'Quarantined & Masked' : 'Clean AST Parsed'}
                   </span>
                 </div>
                 <div>
                   <span className="text-slate-500 block">Release Authorization</span>
-                  <span className={isPassed ? 'font-bold text-emerald-700' : isFailed ? 'font-bold text-rose-700' : isRevision ? 'font-bold text-amber-700' : 'font-bold text-slate-600'}>
+                  <span className="font-bold text-slate-900">
                     {isPassed ? 'Release Token Signed' : isFailed ? 'Voided & Refunded' : isRevision ? 'Cure Window Active' : 'Auditing'}
                   </span>
                 </div>
@@ -301,20 +301,20 @@ export const ArtifactModal: React.FC<ArtifactModalProps> = ({
               {/* Metrics */}
               <div className="grid grid-cols-4 gap-3 bg-[#F8FAFC] border border-slate-200 rounded-xl p-3 text-center text-xs">
                 <div>
-                  <span className="text-slate-400 block">Total Assertions</span>
-                  <span className="font-bold text-slate-800 text-sm">{allTests.length}</span>
+                  <span className="text-slate-500 block">Total Assertions</span>
+                  <span className="font-bold text-slate-900 text-sm">{allTests.length}</span>
                 </div>
                 <div>
-                  <span className="text-slate-400 block">Passed</span>
-                  <span className="font-bold text-emerald-700 text-sm">{passedCount}</span>
+                  <span className="text-slate-500 block">Passed</span>
+                  <span className="font-bold text-slate-900 text-sm">{passedCount}</span>
                 </div>
                 <div>
-                  <span className="text-slate-400 block">Failed</span>
-                  <span className="font-bold text-rose-700 text-sm">{failedCount}</span>
+                  <span className="text-slate-500 block">Failed</span>
+                  <span className="font-bold text-slate-900 text-sm">{failedCount}</span>
                 </div>
                 <div>
-                  <span className="text-slate-400 block">Test Engine</span>
-                  <span className="font-bold text-[#0070BA] text-sm">PyTest v8</span>
+                  <span className="text-slate-500 block">Test Engine</span>
+                  <span className="font-bold text-slate-900 text-sm">PyTest v8</span>
                 </div>
               </div>
 
@@ -324,16 +324,14 @@ export const ArtifactModal: React.FC<ArtifactModalProps> = ({
                   allTests.map((t, idx) => (
                     <div
                       key={idx}
-                      className={`p-3 rounded-xl border text-xs flex flex-col gap-1.5 ${
-                        t.passed ? 'bg-emerald-50/50 border-emerald-200' : 'bg-rose-50/50 border-rose-200'
-                      }`}
+                      className="p-3 rounded-xl border border-slate-200 bg-white text-xs flex flex-col gap-1.5 shadow-2xs"
                     >
                       <div className="flex items-center justify-between">
                         <span className="font-semibold flex items-center gap-2">
                           {t.passed ? (
-                            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                            <CheckCircle2 className="w-4 h-4 text-slate-900 shrink-0" />
                           ) : (
-                            <ShieldAlert className="w-4 h-4 text-rose-600 shrink-0" />
+                            <ShieldAlert className="w-4 h-4 text-slate-900 shrink-0" />
                           )}
                           <span className="text-slate-900">{t.name}</span>
                         </span>
@@ -341,7 +339,7 @@ export const ArtifactModal: React.FC<ArtifactModalProps> = ({
                       </div>
 
                       {t.error && (
-                        <div className="mt-1 p-2 rounded-lg bg-rose-100 border border-rose-300 text-rose-900 font-mono text-[11px] leading-snug">
+                        <div className="mt-1 p-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 font-mono text-[11px] leading-snug">
                           {t.error}
                         </div>
                       )}
@@ -357,7 +355,7 @@ export const ArtifactModal: React.FC<ArtifactModalProps> = ({
               {/* Re-run footer */}
               {allTests.length > 0 && (
                 <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
-                  <span className="text-slate-500">
+                  <span className="text-slate-500 text-xs">
                     Automated assertion verification completed in {allTests.reduce((acc, t) => acc + t.durationMs, 0)}ms
                   </span>
                   <button
@@ -365,7 +363,7 @@ export const ArtifactModal: React.FC<ArtifactModalProps> = ({
                     disabled={isReRunningTests}
                     className="px-3.5 py-1.5 rounded-lg bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs"
                   >
-                    <RotateCw className={`w-3.5 h-3.5 text-slate-500 ${isReRunningTests ? 'animate-spin text-[#0070BA]' : ''}`} />
+                    <RotateCw className={`w-3.5 h-3.5 text-slate-500 ${isReRunningTests ? 'animate-spin' : ''}`} />
                     <span>{isReRunningTests ? 'Evaluating...' : 'Re-run Test Suite'}</span>
                   </button>
                 </div>
@@ -377,22 +375,22 @@ export const ArtifactModal: React.FC<ArtifactModalProps> = ({
           {activeTab === 'AUDIT' && (
             <div className="flex flex-col gap-4">
               <div className="p-4 rounded-xl bg-[#F8FAFC] border border-slate-200 space-y-3">
-                <div className="text-[#003087] font-bold flex items-center justify-between">
+                <div className="text-slate-900 font-bold flex items-center justify-between">
                   <span className="flex items-center gap-2">
-                    <ShieldCheck className="w-4 h-4 text-[#0070BA]" /> Proof-of-Arbitration Certificate
+                    <ShieldCheck className="w-4 h-4 text-slate-800" /> Proof-of-Arbitration Certificate
                   </span>
-                  <span className="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded-full">
+                  <span className="text-[11px] bg-slate-100 text-slate-800 border border-slate-200 font-semibold px-2.5 py-0.5 rounded-full">
                     ECDSA SECP256K1 Validated
                   </span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3 text-xs">
                   <div>Contract ID: <span className="font-bold text-slate-900">{contract.id}</span></div>
-                  <div>Final Status: <span className="font-bold text-[#003087]">{contract.status}</span></div>
+                  <div>Final Status: <span className="font-bold text-slate-900">{contract.status}</span></div>
                   <div>Buyer Agent: <span className="text-slate-800">{contract.buyerAgentId}</span></div>
                   <div>Worker Agent: <span className="text-slate-800">{contract.workerAgentId}</span></div>
                   <div>Order ID: <span className="font-mono text-slate-800">{contract.paypalMetadata.orderId || 'Pending'}</span></div>
-                  <div>Auth ID: <span className="font-mono text-[#0070BA] font-bold">{contract.paypalMetadata.authorizationId || 'Pending'}</span></div>
+                  <div>Auth ID: <span className="font-mono text-slate-900 font-bold">{contract.paypalMetadata.authorizationId || 'Pending'}</span></div>
                 </div>
               </div>
 
@@ -400,21 +398,21 @@ export const ArtifactModal: React.FC<ArtifactModalProps> = ({
                 <div className="grid grid-cols-3 gap-3 text-center">
                   <div>
                     <span className="block text-slate-500 text-xs">Final Verdict</span>
-                    <span className={`text-sm font-bold mt-1 block ${isPassed ? 'text-emerald-700' : isFailed ? 'text-rose-700' : 'text-slate-600'}`}>
+                    <span className="text-sm font-bold mt-1 block text-slate-900">
                       {isPassed ? 'RELEASE_FUNDS' : isFailed ? 'VOID_REFUND' : isRevision ? 'REVISION_CURE' : 'PENDING'}
                     </span>
                   </div>
 
                   <div className="border-x border-slate-200 px-3">
                     <span className="block text-slate-500 text-xs">Security Scanner</span>
-                    <span className={`text-sm font-bold mt-1 block ${isPassed ? 'text-emerald-700' : isFailed ? 'text-rose-700' : 'text-slate-600'}`}>
+                    <span className="text-sm font-bold mt-1 block text-slate-900">
                       {isPassed ? '0 Vulnerabilities' : isFailed ? 'CWE-89 Blocked' : 'Scanning'}
                     </span>
                   </div>
 
                   <div>
                     <span className="block text-slate-500 text-xs">Compliance</span>
-                    <span className={`text-base font-black mt-0.5 block ${isPassed ? 'text-emerald-700' : isFailed ? 'text-rose-700' : 'text-slate-600'}`}>
+                    <span className="text-base font-black mt-0.5 block text-slate-900">
                       {isPassed ? '100%' : isFailed ? '25%' : '---'}
                     </span>
                   </div>
