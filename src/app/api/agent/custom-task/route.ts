@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateDynamicAgentWorkflow } from '@/lib/gemini';
+import { createEscrowOrder, isPayPalConfigured } from '@/lib/paypal';
 import { TaskContract, AgentMessage } from '@/types/escrow';
 
 export async function POST(req: NextRequest) {
@@ -10,6 +11,20 @@ export async function POST(req: NextRequest) {
       taskDescription = 'Build a Python module to compute Luhn checksum and identify card networks.',
       budgetUSD = 50.00,
     } = body;
+
+    let liveOrderId = `ORD-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+    let isLive = false;
+    if (isPayPalConfigured()) {
+      try {
+        const liveOrder = await createEscrowOrder(Number(budgetUSD), taskTitle);
+        if (liveOrder?.id) {
+          liveOrderId = liveOrder.id;
+          isLive = true;
+        }
+      } catch (err) {
+        console.warn('[PayPal] Live order creation error, using fallback:', err);
+      }
+    }
 
     const result = await generateDynamicAgentWorkflow(taskTitle, taskDescription, Number(budgetUSD));
     const isPassed = result.verdict === 'RELEASE_FUNDS_AUTHORIZED';
@@ -48,10 +63,10 @@ export async function POST(req: NextRequest) {
         },
       ],
       paypalMetadata: {
-        orderId: `ORD-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
-        authorizationId: `AUTH-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+        orderId: liveOrderId,
+        authorizationId: `AUTH-${liveOrderId.substring(0, 8)}-ESCROW`,
         captureId: isPassed ? `CAP-${Math.random().toString(36).substring(2, 8).toUpperCase()}` : 'VOIDED_AUTHORIZATION',
-        isSimulated: true,
+        isSimulated: !isLive,
         escrowLockedAt: new Date().toISOString(),
         releasedAt: isPassed ? new Date().toISOString() : undefined,
       },
