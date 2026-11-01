@@ -14,6 +14,12 @@ import { ArtifactModal } from '@/components/ArtifactModal';
 import { TaskContract, AgentMessage } from '@/types/escrow';
 import { SIMULATION_PRESETS, createInitialContract, getStepDetails } from '@/lib/agent-engine';
 
+// Human Observability Stream Pacing:
+// In headless production API (/api/v1/escrow/requisition), agent settlement runs at sub-second wire speed.
+// In the interactive telemetry dashboard, we pace multi-agent step dispatching (1,500ms) to emulate
+// distributed network consensus roundtrips and enable real-time human observation.
+const TELEMETRY_STREAM_PACE_MS = 1500;
+
 interface CustomFlowState {
   finalContract: TaskContract;
   allMessages: AgentMessage[];
@@ -376,7 +382,7 @@ export default function MainApp() {
         if (intervalRef.current) clearInterval(intervalRef.current);
         setIsRunning(false);
       }
-    }, 1500);
+    }, TELEMETRY_STREAM_PACE_MS);
   };
 
   const handleSelectPreset = (key: 'SUCCESS_FLOW' | 'HEALING_FLOW' | 'DISPUTE_FLOW') => {
@@ -445,7 +451,7 @@ export default function MainApp() {
         if (intervalRef.current) clearInterval(intervalRef.current);
         setIsRunning(false);
       }
-    }, 1500);
+    }, TELEMETRY_STREAM_PACE_MS);
   };
 
   useEffect(() => {

@@ -27,10 +27,17 @@ export interface Milestone {
   };
 }
 
+export type DeliverableCategory = 
+  | 'SOFTWARE_CODE'        // AST Security Scan + PyTest Deterministic Assertions
+  | 'STRUCTURED_DATA'      // JSON Schema Validation + Integrity & Null Check Rate
+  | 'ANALYTICAL_RESEARCH'  // Source Citations + Hallucination Audit + Factual Precision
+  | 'CREATIVE_MEDIA';      // Semantic Alignment + Brand Safety & Tone Rubric
+
 export interface TaskContract {
   id: string;
   title: string;
   description: string;
+  deliverableCategory?: DeliverableCategory;
   totalBudgetUSD: number;
   currency: string;
   buyerAgentId: string;
