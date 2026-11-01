@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { TaskContract } from '@/types/escrow';
-import { FileCode, CheckCircle2, XCircle, Clock, Cpu, Users, Award } from 'lucide-react';
+import { FileCode, CheckCircle2, XCircle, Clock, Cpu, Users, Award, RefreshCw, ShieldCheck } from 'lucide-react';
 
 interface ContractCardProps {
   contract: TaskContract;
@@ -19,10 +19,19 @@ export const ContractCard: React.FC<ContractCardProps> = ({ contract }) => {
         return <span className="px-3 py-1 text-xs rounded-full bg-[#F0F5FA] text-[#003087] border border-[#D0E2F2] font-bold whitespace-nowrap">Escrow Locked</span>;
       case 'DELIVERED_AUDITING':
         return <span className="px-3 py-1 text-xs rounded-full bg-amber-50 text-amber-800 border border-amber-200 font-bold whitespace-nowrap">AI Arbitration</span>;
+      case 'REVISION_REQUESTED':
+        return <span className="px-3 py-1 text-xs rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 font-bold whitespace-nowrap">Revision Notice</span>;
+      case 'ARBITRATION_PASSED':
+        return <span className="px-3 py-1 text-xs rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold whitespace-nowrap">Audit Passed</span>;
+      case 'ARBITRATION_FAILED':
+        return <span className="px-3 py-1 text-xs rounded-full bg-rose-50 text-rose-700 border border-rose-200 font-bold whitespace-nowrap">Audit Failed</span>;
       default:
         return <span className="px-3 py-1 text-xs rounded-full bg-slate-100 text-slate-700 font-bold whitespace-nowrap">{status.replace('_', ' ')}</span>;
     }
   };
+
+  const attempt = contract.revisionAttempt || 1;
+  const maxAttempts = contract.maxRevisions || 3;
 
   return (
     <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col h-[580px]">
@@ -35,7 +44,14 @@ export const ContractCard: React.FC<ContractCardProps> = ({ contract }) => {
           </span>
           <span className="text-xs text-slate-500 font-medium">Autonomous Contract</span>
         </div>
-        <div>{getStatusBadge(contract.status)}</div>
+        <div className="flex items-center gap-1.5">
+          {contract.isPatched && (
+            <span className="px-2 py-0.5 text-[11px] rounded-full bg-blue-50 text-[#0070BA] border border-blue-200 font-bold flex items-center gap-1">
+              <RefreshCw className="w-2.5 h-2.5" /> Patched
+            </span>
+          )}
+          {getStatusBadge(contract.status)}
+        </div>
       </div>
 
       {/* Contract Title & Description */}
@@ -45,7 +61,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({ contract }) => {
       </div>
 
       {/* Agents Card */}
-      <div className="bg-[#F0F5FA]/80 border border-[#D0E2F2] rounded-xl p-3 flex flex-col gap-2 text-xs mb-3.5">
+      <div className="bg-[#F0F5FA]/80 border border-[#D0E2F2] rounded-xl p-3 flex flex-col gap-2 text-xs mb-3">
         <div className="flex items-center justify-between">
           <span className="text-slate-500 flex items-center gap-1.5 font-medium">
             <Users className="w-3.5 h-3.5 text-[#0070BA]" /> Buyer Agent:
@@ -58,6 +74,15 @@ export const ContractCard: React.FC<ContractCardProps> = ({ contract }) => {
             <Cpu className="w-3.5 h-3.5 text-indigo-600" /> Worker Agent:
           </span>
           <span className="text-slate-800 font-semibold">{contract.workerAgentId}</span>
+        </div>
+
+        <div className="flex items-center justify-between pt-1 border-t border-[#D0E2F2]/60">
+          <span className="text-slate-500 flex items-center gap-1.5 font-medium">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> Cure Policy:
+          </span>
+          <span className="text-[#003087] font-bold">
+            Attempt {attempt} of {maxAttempts}
+          </span>
         </div>
       </div>
 

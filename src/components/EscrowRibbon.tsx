@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { TaskContract } from '@/types/escrow';
-import { Lock, Unlock, ShieldAlert, CheckCircle, Zap } from 'lucide-react';
+import { Lock, Unlock, ShieldAlert, CheckCircle, Zap, RefreshCw } from 'lucide-react';
 
 interface EscrowRibbonProps {
   contract: TaskContract;
@@ -15,18 +15,24 @@ export const EscrowRibbon: React.FC<EscrowRibbonProps> = ({ contract, onSimulate
   const isCompleted = contract.status === 'PAYOUT_COMPLETED';
   const isRefunded = contract.status === 'DISPUTE_REFUNDED';
   const isWaitingDeposit = contract.status === 'WAITING_DEPOSIT';
+  const isRevision = contract.status === 'REVISION_REQUESTED';
+
+  const attempt = contract.revisionAttempt || 1;
+  const maxAttempts = contract.maxRevisions || 3;
 
   return (
     <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs">
       <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
         
-        {/* Metric 1: Vault Status (Tier 2: 14px title, Tier 1: 12px text) */}
+        {/* Metric 1: Vault Status */}
         <div className="flex items-center gap-3 w-full lg:w-auto">
           <div className="w-9 h-9 rounded-xl bg-[#F0F5FA] border border-[#D0E2F2] flex items-center justify-center text-[#003087] shrink-0">
             {isCompleted ? (
               <CheckCircle className="w-5 h-5 text-emerald-600" />
             ) : isRefunded ? (
               <ShieldAlert className="w-5 h-5 text-rose-600" />
+            ) : isRevision ? (
+              <RefreshCw className="w-5 h-5 text-indigo-600" />
             ) : isLocked ? (
               <Lock className="w-5 h-5 text-[#0070BA]" />
             ) : (
@@ -43,7 +49,12 @@ export const EscrowRibbon: React.FC<EscrowRibbonProps> = ({ contract, onSimulate
               )}
               {isRefunded && (
                 <span className="text-xs font-semibold text-rose-700 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200">
-                  Voided & Refunded
+                  Voided & Refunded (100%)
+                </span>
+              )}
+              {isRevision && (
+                <span className="text-xs font-semibold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-200">
+                  Cure Notice ({attempt}/{maxAttempts})
                 </span>
               )}
               {isLocked && (
@@ -59,9 +70,11 @@ export const EscrowRibbon: React.FC<EscrowRibbonProps> = ({ contract, onSimulate
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
               {isCompleted
-                ? 'Full payout disbursed to Worker Agent'
+                ? 'Full payout disbursed to Worker Agent upon verified pass'
                 : isRefunded
-                ? '100% of funds returned to Buyer Agent'
+                ? '100% of funds returned to Buyer Agent (Authorization voided)'
+                : isRevision
+                ? `Remediation active (Attempt ${attempt} of ${maxAttempts}). Funds locked in vault.`
                 : isLocked
                 ? 'Cryptographically locked under REST v2 Authorization'
                 : 'Awaiting buyer cryptographic deposit signature'}
@@ -69,7 +82,7 @@ export const EscrowRibbon: React.FC<EscrowRibbonProps> = ({ contract, onSimulate
           </div>
         </div>
 
-        {/* Metric 2: Escrow Locked Amount (Tier 3: 18px amount, Tier 1: 12px label) */}
+        {/* Metric 2: Escrow Locked Amount */}
         <div className="flex items-center gap-6 w-full lg:w-auto justify-between lg:justify-start border-t lg:border-t-0 lg:border-l border-slate-200 lg:pl-6 pt-3 lg:pt-0">
           <div>
             <span className="text-xs font-medium text-slate-500 block">
@@ -91,16 +104,16 @@ export const EscrowRibbon: React.FC<EscrowRibbonProps> = ({ contract, onSimulate
           </div>
         </div>
 
-        {/* Metric 3: Live Protocol Telemetry (Tier 1: 12px labels & values) */}
+        {/* Metric 3: Live Protocol Telemetry */}
         <div className="flex items-center gap-6 w-full lg:w-auto justify-between lg:justify-start border-t lg:border-t-0 lg:border-l border-slate-200 lg:pl-6 pt-3 lg:pt-0 text-xs">
           <div>
             <span className="text-xs font-medium text-slate-400 block">Order ID</span>
-            <span className="font-semibold text-slate-800">{meta.orderId || 'Pending'}</span>
+            <span className="font-semibold text-slate-800 font-mono">{meta.orderId || 'Pending'}</span>
           </div>
 
           <div>
             <span className="text-xs font-medium text-slate-400 block">Auth ID</span>
-            <span className="font-bold text-[#0070BA]">{meta.authorizationId || 'Awaiting Auth'}</span>
+            <span className="font-bold text-[#0070BA] font-mono">{meta.authorizationId || 'Awaiting Auth'}</span>
           </div>
 
           <div>

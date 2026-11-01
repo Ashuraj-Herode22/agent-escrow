@@ -9,6 +9,7 @@ import { AgentTerminal } from '@/components/AgentTerminal';
 import { CodeInspector } from '@/components/CodeInspector';
 import { CustomTaskModal } from '@/components/CustomTaskModal';
 import { DevDocsModal } from '@/components/DevDocsModal';
+import { PolicyModal } from '@/components/PolicyModal';
 import { TaskContract, AgentMessage } from '@/types/escrow';
 import { SIMULATION_PRESETS, createInitialContract, getStepDetails } from '@/lib/agent-engine';
 
@@ -19,20 +20,27 @@ interface CustomFlowState {
 }
 
 export default function MainApp() {
-  const [presetKey, setPresetKey] = useState<'SUCCESS_FLOW' | 'DISPUTE_FLOW'>('SUCCESS_FLOW');
+  const [presetKey, setPresetKey] = useState<'SUCCESS_FLOW' | 'HEALING_FLOW' | 'DISPUTE_FLOW'>('SUCCESS_FLOW');
   const [contract, setContract] = useState<TaskContract>(() => createInitialContract('SUCCESS_FLOW').contract);
   const [messages, setMessages] = useState<AgentMessage[]>(() => createInitialContract('SUCCESS_FLOW').messages);
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [isCustomTaskOpen, setIsCustomTaskOpen] = useState<boolean>(false);
   const [isDevDocsOpen, setIsDevDocsOpen] = useState<boolean>(false);
+  const [isPolicyModalOpen, setIsPolicyModalOpen] = useState<boolean>(false);
   const [customFlow, setCustomFlow] = useState<CustomFlowState | null>(null);
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const customFlowRef = useRef<CustomFlowState | null>(null);
   customFlowRef.current = customFlow;
 
-  const totalSteps = customFlow ? 5 : 6;
+  const totalSteps = customFlow
+    ? 5
+    : presetKey === 'SUCCESS_FLOW'
+    ? 6
+    : presetKey === 'HEALING_FLOW'
+    ? 8
+    : 7;
 
   // Execute a single step in custom flow
   const executeCustomStep = (stepNumber: number, flow: CustomFlowState) => {
@@ -252,6 +260,8 @@ export default function MainApp() {
         status: stepData.nextStatus,
         milestones: stepData.milestoneUpdates || prev.milestones,
         codeArtifact: stepData.codeArtifact || prev.codeArtifact,
+        revisionAttempt: stepData.revisionAttempt ?? prev.revisionAttempt,
+        isPatched: stepData.isPatched ?? prev.isPatched,
       };
 
       if (stepNumber === 2) {
@@ -261,18 +271,22 @@ export default function MainApp() {
         updated.paypalMetadata.authorizationId = `AUTH-${Math.random().toString(36).substring(2, 8).toUpperCase()}-ESCROW`;
         updated.paypalMetadata.escrowLockedAt = new Date().toISOString();
       }
-      if (stepNumber === 6) {
-        if (presetKey === 'SUCCESS_FLOW') {
-          updated.paypalMetadata.captureId = `CAP-${Math.random().toString(36).substring(2, 8).toUpperCase()}-RELEASE`;
-          updated.paypalMetadata.releasedAt = new Date().toISOString();
-          confetti({
-            particleCount: 80,
-            spread: 70,
-            origin: { y: 0.6 },
-          });
-        } else {
-          updated.paypalMetadata.captureId = 'VOIDED_AUTHORIZATION';
-        }
+
+      // Final settlement handling across all 3 flows
+      const isFinalSuccess =
+        (presetKey === 'SUCCESS_FLOW' && stepNumber === 6) ||
+        (presetKey === 'HEALING_FLOW' && stepNumber === 8);
+
+      if (isFinalSuccess) {
+        updated.paypalMetadata.captureId = `CAP-${Math.random().toString(36).substring(2, 8).toUpperCase()}-RELEASE`;
+        updated.paypalMetadata.releasedAt = new Date().toISOString();
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.6 },
+        });
+      } else if (presetKey === 'DISPUTE_FLOW' && stepNumber === 7) {
+        updated.paypalMetadata.captureId = 'VOIDED_AUTHORIZATION';
       }
 
       return updated;
@@ -316,6 +330,9 @@ export default function MainApp() {
       arbiterAgentId: 'Arbiter-01',
       status: 'INITIALIZING',
       createdAt: new Date().toISOString(),
+      revisionAttempt: 1,
+      maxRevisions: 3,
+      isPatched: false,
       milestones: [
         {
           id: 'M1',
@@ -341,7 +358,7 @@ export default function MainApp() {
       timestamp: new Date().toISOString(),
       sender: 'BUYER_AGENT',
       title: 'Custom Task Requisition Dispatched',
-      content: `I am commissioning custom task: "${customContract.title}". Budget: $${customContract.totalBudgetUSD.toFixed(2)} USD.`,
+      content: `I am commissioning custom task: "${customContract.title}". Budget: $${customContract.totalBudgetUSD.toFixed(2)} USD. Cure policy: 3 revision attempts.`,
       stepIndex: 1,
       type: 'TASK_SPEC',
       dataPayload: { budgetUSD: customContract.totalBudgetUSD },
@@ -366,7 +383,7 @@ export default function MainApp() {
   };
 
   // Reset or change preset
-  const handleSelectPreset = (key: 'SUCCESS_FLOW' | 'DISPUTE_FLOW') => {
+  const handleSelectPreset = (key: 'SUCCESS_FLOW' | 'HEALING_FLOW' | 'DISPUTE_FLOW') => {
     if (isRunning) return;
     setCustomFlow(null);
     customFlowRef.current = null;
@@ -382,7 +399,6 @@ export default function MainApp() {
     setIsRunning(false);
 
     if (customFlow) {
-      // Reset custom task back to Step 0
       const initialContract: TaskContract = {
         ...customFlow.finalContract,
         status: 'INITIALIZING',
@@ -459,6 +475,7 @@ export default function MainApp() {
         isSimulated={true}
         onOpenCustomTask={() => setIsCustomTaskOpen(true)}
         onOpenSdkDocs={() => setIsDevDocsOpen(true)}
+        onOpenPolicyModal={() => setIsPolicyModalOpen(true)}
       />
 
       {/* Main Workspace */}
@@ -479,7 +496,10 @@ export default function MainApp() {
           <AgentTerminal messages={messages} />
 
           {/* Column 3: Verification Sandbox & Audit */}
-          <CodeInspector contract={contract} />
+          <CodeInspector
+            contract={contract}
+            onOpenPolicyModal={() => setIsPolicyModalOpen(true)}
+          />
         </div>
 
       </main>
@@ -493,7 +513,7 @@ export default function MainApp() {
             <span>Autonomous Multi-Agent Commerce Protocol</span>
           </div>
           <div className="text-slate-400">
-            Programmable Milestone Escrow & Dispute Arbitration Engine (REST v2)
+            Programmable Milestone Escrow, Self-Healing Cure Loops & Dispute Arbitration (REST v2)
           </div>
         </div>
       </footer>
@@ -508,6 +528,11 @@ export default function MainApp() {
       <DevDocsModal
         isOpen={isDevDocsOpen}
         onClose={() => setIsDevDocsOpen(false)}
+      />
+
+      <PolicyModal
+        isOpen={isPolicyModalOpen}
+        onClose={() => setIsPolicyModalOpen(false)}
       />
     </div>
   );

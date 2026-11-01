@@ -1,12 +1,12 @@
 'use client';
 
 import React from 'react';
-import { Play, RotateCcw, ArrowRight, ShieldCheck, CheckCircle2, Shield, Sparkles, Code2 } from 'lucide-react';
+import { Play, RotateCcw, ArrowRight, ShieldCheck, CheckCircle2, Shield, Sparkles, Code2, RefreshCw, AlertOctagon } from 'lucide-react';
 import { SimulationPreset } from '@/types/escrow';
 
 interface HeaderProps {
   currentPreset: SimulationPreset;
-  onSelectPreset: (presetKey: 'SUCCESS_FLOW' | 'DISPUTE_FLOW') => void;
+  onSelectPreset: (presetKey: 'SUCCESS_FLOW' | 'HEALING_FLOW' | 'DISPUTE_FLOW') => void;
   isRunning: boolean;
   onStartSimulation: () => void;
   onNextStep: () => void;
@@ -16,6 +16,7 @@ interface HeaderProps {
   isSimulated: boolean;
   onOpenCustomTask?: () => void;
   onOpenSdkDocs?: () => void;
+  onOpenPolicyModal?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -30,6 +31,7 @@ export const Header: React.FC<HeaderProps> = ({
   isSimulated,
   onOpenCustomTask,
   onOpenSdkDocs,
+  onOpenPolicyModal,
 }) => {
   return (
     <header className="border-b border-slate-200/80 bg-white sticky top-0 z-50">
@@ -43,36 +45,52 @@ export const Header: React.FC<HeaderProps> = ({
           <span className="font-extrabold text-lg tracking-tight text-[#003087]">AgentEscrow</span>
         </div>
 
-        {/* Center: Tier 1 (12px) Sleek Toggle */}
-        <div className="flex items-center bg-slate-100/80 p-0.5 rounded-full border border-slate-200/70 h-8">
+        {/* Center: 3-Way Scenario Switcher */}
+        <div className="flex items-center bg-slate-100/90 p-0.5 rounded-full border border-slate-200/70 h-8">
           <button
             onClick={() => onSelectPreset('SUCCESS_FLOW')}
             disabled={isRunning}
-            className={`px-3.5 py-1 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer h-7 ${
+            className={`px-3 py-1 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer h-7 ${
               currentPreset.id === 'SUCCESS_FLOW'
                 ? 'bg-white text-[#003087] shadow-2xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
+            title="Instant clean build with 100% test pass"
           >
             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
             <span>Scenario 1: Verified Payout ($75)</span>
           </button>
 
           <button
+            onClick={() => onSelectPreset('HEALING_FLOW')}
+            disabled={isRunning}
+            className={`px-3 py-1 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer h-7 ${
+              currentPreset.id === 'HEALING_FLOW'
+                ? 'bg-white text-[#003087] shadow-2xs'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+            title="CWE-89 caught on Attempt 1 -> Self-healed on Attempt 2 -> Payout"
+          >
+            <RefreshCw className="w-3.5 h-3.5 text-indigo-600" />
+            <span>Scenario 2: Self-Healing Patch ($120)</span>
+          </button>
+
+          <button
             onClick={() => onSelectPreset('DISPUTE_FLOW')}
             disabled={isRunning}
-            className={`px-3.5 py-1 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer h-7 ${
+            className={`px-3 py-1 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer h-7 ${
               currentPreset.id === 'DISPUTE_FLOW'
                 ? 'bg-white text-[#003087] shadow-2xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
+            title="3/3 attempts fail security scan -> 100% void refund"
           >
-            <ShieldCheck className="w-3.5 h-3.5 text-amber-600" />
-            <span>Scenario 2: Flaw Refund ($120)</span>
+            <AlertOctagon className="w-3.5 h-3.5 text-rose-600" />
+            <span>Scenario 3: Quota Refund ($120)</span>
           </button>
         </div>
 
-        {/* Right Actions: Tier 1 (12px) Pill Buttons */}
+        {/* Right Actions: Pill Buttons */}
         <div className="flex items-center gap-2 shrink-0">
           {onOpenCustomTask && (
             <button
@@ -83,6 +101,18 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <Sparkles className="w-3.5 h-3.5 text-[#0070BA]" />
               <span>+ Custom Task</span>
+            </button>
+          )}
+
+          {onOpenPolicyModal && (
+            <button
+              onClick={onOpenPolicyModal}
+              disabled={isRunning}
+              className="h-8 px-2.5 rounded-full text-xs font-medium bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 flex items-center gap-1 transition-all cursor-pointer active:scale-98"
+              title="View Security & Governance Policy"
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-indigo-600" />
+              <span>Governance</span>
             </button>
           )}
 

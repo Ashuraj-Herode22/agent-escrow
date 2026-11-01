@@ -7,6 +7,7 @@ export type ContractStatus =
   | 'ESCROW_LOCKED'
   | 'WORK_IN_PROGRESS'
   | 'DELIVERED_AUDITING'
+  | 'REVISION_REQUESTED'
   | 'ARBITRATION_PASSED'
   | 'ARBITRATION_FAILED'
   | 'PAYOUT_COMPLETED'
@@ -37,6 +38,9 @@ export interface TaskContract {
   arbiterAgentId: string;
   status: ContractStatus;
   createdAt: string;
+  revisionAttempt?: number;
+  maxRevisions?: number;
+  isPatched?: boolean;
   milestones: Milestone[];
   codeArtifact?: {
     filename: string;
@@ -77,12 +81,12 @@ export interface AgentMessage {
 }
 
 export interface SimulationPreset {
-  id: 'SUCCESS_FLOW' | 'DISPUTE_FLOW';
+  id: 'SUCCESS_FLOW' | 'HEALING_FLOW' | 'DISPUTE_FLOW';
   name: string;
   description: string;
   taskTitle: string;
   taskDescription: string;
   budgetUSD: number;
-  targetOutcome: '100% PASS -> PAYOUT' | 'SECURITY FLAW -> REFUND';
+  targetOutcome: string;
 }
 
