@@ -79,7 +79,7 @@ console.log('Arbiter Result:', result.verdict);`;
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-slate-900 flex items-center justify-center text-white shadow-2xs">
+            <div className="w-8 h-8 rounded-xl bg-[#003087] flex items-center justify-center text-white shadow-xs">
               <Code2 className="w-4 h-4 text-white" />
             </div>
             <div>
@@ -92,14 +92,14 @@ console.log('Arbiter Result:', result.verdict);`;
           </button>
         </div>
 
-        {/* Clean Symmetrical Tab Selector (No Awkward 2-Line Text Wrapping!) */}
+        {/* Clean Symmetrical Tab Selector */}
         <div className="grid grid-cols-3 bg-slate-100/90 p-1 rounded-xl text-center font-medium border border-slate-200/60">
           <button
             onClick={() => setActiveTab('PYTHON')}
             className={`py-2 rounded-lg transition-all cursor-pointer text-xs font-bold ${
               activeTab === 'PYTHON'
-                ? 'bg-white text-slate-900 shadow-2xs'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-[#003087] text-white shadow-2xs'
+                : 'text-slate-600 hover:text-[#003087]'
             }`}
           >
             Python SDK
@@ -108,8 +108,8 @@ console.log('Arbiter Result:', result.verdict);`;
             onClick={() => setActiveTab('TYPESCRIPT')}
             className={`py-2 rounded-lg transition-all cursor-pointer text-xs font-bold ${
               activeTab === 'TYPESCRIPT'
-                ? 'bg-white text-slate-900 shadow-2xs'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-[#003087] text-white shadow-2xs'
+                : 'text-slate-600 hover:text-[#003087]'
             }`}
           >
             TypeScript SDK
@@ -118,8 +118,8 @@ console.log('Arbiter Result:', result.verdict);`;
             onClick={() => setActiveTab('CURL')}
             className={`py-2 rounded-lg transition-all cursor-pointer text-xs font-bold ${
               activeTab === 'CURL'
-                ? 'bg-white text-slate-900 shadow-2xs'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-[#003087] text-white shadow-2xs'
+                : 'text-slate-600 hover:text-[#003087]'
             }`}
           >
             cURL API
@@ -130,12 +130,12 @@ console.log('Arbiter Result:', result.verdict);`;
         <div className="relative rounded-xl border border-slate-200 bg-[#F8FAFC] p-4 font-mono text-xs text-slate-900 leading-relaxed overflow-x-auto max-h-[300px]">
           <button
             onClick={handleCopy}
-            className="absolute top-3 right-3 px-2.5 py-1 rounded-md bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center gap-1.5 shadow-2xs font-sans text-[11px] font-semibold transition-all cursor-pointer active:scale-98"
+            className="absolute top-3 right-3 px-2.5 py-1 rounded-md bg-white border border-slate-200 text-slate-700 hover:text-[#003087] hover:border-[#0070BA]/50 flex items-center gap-1.5 shadow-2xs font-sans text-[11px] font-semibold transition-all cursor-pointer active:scale-98"
           >
             {copied ? (
               <>
-                <Check className="w-3.5 h-3.5 text-slate-900 stroke-[2.5]" />
-                <span className="text-slate-900">Copied</span>
+                <Check className="w-3.5 h-3.5 text-emerald-600 stroke-[2.5]" />
+                <span className="text-emerald-700">Copied</span>
               </>
             ) : (
               <>

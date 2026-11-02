@@ -77,7 +77,7 @@ export const CustomTaskModal: React.FC<CustomTaskModalProps> = ({ isOpen, onClos
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-slate-900 flex items-center justify-center text-white">
+            <div className="w-7 h-7 rounded-lg bg-[#003087] flex items-center justify-center text-white shadow-xs">
               <Sparkles className="w-4 h-4 text-white" />
             </div>
             <div>
@@ -99,7 +99,7 @@ export const CustomTaskModal: React.FC<CustomTaskModalProps> = ({ isOpen, onClos
                 key={i}
                 type="button"
                 onClick={() => applySuggestion(s)}
-                className="px-2.5 py-1 rounded-md bg-slate-50 hover:bg-slate-100 text-slate-800 text-xs font-medium border border-slate-200 transition-colors cursor-pointer"
+                className="px-2.5 py-1 rounded-md bg-slate-50 hover:bg-[#F0F5FA] text-slate-800 hover:text-[#003087] text-xs font-medium border border-slate-200 hover:border-[#D0E2F2] transition-colors cursor-pointer"
               >
                 {s.title.split(' ')[0]} {s.title.split(' ')[1]} (${s.bounty})
               </button>
@@ -117,7 +117,7 @@ export const CustomTaskModal: React.FC<CustomTaskModalProps> = ({ isOpen, onClos
               value={taskTitle}
               onChange={(e) => setTaskTitle(e.target.value)}
               placeholder="e.g. Build an asynchronous Python rate limiter"
-              className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs text-slate-800 focus:outline-hidden focus:border-slate-400"
+              className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs text-slate-800 focus:outline-hidden focus:border-[#0070BA] focus:ring-1 focus:ring-[#0070BA]/20"
             />
           </div>
 
@@ -128,21 +128,21 @@ export const CustomTaskModal: React.FC<CustomTaskModalProps> = ({ isOpen, onClos
               value={taskDesc}
               onChange={(e) => setTaskDesc(e.target.value)}
               placeholder="e.g. Must handle 1,000 req/sec, zero hardcoded credentials, sub-10ms response"
-              className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs text-slate-800 focus:outline-hidden focus:border-slate-400"
+              className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs text-slate-800 focus:outline-hidden focus:border-[#0070BA] focus:ring-1 focus:ring-[#0070BA]/20"
             />
           </div>
 
           <div>
             <label className="block text-xs font-bold text-slate-700 mb-1">Escrow Bounty (USD)</label>
             <div className="relative">
-              <span className="absolute left-3 top-2 text-slate-400 font-bold">$</span>
+              <span className="absolute left-3 top-2 text-[#003087] font-bold">$</span>
               <input
                 type="number"
                 min="10"
                 max="500"
                 value={bounty}
                 onChange={(e) => setBounty(e.target.value)}
-                className="w-full pl-7 pr-3 py-2 rounded-xl border border-slate-200 text-xs text-slate-800 font-bold focus:outline-hidden focus:border-slate-400"
+                className="w-full pl-7 pr-3 py-2 rounded-xl border border-slate-200 text-xs text-[#003087] font-bold focus:outline-hidden focus:border-[#0070BA] focus:ring-1 focus:ring-[#0070BA]/20"
               />
             </div>
           </div>
@@ -151,17 +151,17 @@ export const CustomTaskModal: React.FC<CustomTaskModalProps> = ({ isOpen, onClos
           <button
             type="submit"
             disabled={loading || !taskTitle.trim()}
-            className="w-full mt-2 py-2.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-xs transition-all active:scale-98 cursor-pointer disabled:opacity-50"
+            className="w-full mt-2 py-2.5 rounded-full bg-[#003087] hover:bg-[#002266] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-xs transition-all active:scale-98 cursor-pointer disabled:opacity-50"
           >
             {loading ? (
               <>
-                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                <Loader2 className="w-3.5 h-3.5 animate-spin text-[#FFC439]" />
                 <span>AI Agents Synthesizing & Arbitrating...</span>
               </>
             ) : (
               <>
                 <span>Dispatch to AI Agent Network</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <ArrowRight className="w-3.5 h-3.5 text-[#FFC439]" />
               </>
             )}
           </button>

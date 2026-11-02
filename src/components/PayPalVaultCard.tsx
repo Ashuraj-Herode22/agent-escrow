@@ -22,7 +22,7 @@ export const PayPalVaultCard: React.FC<PayPalVaultCardProps> = ({ contract, onSi
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-slate-900 flex items-center justify-center text-white">
+          <div className="w-8 h-8 rounded-lg bg-[#003087] flex items-center justify-center text-white shadow-xs">
             <Shield className="w-4 h-4 fill-white/20 stroke-white" />
           </div>
           <div>
@@ -34,35 +34,35 @@ export const PayPalVaultCard: React.FC<PayPalVaultCardProps> = ({ contract, onSi
         {/* Vault State Indicator */}
         <div className="flex items-center gap-2">
           {isCompleted && (
-            <span className="flex items-center gap-1.5 text-xs text-slate-900 font-semibold bg-slate-100 px-3 py-1 rounded-full border border-slate-300">
-              <CheckCircle className="w-3.5 h-3.5" /> Released & Settled
+            <span className="flex items-center gap-1.5 text-xs text-emerald-800 font-semibold bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 shadow-2xs">
+              <CheckCircle className="w-3.5 h-3.5 text-emerald-600" /> Released & Settled
             </span>
           )}
           {isRefunded && (
-            <span className="flex items-center gap-1.5 text-xs text-slate-900 font-semibold bg-slate-100 px-3 py-1 rounded-full border border-slate-300">
-              <ShieldAlert className="w-3.5 h-3.5" /> Voided & Refunded
+            <span className="flex items-center gap-1.5 text-xs text-rose-800 font-semibold bg-rose-50 px-3 py-1 rounded-full border border-rose-200 shadow-2xs">
+              <ShieldAlert className="w-3.5 h-3.5 text-rose-600" /> Voided & Refunded
             </span>
           )}
           {isLocked && (
-            <span className="flex items-center gap-1.5 text-xs text-slate-900 font-semibold bg-slate-100 px-3 py-1 rounded-full border border-slate-300">
-              <Lock className="w-3.5 h-3.5 text-slate-800" /> Funds Secured
+            <span className="flex items-center gap-1.5 text-xs text-[#003087] font-semibold bg-[#F0F5FA] px-3 py-1 rounded-full border border-[#D0E2F2] shadow-2xs">
+              <Lock className="w-3.5 h-3.5 text-[#0070BA]" /> Funds Secured
             </span>
           )}
           {isWaitingDeposit && (
-            <span className="flex items-center gap-1.5 text-xs text-slate-900 font-semibold bg-slate-100 px-3 py-1 rounded-full border border-slate-300">
-              <Unlock className="w-3.5 h-3.5 text-slate-800" /> Awaiting Auth
+            <span className="flex items-center gap-1.5 text-xs text-amber-800 font-semibold bg-amber-50 px-3 py-1 rounded-full border border-amber-200 shadow-2xs">
+              <Unlock className="w-3.5 h-3.5 text-amber-600" /> Awaiting Auth
             </span>
           )}
         </div>
       </div>
 
-      {/* Vault Balance Display (Clean Neutral Box) */}
-      <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex items-center justify-between">
+      {/* Vault Balance Display (Clean Navy Theme) */}
+      <div className="bg-gradient-to-r from-[#F0F5FA] to-white border border-[#D0E2F2] rounded-xl p-4 flex items-center justify-between">
         <div>
-          <span className="text-[11px] text-slate-500 block uppercase tracking-wider font-semibold">
+          <span className="text-[11px] text-[#0070BA] block uppercase tracking-wider font-bold">
             Escrow Locked Balance
           </span>
-          <div className="text-2xl font-black text-slate-900 mt-0.5 flex items-baseline gap-1.5">
+          <div className="text-2xl font-black text-[#003087] mt-0.5 flex items-baseline gap-1.5">
             <span>${contract.totalBudgetUSD.toFixed(2)}</span>
             <span className="text-xs font-semibold text-slate-500">USD</span>
           </div>
@@ -72,25 +72,25 @@ export const PayPalVaultCard: React.FC<PayPalVaultCardProps> = ({ contract, onSi
           <span className="text-[11px] text-slate-500 block uppercase tracking-wider font-semibold">
             Release Gate
           </span>
-          <span className="text-xs font-mono font-bold text-slate-900 bg-white px-2.5 py-1 rounded border border-slate-200 mt-0.5 inline-block shadow-2xs">
+          <span className="text-xs font-mono font-bold text-[#003087] bg-white px-2.5 py-1 rounded border border-[#D0E2F2] mt-0.5 inline-block shadow-2xs">
             Arbiter Score ≥ 95%
           </span>
         </div>
       </div>
 
       {/* Protocol Telemetry Info */}
-      <div className="space-y-2 text-xs font-mono bg-slate-50/80 rounded-xl p-3.5 border border-slate-200/80">
+      <div className="space-y-2 text-xs font-mono bg-[#F8FAFC] rounded-xl p-3.5 border border-slate-200">
         <div className="flex items-center justify-between text-slate-600">
           <span className="font-sans font-medium text-slate-500">Order ID:</span>
           <span className="text-slate-800 font-semibold">{meta.orderId || 'PENDING_CREATION'}</span>
         </div>
         <div className="flex items-center justify-between text-slate-600">
           <span className="font-sans font-medium text-slate-500">Authorization ID:</span>
-          <span className="text-slate-900 font-bold">{meta.authorizationId || 'AWAITING_AUTH'}</span>
+          <span className="text-[#003087] font-bold">{meta.authorizationId || 'AWAITING_AUTH'}</span>
         </div>
         <div className="flex items-center justify-between text-slate-600">
           <span className="font-sans font-medium text-slate-500">Settlement Status:</span>
-          <span className="text-slate-900 font-bold">
+          <span className={`font-bold ${isCompleted ? 'text-emerald-700' : isRefunded ? 'text-rose-700' : 'text-[#003087]'}`}>
             {meta.captureId || (isRefunded ? 'VOIDED_AUTHORIZATION' : 'LOCKED_IN_ESCROW')}
           </span>
         </div>
@@ -100,9 +100,9 @@ export const PayPalVaultCard: React.FC<PayPalVaultCardProps> = ({ contract, onSi
       {isWaitingDeposit && (
         <button
           onClick={onSimulateApproveDeposit}
-          className="w-full py-2.5 px-4 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs flex items-center justify-center gap-2 shadow-xs transition-all active:scale-98 cursor-pointer"
+          className="w-full py-2.5 px-4 rounded-full bg-[#003087] hover:bg-[#002266] text-white font-extrabold text-xs flex items-center justify-center gap-2 shadow-xs transition-all active:scale-98 cursor-pointer"
         >
-          <Zap className="w-3.5 h-3.5 fill-current" />
+          <Zap className="w-3.5 h-3.5 fill-[#FFC439] text-[#FFC439]" />
           <span>Authorize Conditional Escrow Hold</span>
         </button>
       )}

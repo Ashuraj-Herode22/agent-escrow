@@ -517,11 +517,13 @@ export default function MainApp() {
 
       </main>
 
-      {/* Clean Enterprise Footer */}
+      {/* Clean Enterprise Footer with Brand Theme */}
       <footer className="border-t border-slate-200 bg-white px-6 py-4 text-xs text-slate-500 font-medium mt-auto">
         <div className="max-w-[1400px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <span className="font-extrabold text-slate-900">AgentEscrow</span>
+            <span className="font-extrabold text-[#003087]">
+              Agent<span className="text-[#0070BA]">Escrow</span>
+            </span>
             <span>•</span>
             <span>Autonomous Multi-Agent Commerce Protocol</span>
           </div>

@@ -33,28 +33,36 @@ export const AgentTerminal: React.FC<AgentTerminalProps> = ({
 
   const filteredMessages = filter === 'ALL' ? messages : messages.filter((m) => m.sender === filter);
 
-  // Clean, uniform, formal neutral badges (No rainbow circus colors!)
+  // Tasteful, distinct agent badges with minimal semantic color identity
   const getAgentBadge = (sender: AgentRole) => {
     switch (sender) {
       case 'BUYER_AGENT':
         return {
           label: 'Buyer Agent',
-          icon: <Users className="w-3.5 h-3.5 text-slate-700" />,
+          icon: <Users className="w-3.5 h-3.5 text-sky-600" />,
+          badgeStyle: 'bg-sky-50 text-sky-800 border-sky-200',
+          borderAccent: 'border-l-3 border-l-sky-500',
         };
       case 'WORKER_AGENT':
         return {
           label: 'Worker Agent',
-          icon: <Cpu className="w-3.5 h-3.5 text-slate-700" />,
+          icon: <Cpu className="w-3.5 h-3.5 text-emerald-600" />,
+          badgeStyle: 'bg-emerald-50 text-emerald-800 border-emerald-200',
+          borderAccent: 'border-l-3 border-l-emerald-500',
         };
       case 'ARBITER_AGENT':
         return {
           label: 'AI Arbiter',
-          icon: <ShieldCheck className="w-3.5 h-3.5 text-slate-700" />,
+          icon: <ShieldCheck className="w-3.5 h-3.5 text-indigo-600" />,
+          badgeStyle: 'bg-indigo-50 text-indigo-800 border-indigo-200',
+          borderAccent: 'border-l-3 border-l-indigo-500',
         };
       case 'PAYPAL_ESCROW':
         return {
-          label: 'Escrow Engine',
-          icon: <DollarSign className="w-3.5 h-3.5 text-slate-700" />,
+          label: 'PayPal Escrow',
+          icon: <DollarSign className="w-3.5 h-3.5 text-[#0070BA]" />,
+          badgeStyle: 'bg-[#F0F5FA] text-[#003087] border-[#D0E2F2]',
+          borderAccent: 'border-l-3 border-l-[#003087]',
         };
     }
   };
@@ -77,18 +85,19 @@ export const AgentTerminal: React.FC<AgentTerminalProps> = ({
       {/* Title & Count Row */}
       <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
         <div className="flex items-center gap-2">
-          <Terminal className="w-4 h-4 text-slate-700" />
+          <Terminal className="w-4 h-4 text-[#003087]" />
           <h3 className="text-sm font-bold text-slate-900">
             Agent Activity Stream
           </h3>
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse ml-0.5" title="Live stream active" />
         </div>
-        <span className="text-xs bg-slate-100 text-slate-700 px-2.5 py-0.5 rounded-full font-semibold border border-slate-200">
+        <span className="text-xs bg-[#F0F5FA] text-[#003087] px-2.5 py-0.5 rounded-full font-bold border border-[#D0E2F2]">
           {messages.length} Events Logged
         </span>
       </div>
 
       {/* Filter Segmented Control */}
-      <div className="grid grid-cols-5 bg-slate-100/80 p-0.5 rounded-lg text-center text-xs mb-3 font-medium border border-slate-200/50">
+      <div className="grid grid-cols-5 bg-slate-100/90 p-0.5 rounded-lg text-center text-xs mb-3 font-medium border border-slate-200/60">
         {(['ALL', 'BUYER_AGENT', 'WORKER_AGENT', 'ARBITER_AGENT', 'PAYPAL_ESCROW'] as const).map((role) => {
           const shortLabel = 
             role === 'ALL' ? 'All' :
@@ -102,8 +111,8 @@ export const AgentTerminal: React.FC<AgentTerminalProps> = ({
               onClick={() => setFilter(role)}
               className={`py-1 rounded-md transition-all cursor-pointer ${
                 filter === role
-                  ? 'bg-white text-slate-900 font-bold shadow-2xs'
-                  : 'text-slate-500 hover:text-slate-900'
+                  ? 'bg-[#003087] text-white font-bold shadow-2xs'
+                  : 'text-slate-600 hover:text-[#003087]'
               }`}
             >
               {shortLabel}
@@ -121,10 +130,10 @@ export const AgentTerminal: React.FC<AgentTerminalProps> = ({
             return (
               <div
                 key={msg.id}
-                className="p-3.5 rounded-xl bg-[#F8FAFC] border border-slate-200 text-xs flex flex-col gap-1.5 transition-all hover:bg-slate-50 animate-in fade-in duration-150"
+                className={`p-3.5 rounded-xl bg-[#F8FAFC] border border-slate-200 text-xs flex flex-col gap-1.5 transition-all hover:bg-slate-50 animate-in fade-in duration-150 ${badge.borderAccent}`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md border border-slate-200 bg-white text-xs font-bold text-slate-800 shadow-2xs">
+                  <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md border text-xs font-bold shadow-2xs ${badge.badgeStyle}`}>
                     {badge.icon}
                     <span>{badge.label}</span>
                   </span>

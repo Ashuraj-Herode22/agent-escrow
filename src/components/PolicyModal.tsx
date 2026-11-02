@@ -18,7 +18,7 @@ export const PolicyModal: React.FC<PolicyModalProps> = ({ isOpen, onClose }) => 
         {/* Header */}
         <div className="p-5 border-b border-slate-100 flex items-center justify-between bg-[#F8FAFC]">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-slate-900 flex items-center justify-center text-white shadow-2xs">
+            <div className="w-9 h-9 rounded-xl bg-[#003087] flex items-center justify-center text-white shadow-xs">
               <ShieldCheck className="w-5 h-5 text-white" />
             </div>
             <div>
@@ -34,13 +34,13 @@ export const PolicyModal: React.FC<PolicyModalProps> = ({ isOpen, onClose }) => 
           </button>
         </div>
 
-        {/* Clean, Spacious Scrollable Body */}
+        {/* Clean, Spacious Scrollable Body with Refined Theme Highlights */}
         <div className="p-6 overflow-y-auto space-y-4 text-xs">
           
           {/* Card 1: Two-Phase Commit */}
-          <div className="p-4 rounded-xl border border-slate-200 bg-[#F8FAFC] space-y-1.5">
-            <div className="flex items-center gap-2 text-slate-900 font-bold text-xs">
-              <Lock className="w-4 h-4 text-slate-700 shrink-0" />
+          <div className="p-4 rounded-xl border border-[#D0E2F2] bg-[#F0F5FA]/70 space-y-1.5">
+            <div className="flex items-center gap-2 text-[#003087] font-bold text-xs">
+              <Lock className="w-4 h-4 text-[#0070BA] shrink-0" />
               <span>1. Two-Phase Escrow Safeguard (intent: AUTHORIZE)</span>
             </div>
             <p className="text-slate-700 leading-relaxed text-xs">
@@ -49,9 +49,9 @@ export const PolicyModal: React.FC<PolicyModalProps> = ({ isOpen, onClose }) => 
           </div>
 
           {/* Card 2: Cure Period */}
-          <div className="p-4 rounded-xl border border-slate-200 bg-[#F8FAFC] space-y-1.5">
-            <div className="flex items-center gap-2 text-slate-900 font-bold text-xs">
-              <RefreshCw className="w-4 h-4 text-slate-700 shrink-0" />
+          <div className="p-4 rounded-xl border border-indigo-200 bg-indigo-50/50 space-y-1.5">
+            <div className="flex items-center gap-2 text-indigo-950 font-bold text-xs">
+              <RefreshCw className="w-4 h-4 text-indigo-600 shrink-0" />
               <span>2. Autonomous Cure Period (Up to 3 Revisions)</span>
             </div>
             <p className="text-slate-700 leading-relaxed text-xs">
@@ -60,9 +60,9 @@ export const PolicyModal: React.FC<PolicyModalProps> = ({ isOpen, onClose }) => 
           </div>
 
           {/* Card 3: Cyber Defense */}
-          <div className="p-4 rounded-xl border border-slate-200 bg-[#F8FAFC] space-y-1.5">
-            <div className="flex items-center gap-2 text-slate-900 font-bold text-xs">
-              <ShieldAlert className="w-4 h-4 text-slate-700 shrink-0" />
+          <div className="p-4 rounded-xl border border-rose-200 bg-rose-50/50 space-y-1.5">
+            <div className="flex items-center gap-2 text-rose-950 font-bold text-xs">
+              <ShieldAlert className="w-4 h-4 text-rose-600 shrink-0" />
               <span>3. Automated Static Cyber Defense</span>
             </div>
             <p className="text-slate-700 leading-relaxed text-xs">
@@ -71,9 +71,9 @@ export const PolicyModal: React.FC<PolicyModalProps> = ({ isOpen, onClose }) => 
           </div>
 
           {/* Card 4: Spending Limits */}
-          <div className="p-4 rounded-xl border border-slate-200 bg-[#F8FAFC] space-y-1.5">
-            <div className="flex items-center gap-2 text-slate-900 font-bold text-xs">
-              <AlertTriangle className="w-4 h-4 text-slate-700 shrink-0" />
+          <div className="p-4 rounded-xl border border-amber-200 bg-amber-50/50 space-y-1.5">
+            <div className="flex items-center gap-2 text-amber-950 font-bold text-xs">
+              <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
               <span>4. Spending Guardrails & Caps</span>
             </div>
             <p className="text-slate-700 leading-relaxed text-xs">
@@ -90,7 +90,7 @@ export const PolicyModal: React.FC<PolicyModalProps> = ({ isOpen, onClose }) => 
           </span>
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-full bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold transition-all cursor-pointer shadow-2xs"
+            className="px-4 py-2 rounded-full bg-[#003087] hover:bg-[#002266] text-white text-xs font-semibold transition-all cursor-pointer shadow-xs active:scale-98"
           >
             Close Policy
           </button>
