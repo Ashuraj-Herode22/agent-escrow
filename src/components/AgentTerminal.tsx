@@ -80,10 +80,10 @@ export const AgentTerminal: React.FC<AgentTerminalProps> = ({
   };
 
   return (
-    <div className="bg-[#0B132B] border border-slate-800 rounded-2xl p-5 shadow-[0_8px_30px_rgb(0,0,0,0.15)] flex flex-col h-[640px] text-slate-100">
+    <div className="bg-[#030712] border border-slate-800 rounded-2xl p-5 shadow-[0_12px_40px_rgba(0,0,0,0.25)] flex flex-col h-[640px] text-slate-100">
       
       {/* Terminal Title Bar & System Controls */}
-      <div className="flex items-center justify-between pb-3.5 border-b border-slate-800/80 mb-3.5">
+      <div className="flex items-center justify-between pb-3.5 border-b border-slate-800/90 mb-3.5">
         <div className="flex items-center gap-3">
           {/* macOS window dots */}
           <div className="flex items-center gap-1.5 shrink-0">
@@ -104,14 +104,14 @@ export const AgentTerminal: React.FC<AgentTerminalProps> = ({
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
             LIVE SWARM
           </span>
-          <span className="text-xs bg-[#111C38] text-sky-300 px-2.5 py-0.5 rounded-full font-mono font-bold border border-slate-800">
+          <span className="text-xs bg-[#0F172A] text-sky-300 px-2.5 py-0.5 rounded-full font-mono font-bold border border-slate-700">
             {messages.length} Events
           </span>
         </div>
       </div>
 
       {/* Filter Segmented Control (Dark High-Tech) */}
-      <div className="grid grid-cols-5 bg-[#111C38]/90 p-1 rounded-xl text-center text-xs mb-3.5 font-medium border border-slate-800/80">
+      <div className="grid grid-cols-5 bg-[#0A0F1D] p-1 rounded-xl text-center text-xs mb-3.5 font-medium border border-slate-800">
         {(['ALL', 'BUYER_AGENT', 'WORKER_AGENT', 'ARBITER_AGENT', 'PAYPAL_ESCROW'] as const).map((role) => {
           const shortLabel = 
             role === 'ALL' ? 'All' :
@@ -144,7 +144,7 @@ export const AgentTerminal: React.FC<AgentTerminalProps> = ({
             return (
               <div
                 key={msg.id}
-                className={`p-3.5 rounded-xl bg-[#111C38] border border-slate-800 text-xs flex flex-col gap-1.5 transition-all hover:border-slate-700 animate-in fade-in duration-150 ${badge.borderAccent}`}
+                className={`p-3.5 rounded-xl bg-[#152445] border border-slate-600/70 text-xs flex flex-col gap-1.5 transition-all shadow-sm hover:border-slate-500 hover:bg-[#1A2D54] animate-in fade-in duration-150 ${badge.borderAccent}`}
               >
                 <div className="flex items-center justify-between">
                   <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md border text-[11px] font-bold shadow-2xs ${badge.badgeStyle}`}>
@@ -156,15 +156,15 @@ export const AgentTerminal: React.FC<AgentTerminalProps> = ({
                   </span>
                 </div>
 
-                <div className="font-bold text-slate-100 mt-0.5 font-mono text-xs">{msg.title}</div>
-                <p className="text-slate-300 leading-relaxed font-sans text-xs">{msg.content}</p>
+                <div className="font-bold text-white mt-0.5 font-mono text-xs">{msg.title}</div>
+                <p className="text-slate-200 leading-relaxed font-sans text-xs">{msg.content}</p>
               </div>
             );
           })
         ) : (
-          /* HIGH-TECH TERMINAL BOOT CONSOLE (Dual-Tone Staged Ready State) */
-          <div className="my-auto p-5 rounded-2xl bg-[#0D1527] border border-slate-800 flex flex-col gap-4 text-xs font-mono">
-            <div className="flex items-center justify-between pb-2.5 border-b border-slate-800">
+          /* HIGH-CONTRAST TERMINAL BOOT CONSOLE (Distinct Elevated Staged Card) */
+          <div className="my-auto p-5 rounded-2xl bg-[#152445] border border-slate-600/80 shadow-lg flex flex-col gap-4 text-xs font-mono">
+            <div className="flex items-center justify-between pb-2.5 border-b border-slate-600/70">
               <span className="font-bold text-sky-400 flex items-center gap-2">
                 <Radio className="w-4 h-4 text-sky-400 animate-pulse" />
                 <span>SWARM PROTOCOL STAGED & READY</span>
@@ -175,29 +175,29 @@ export const AgentTerminal: React.FC<AgentTerminalProps> = ({
             </div>
 
             <div className="space-y-1.5 font-sans">
-              <div className="text-sm font-bold text-slate-100">
+              <div className="text-sm font-bold text-white">
                 {contract?.title || 'Autonomous Task Commission'}
               </div>
-              <p className="text-xs text-slate-400 leading-relaxed">
+              <p className="text-xs text-slate-300 leading-relaxed">
                 {contract?.description || 'Awaiting execution trigger to broadcast task specifications to autonomous worker agents.'}
               </p>
             </div>
 
-            {/* Agent Readiness Telemetry Grid */}
-            <div className="grid grid-cols-2 gap-2 text-[11px] bg-[#070B16] p-3 rounded-xl border border-slate-800/80 font-mono">
-              <div className="flex items-center gap-2 text-slate-300">
+            {/* Agent Readiness Telemetry Grid (Crisp Dark Inset Box) */}
+            <div className="grid grid-cols-2 gap-2 text-[11px] bg-[#0B1324] p-3 rounded-xl border border-slate-700 font-mono shadow-inner">
+              <div className="flex items-center gap-2 text-slate-200">
                 <span className="w-1.5 h-1.5 rounded-full bg-sky-400"></span>
                 <span><strong>Buyer-01:</strong> RFQ Broadcaster Ready</span>
               </div>
-              <div className="flex items-center gap-2 text-slate-300">
+              <div className="flex items-center gap-2 text-slate-200">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
                 <span><strong>Coder-01:</strong> Listening on Pipe</span>
               </div>
-              <div className="flex items-center gap-2 text-slate-300">
+              <div className="flex items-center gap-2 text-slate-200">
                 <span className="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
                 <span><strong>Arbiter-01:</strong> AST SecComp Jail Armed</span>
               </div>
-              <div className="flex items-center gap-2 text-slate-300">
+              <div className="flex items-center gap-2 text-slate-200">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#0070BA]"></span>
                 <span><strong>PayPal Vault:</strong> Intent=AUTHORIZE</span>
               </div>
@@ -205,14 +205,14 @@ export const AgentTerminal: React.FC<AgentTerminalProps> = ({
 
             {/* CTA */}
             <div className="flex items-center justify-between pt-1 font-sans">
-              <span className="text-slate-400 text-[11px]">
-                Click <strong className="text-slate-200">Execute Contract</strong> or <strong className="text-slate-200">Next</strong> to start live execution.
+              <span className="text-slate-300 text-[11px]">
+                Click <strong className="text-white">Execute Contract</strong> or <strong className="text-white">Next</strong> to start live execution.
               </span>
               {onStartSimulation && (
                 <button
                   onClick={onStartSimulation}
                   disabled={isRunning}
-                  className="px-4 py-1.5 rounded-full bg-[#003087] hover:bg-[#002266] text-white font-bold text-xs flex items-center gap-1.5 shadow-[0_0_15px_rgba(0,112,186,0.3)] transition-all cursor-pointer active:scale-98"
+                  className="px-4 py-1.5 rounded-full bg-[#003087] hover:bg-[#002266] text-white font-bold text-xs flex items-center gap-1.5 shadow-[0_0_15px_rgba(0,112,186,0.35)] transition-all cursor-pointer active:scale-98"
                 >
                   <Play className="w-3 h-3 fill-current" />
                   <span>Execute Contract</span>

@@ -10,8 +10,8 @@
   --blue-border: #d0e2f2;
   --gold: #ffc439;
   --gold-hover: #f4b41a;
-  --terminal-bg: #0b132b;
-  --terminal-card: #111c38;
+  --terminal-bg: #050811;
+  --terminal-card: #16233b;
 }
 
 body {
@@ -50,7 +50,7 @@ body {
   width: 4px;
 }
 .terminal-scroll::-webkit-scrollbar-track {
-  background: #0b132b;
+  background: #050811;
 }
 .terminal-scroll::-webkit-scrollbar-thumb {
   background: #1e293b;
