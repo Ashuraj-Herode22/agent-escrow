@@ -71,13 +71,9 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#003087] to-[#001f54] flex items-center justify-center text-white shadow-xs ring-1 ring-[#0070BA]/20">
             <Shield className="w-4 h-4 fill-white/20 stroke-white" />
           </div>
-          <div className="flex items-baseline gap-2">
+          <div className="flex items-baseline">
             <span className="font-extrabold text-base tracking-tight text-[#003087]">
               Agent<span className="text-[#0070BA]">Escrow</span>
-            </span>
-            <span className="text-[10px] font-bold text-[#0070BA] bg-[#F0F5FA] border border-[#D0E2F2] px-2 py-0.5 rounded-full tracking-wider uppercase flex items-center gap-1 shadow-2xs">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              REST v2
             </span>
           </div>
         </div>
