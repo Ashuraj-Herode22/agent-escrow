@@ -29,6 +29,13 @@ export const CodeInspector: React.FC<CodeInspectorProps> = ({
   const attemptNum = contract.revisionAttempt || 1;
   const maxAttempts = contract.maxRevisions || 3;
 
+  const releasedAmount = contract.milestones
+    .filter((m) => m.status === 'PASSED')
+    .reduce((sum, m) => sum + m.amountUSD, 0);
+  const refundedAmount = contract.milestones
+    .filter((m) => m.status === 'FAILED')
+    .reduce((sum, m) => sum + m.amountUSD, 0);
+
   const getPipelineStage = () => {
     switch (contract.status) {
       case 'INITIALIZING':
@@ -325,7 +332,9 @@ export const CodeInspector: React.FC<CodeInspectorProps> = ({
               {isPassed
                 ? 'Final Settlement: PayPal Capture & Worker Payout'
                 : isFailed
-                ? 'Final Settlement: Authorization Voided & 100% Refunded'
+                ? (releasedAmount > 0
+                    ? `Final Settlement: $${refundedAmount.toFixed(2)} Refunded (M2) • $${releasedAmount.toFixed(2)} Paid (M1)`
+                    : `Final Settlement: $${contract.totalBudgetUSD.toFixed(2)} (100%) Refunded to Buyer`)
                 : 'Final Arbitrated Settlement (Capture or Void)'}
             </span>
           </div>

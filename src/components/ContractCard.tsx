@@ -10,10 +10,16 @@ interface ContractCardProps {
 
 export const ContractCard: React.FC<ContractCardProps> = ({ contract }) => {
   const totalBudget = contract.totalBudgetUSD;
+  const isRefunded = contract.status === 'DISPUTE_REFUNDED' || contract.status === 'ARBITRATION_FAILED';
   const releasedAmount = contract.milestones
     .filter((m) => m.status === 'PASSED')
     .reduce((sum, m) => sum + m.amountUSD, 0);
+  const refundedAmount = contract.milestones
+    .filter((m) => m.status === 'FAILED')
+    .reduce((sum, m) => sum + m.amountUSD, 0);
   const releasedPercent = totalBudget > 0 ? (releasedAmount / totalBudget) * 100 : 0;
+  const refundedPercent = totalBudget > 0 ? (refundedAmount / totalBudget) * 100 : 0;
+  const heldAmount = isRefunded ? 0 : Math.max(0, totalBudget - releasedAmount);
 
   return (
     <div className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-[0_4px_25px_-5px_rgba(0,48,135,0.06),0_2px_8px_-2px_rgba(0,0,0,0.04)]">
@@ -43,26 +49,47 @@ export const ContractCard: React.FC<ContractCardProps> = ({ contract }) => {
       {/* Real-time Escrow Capital Allocation Bar */}
       <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-3.5 mb-5 flex flex-col gap-2">
         <div className="flex items-center justify-between text-xs">
-          <span className="font-semibold text-slate-700 flex items-center gap-1.5">
-            <Award className="w-3.5 h-3.5 text-[#0070BA]" />
-            <span>Escrow Allocation:</span>
-            <strong className="text-slate-900 font-mono">${releasedAmount.toFixed(2)} Released</strong>
-            <span className="text-slate-400">/</span>
-            <span className="text-slate-500 font-mono">${(totalBudget - releasedAmount).toFixed(2)} Held in Vault</span>
-          </span>
+          {isRefunded ? (
+            <span className="font-semibold text-slate-700 flex items-center gap-1.5 flex-wrap">
+              <Award className="w-3.5 h-3.5 text-rose-600" />
+              <span>Arbitrated Settlement:</span>
+              <strong className="text-emerald-700 font-mono">${releasedAmount.toFixed(2)} Paid to Worker (M1)</strong>
+              <span className="text-slate-400">•</span>
+              <strong className="text-rose-700 font-mono">${refundedAmount.toFixed(2)} Refunded to Buyer (M2)</strong>
+            </span>
+          ) : (
+            <span className="font-semibold text-slate-700 flex items-center gap-1.5">
+              <Award className="w-3.5 h-3.5 text-[#0070BA]" />
+              <span>Escrow Allocation:</span>
+              <strong className="text-slate-900 font-mono">${releasedAmount.toFixed(2)} Released</strong>
+              <span className="text-slate-400">/</span>
+              <span className="text-slate-500 font-mono">${heldAmount.toFixed(2)} Held in Vault</span>
+            </span>
+          )}
           <span className="text-[11px] font-mono font-bold text-[#0070BA]">
-            {releasedPercent.toFixed(0)}% Settled
+            {isRefunded ? '100% Resolved' : `${releasedPercent.toFixed(0)}% Settled`}
           </span>
         </div>
         <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden flex">
           <div
             className="bg-emerald-500 h-full transition-all duration-500 ease-out"
             style={{ width: `${releasedPercent}%` }}
+            title={`$${releasedAmount.toFixed(2)} Released to Worker`}
           />
-          <div
-            className="bg-[#0070BA] h-full transition-all duration-500 ease-out opacity-75"
-            style={{ width: `${100 - releasedPercent}%` }}
-          />
+          {isRefunded && refundedAmount > 0 && (
+            <div
+              className="bg-rose-500 h-full transition-all duration-500 ease-out"
+              style={{ width: `${refundedPercent}%` }}
+              title={`$${refundedAmount.toFixed(2)} Refunded to Buyer`}
+            />
+          )}
+          {!isRefunded && (
+            <div
+              className="bg-[#0070BA] h-full transition-all duration-500 ease-out opacity-75"
+              style={{ width: `${100 - releasedPercent}%` }}
+              title={`$${heldAmount.toFixed(2)} Held in Vault`}
+            />
+          )}
         </div>
       </div>
 

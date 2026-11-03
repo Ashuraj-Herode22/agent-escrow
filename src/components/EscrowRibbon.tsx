@@ -20,6 +20,13 @@ export const EscrowRibbon: React.FC<EscrowRibbonProps> = ({ contract, onSimulate
   const attempt = contract.revisionAttempt || 1;
   const maxAttempts = contract.maxRevisions || 3;
 
+  const releasedAmount = contract.milestones
+    .filter((m) => m.status === 'PASSED')
+    .reduce((sum, m) => sum + m.amountUSD, 0);
+  const refundedAmount = contract.milestones
+    .filter((m) => m.status === 'FAILED')
+    .reduce((sum, m) => sum + m.amountUSD, 0);
+
   const getActiveStage = () => {
     switch (contract.status) {
       case 'INITIALIZING':
@@ -69,9 +76,20 @@ export const EscrowRibbon: React.FC<EscrowRibbonProps> = ({ contract, onSimulate
               </span>
             )}
             {isRefunded && (
-              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-rose-50 text-rose-800 border border-rose-200 flex items-center gap-1.5 shadow-2xs">
-                <ShieldAlert className="w-3.5 h-3.5 text-rose-600" /> 100% Refunded to Buyer
-              </span>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="px-3 py-1 rounded-full text-xs font-semibold bg-rose-50 text-rose-800 border border-rose-200 flex items-center gap-1.5 shadow-2xs">
+                  <ShieldAlert className="w-3.5 h-3.5 text-rose-600" />
+                  {releasedAmount > 0
+                    ? `$${refundedAmount.toFixed(2)} Refunded to Buyer (${((refundedAmount / contract.totalBudgetUSD) * 100).toFixed(0)}% • M2 Voided)`
+                    : `100% Refunded ($${contract.totalBudgetUSD.toFixed(2)} to Buyer)`}
+                </span>
+                {releasedAmount > 0 && (
+                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-1.5 shadow-2xs">
+                    <Check className="w-3.5 h-3.5 text-emerald-600 stroke-[2.5]" />
+                    ${releasedAmount.toFixed(2)} Paid to Worker (M1 Cleared)
+                  </span>
+                )}
+              </div>
             )}
             {isRevision && (
               <span className="px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-800 border border-indigo-200 flex items-center gap-1.5 shadow-2xs">

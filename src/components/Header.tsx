@@ -182,11 +182,11 @@ export const Header: React.FC<HeaderProps> = ({
                 <div className="space-y-0.5">
                   <div className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-rose-500 shrink-0" />
-                    <span className="font-bold text-slate-900 text-xs">3. Quota Exhausted Refund</span>
+                    <span className="font-bold text-slate-900 text-xs">3. Partial Quota Refund</span>
                     <span className="text-rose-700 font-bold text-xs bg-rose-100/60 px-1.5 py-0.2 rounded">($120)</span>
                   </div>
                   <p className="text-[11px] text-slate-600 leading-relaxed pl-4">
-                    Security policy fails across all 3 attempts. Authorization voided with 100% refund.
+                    M1 ($48) verified & captured; M2 ($72) voided & refunded to buyer upon quota exhaustion.
                   </p>
                 </div>
                 {currentPreset.id === 'DISPUTE_FLOW' && (

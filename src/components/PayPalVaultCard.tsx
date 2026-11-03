@@ -16,6 +16,13 @@ export const PayPalVaultCard: React.FC<PayPalVaultCardProps> = ({ contract, onSi
   const isRefunded = contract.status === 'DISPUTE_REFUNDED';
   const isWaitingDeposit = contract.status === 'WAITING_DEPOSIT';
 
+  const releasedAmount = contract.milestones
+    .filter((m) => m.status === 'PASSED')
+    .reduce((sum, m) => sum + m.amountUSD, 0);
+  const refundedAmount = contract.milestones
+    .filter((m) => m.status === 'FAILED')
+    .reduce((sum, m) => sum + m.amountUSD, 0);
+
   return (
     <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col gap-4">
       
@@ -40,7 +47,8 @@ export const PayPalVaultCard: React.FC<PayPalVaultCardProps> = ({ contract, onSi
           )}
           {isRefunded && (
             <span className="flex items-center gap-1.5 text-xs text-rose-800 font-semibold bg-rose-50 px-3 py-1 rounded-full border border-rose-200 shadow-2xs">
-              <ShieldAlert className="w-3.5 h-3.5 text-rose-600" /> Voided & Refunded
+              <ShieldAlert className="w-3.5 h-3.5 text-rose-600" />
+              {releasedAmount > 0 ? `$${refundedAmount.toFixed(2)} Refunded (M2)` : 'Voided & Refunded'}
             </span>
           )}
           {isLocked && (
