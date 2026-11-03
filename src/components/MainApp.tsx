@@ -461,7 +461,7 @@ export default function MainApp() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#F5F7FA] text-[#0C2340] flex flex-col font-sans selection:bg-slate-900 selection:text-white">
+    <div className="min-h-screen bg-[#F8FAFC] bg-tech-grid text-[#0C2340] flex flex-col font-sans selection:bg-[#003087] selection:text-white">
       {/* 1. Minimalist Top Navigation */}
       <Header
         currentPreset={SIMULATION_PRESETS[presetKey]}

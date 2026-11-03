@@ -14,7 +14,7 @@ export default function RootLayout({
           content="Enterprise multi-agent milestone escrow and automated dispute arbitration powered by PayPal REST APIs."
         />
       </head>
-      <body suppressHydrationWarning className="min-h-full flex flex-col bg-[#F5F7FA] text-[#0C2340]">
+      <body suppressHydrationWarning className="min-h-full flex flex-col bg-[#F8FAFC] text-[#0C2340] antialiased">
         {children}
       </body>
     </html>

@@ -63,19 +63,20 @@ export const Header: React.FC<HeaderProps> = ({
   }, []);
 
   return (
-    <header className="border-b border-slate-200/90 bg-white sticky top-0 z-50">
+    <header className="border-b border-slate-200/90 bg-white/95 backdrop-blur-md sticky top-0 z-50 shadow-xs">
       <div className="max-w-[1400px] mx-auto px-6 h-15 flex items-center justify-between gap-4">
         
         {/* Left: Clean Brand with PayPal Identity */}
         <div className="flex items-center gap-3 shrink-0">
-          <div className="w-8 h-8 rounded-xl bg-[#003087] flex items-center justify-center text-white shadow-xs">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#003087] to-[#001f54] flex items-center justify-center text-white shadow-xs ring-1 ring-[#0070BA]/20">
             <Shield className="w-4 h-4 fill-white/20 stroke-white" />
           </div>
           <div className="flex items-baseline gap-2">
             <span className="font-extrabold text-base tracking-tight text-[#003087]">
               Agent<span className="text-[#0070BA]">Escrow</span>
             </span>
-            <span className="text-[10px] font-bold text-[#0070BA] bg-[#F0F5FA] border border-[#D0E2F2] px-1.5 py-0.5 rounded-md tracking-wider uppercase">
+            <span className="text-[10px] font-bold text-[#0070BA] bg-[#F0F5FA] border border-[#D0E2F2] px-2 py-0.5 rounded-full tracking-wider uppercase flex items-center gap-1 shadow-2xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
               REST v2
             </span>
           </div>
@@ -86,23 +87,23 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             onClick={() => !isRunning && setIsScenarioMenuOpen(!isScenarioMenuOpen)}
             disabled={isRunning}
-            className={`h-9 px-4 rounded-full border text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer shadow-2xs ${
+            className={`h-9 px-4 rounded-full border text-xs font-semibold flex items-center gap-2.5 transition-all cursor-pointer shadow-2xs ${
               isScenarioMenuOpen
-                ? 'bg-[#F0F5FA] border-[#0070BA]/50 text-[#003087]'
-                : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-800'
+                ? 'bg-[#F0F5FA] border-[#0070BA]/50 text-[#003087] ring-2 ring-[#0070BA]/15'
+                : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-800 hover:border-slate-300'
             }`}
           >
             {currentPreset.id === 'SUCCESS_FLOW' ? (
-              <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+              <span className="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-emerald-100 shrink-0" />
             ) : currentPreset.id === 'HEALING_FLOW' ? (
-              <span className="w-2 h-2 rounded-full bg-indigo-500 shrink-0" />
+              <span className="w-2 h-2 rounded-full bg-indigo-500 ring-2 ring-indigo-100 shrink-0" />
             ) : (
-              <span className="w-2 h-2 rounded-full bg-rose-500 shrink-0" />
+              <span className="w-2 h-2 rounded-full bg-rose-500 ring-2 ring-rose-100 shrink-0" />
             )}
-            <span className="text-slate-500 font-medium">Flow:</span>
+            <span className="text-slate-400 font-medium">Flow:</span>
             <span className="font-bold text-slate-900">{currentPreset.name.split('&')[0].trim()}</span>
-            <span className="text-slate-500 font-medium">(${currentPreset.budgetUSD.toFixed(0)})</span>
-            <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform ${isScenarioMenuOpen ? 'rotate-180' : ''}`} />
+            <span className="text-[#0070BA] font-bold">(${currentPreset.budgetUSD.toFixed(0)})</span>
+            <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${isScenarioMenuOpen ? 'rotate-180' : ''}`} />
           </button>
 
           {/* Dropdown Menu */}
@@ -204,7 +205,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               onClick={onOpenCustomTask}
               disabled={isRunning}
-              className="h-9 px-3 rounded-full text-xs font-semibold bg-white hover:bg-[#F0F5FA] text-[#003087] border border-[#D0E2F2] flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs active:scale-98"
+              className="h-9 px-3.5 rounded-full text-xs font-semibold bg-white hover:bg-[#F0F5FA] text-[#003087] border border-[#D0E2F2] hover:border-[#0070BA]/40 flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs active:scale-98"
               title="Commission custom autonomous prompt"
             >
               <Sparkles className="w-3.5 h-3.5 text-[#0070BA]" />
@@ -217,21 +218,21 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               onClick={() => setIsMoreMenuOpen(!isMoreMenuOpen)}
               disabled={isRunning}
-              className="h-9 w-9 rounded-full bg-white hover:bg-[#F0F5FA] border border-slate-200 text-slate-600 hover:text-[#003087] flex items-center justify-center transition-all cursor-pointer shadow-2xs"
+              className="h-9 w-9 rounded-full bg-white hover:bg-[#F0F5FA] border border-slate-200 text-slate-600 hover:text-[#003087] flex items-center justify-center transition-all cursor-pointer shadow-2xs hover:border-slate-300"
               title="Governance & SDK Docs"
             >
               <MoreHorizontal className="w-4 h-4" />
             </button>
 
             {isMoreMenuOpen && (
-              <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-2xl border border-slate-200 shadow-xl p-1.5 z-50 animate-in fade-in duration-150">
+              <div className="absolute right-0 top-full mt-2 w-58 bg-white rounded-2xl border border-slate-200 shadow-xl p-1.5 z-50 animate-in fade-in duration-150">
                 {onOpenPolicyModal && (
                   <button
                     onClick={() => {
                       onOpenPolicyModal();
                       setIsMoreMenuOpen(false);
                     }}
-                    className="w-full text-left px-3 py-2 rounded-xl text-xs font-medium text-slate-800 hover:bg-[#F0F5FA] hover:text-[#003087] flex items-center gap-2 transition-colors cursor-pointer"
+                    className="w-full text-left px-3 py-2 rounded-xl text-xs font-medium text-slate-800 hover:bg-[#F0F5FA] hover:text-[#003087] flex items-center gap-2.5 transition-colors cursor-pointer"
                   >
                     <ShieldCheck className="w-4 h-4 text-[#0070BA]" />
                     <span>Security & Governance Policy</span>
@@ -244,7 +245,7 @@ export const Header: React.FC<HeaderProps> = ({
                       onOpenSdkDocs();
                       setIsMoreMenuOpen(false);
                     }}
-                    className="w-full text-left px-3 py-2 rounded-xl text-xs font-medium text-slate-800 hover:bg-[#F0F5FA] hover:text-[#003087] flex items-center gap-2 transition-colors cursor-pointer"
+                    className="w-full text-left px-3 py-2 rounded-xl text-xs font-medium text-slate-800 hover:bg-[#F0F5FA] hover:text-[#003087] flex items-center gap-2.5 transition-colors cursor-pointer"
                   >
                     <Code2 className="w-4 h-4 text-[#0070BA]" />
                     <span>Python & TypeScript SDK</span>
@@ -256,17 +257,17 @@ export const Header: React.FC<HeaderProps> = ({
 
           <div className="h-4 w-px bg-slate-200 mx-1" />
 
-          {/* Execute Contract (Primary CTA in Commanding PayPal Deep Navy) */}
+          {/* Execute Contract (Primary CTA in Commanding PayPal Deep Navy with Micro Glow) */}
           <button
             onClick={onStartSimulation}
             disabled={isRunning || currentStep >= totalSteps}
             className={`h-9 px-4 rounded-full text-xs font-bold flex items-center gap-2 transition-all cursor-pointer ${
               currentStep >= totalSteps
                 ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
-                : 'bg-[#003087] hover:bg-[#002266] text-white shadow-xs active:scale-98'
+                : 'bg-gradient-to-r from-[#003087] to-[#002266] hover:from-[#002266] hover:to-[#001744] text-white shadow-[0_2px_12px_rgba(0,48,135,0.25)] hover:shadow-[0_2px_16px_rgba(0,112,186,0.35)] active:scale-98'
             }`}
           >
-            <Play className="w-3.5 h-3.5 fill-current" />
+            <Play className={`w-3.5 h-3.5 fill-current ${isRunning ? 'animate-spin' : ''}`} />
             <span>{isRunning ? 'Executing...' : 'Execute Contract'}</span>
           </button>
 
@@ -274,7 +275,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             onClick={onNextStep}
             disabled={isRunning || currentStep >= totalSteps}
-            className="h-9 px-3 rounded-full text-xs font-semibold bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 hover:text-[#003087] hover:border-[#0070BA]/30 flex items-center gap-1.5 transition-all active:scale-98 disabled:opacity-40 cursor-pointer shadow-2xs"
+            className="h-9 px-3.5 rounded-full text-xs font-semibold bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 hover:text-[#003087] hover:border-[#0070BA]/30 flex items-center gap-1.5 transition-all active:scale-98 disabled:opacity-40 cursor-pointer shadow-2xs"
             title="Step forward manually"
           >
             <span>Next</span>
@@ -285,7 +286,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             onClick={onReset}
             disabled={isRunning}
-            className="w-9 h-9 rounded-full text-slate-400 hover:text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 flex items-center justify-center transition-all cursor-pointer shadow-2xs"
+            className="w-9 h-9 rounded-full text-slate-400 hover:text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 hover:border-slate-300 flex items-center justify-center transition-all cursor-pointer shadow-2xs active:rotate-180 duration-200"
             title="Reset to beginning"
           >
             <RotateCcw className="w-3.5 h-3.5" />

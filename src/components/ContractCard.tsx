@@ -9,28 +9,60 @@ interface ContractCardProps {
 }
 
 export const ContractCard: React.FC<ContractCardProps> = ({ contract }) => {
+  const totalBudget = contract.totalBudgetUSD;
+  const releasedAmount = contract.milestones
+    .filter((m) => m.status === 'PASSED')
+    .reduce((sum, m) => sum + m.amountUSD, 0);
+  const releasedPercent = totalBudget > 0 ? (releasedAmount / totalBudget) * 100 : 0;
+
   return (
-    <div className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-xs">
+    <div className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-[0_4px_25px_-5px_rgba(0,48,135,0.06),0_2px_8px_-2px_rgba(0,0,0,0.04)]">
       
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 mb-5 gap-2">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-[#003087] flex items-center justify-center text-white shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 mb-5 gap-3">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#003087] to-[#001f54] flex items-center justify-center text-white shadow-xs">
             <FileCode className="w-4 h-4 text-white" />
           </div>
           <div>
-            <h2 className="text-sm font-bold text-slate-900">Programmable Contract Milestones</h2>
+            <h2 className="text-sm font-black text-slate-900 tracking-tight">Programmable Contract Milestones</h2>
             <p className="text-xs text-slate-500">Milestone funds release only upon AI Arbiter test verification</p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
+          <span className="text-xs font-mono font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
             Contract #{contract.id}
           </span>
-          <span className="text-xs font-bold text-[#003087] bg-[#F0F5FA] border border-[#D0E2F2] px-3 py-1 rounded-full">
+          <span className="text-xs font-mono font-bold text-[#003087] bg-[#F0F5FA] border border-[#D0E2F2] px-3 py-1 rounded-full">
             Total: ${contract.totalBudgetUSD.toFixed(2)} USD
           </span>
+        </div>
+      </div>
+
+      {/* Real-time Escrow Capital Allocation Bar */}
+      <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-3.5 mb-5 flex flex-col gap-2">
+        <div className="flex items-center justify-between text-xs">
+          <span className="font-semibold text-slate-700 flex items-center gap-1.5">
+            <Award className="w-3.5 h-3.5 text-[#0070BA]" />
+            <span>Escrow Allocation:</span>
+            <strong className="text-slate-900 font-mono">${releasedAmount.toFixed(2)} Released</strong>
+            <span className="text-slate-400">/</span>
+            <span className="text-slate-500 font-mono">${(totalBudget - releasedAmount).toFixed(2)} Held in Vault</span>
+          </span>
+          <span className="text-[11px] font-mono font-bold text-[#0070BA]">
+            {releasedPercent.toFixed(0)}% Settled
+          </span>
+        </div>
+        <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden flex">
+          <div
+            className="bg-emerald-500 h-full transition-all duration-500 ease-out"
+            style={{ width: `${releasedPercent}%` }}
+          />
+          <div
+            className="bg-[#0070BA] h-full transition-all duration-500 ease-out opacity-75"
+            style={{ width: `${100 - releasedPercent}%` }}
+          />
         </div>
       </div>
 

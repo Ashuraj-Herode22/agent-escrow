@@ -58,18 +58,21 @@ export const CodeInspector: React.FC<CodeInspectorProps> = ({
   const isHealing = contract.id === 'AG-8814';
 
   return (
-    <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-xs flex flex-col h-[600px]">
+    <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-[0_4px_25px_-5px_rgba(0,48,135,0.06),0_2px_8px_-2px_rgba(0,0,0,0.04)] flex flex-col h-[640px]">
       
       {/* Title & Quick Actions Row */}
-      <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
-        <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-md bg-[#003087] flex items-center justify-center text-white shadow-2xs">
-            <Code2 className="w-3.5 h-3.5 text-white" />
+      <div className="flex items-center justify-between pb-3.5 border-b border-slate-100 mb-3.5">
+        <div className="flex items-center gap-2.5">
+          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#003087] to-[#001f54] flex items-center justify-center text-white shadow-xs">
+            <Code2 className="w-4 h-4 text-white" />
           </div>
-          <h3 className="text-sm font-bold text-slate-900">
-            Verification Engine
-          </h3>
-          <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-[#F0F5FA] text-[#003087] border border-[#D0E2F2] flex items-center gap-1.5">
+          <div>
+            <h3 className="text-sm font-black text-slate-900 tracking-tight">
+              Verification Engine
+            </h3>
+            <span className="text-[10px] font-mono text-slate-400">Deterministic AST Arbitrator</span>
+          </div>
+          <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/80 flex items-center gap-1.5 ml-1">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
             sandbox-node-01
           </span>
@@ -79,7 +82,7 @@ export const CodeInspector: React.FC<CodeInspectorProps> = ({
           {artifact && (
             <button
               onClick={() => onOpenArtifactModal('CODE')}
-              className="text-xs font-bold px-3 py-1 rounded-full bg-[#003087] hover:bg-[#002266] text-white flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs active:scale-98"
+              className="text-xs font-bold px-3 py-1.5 rounded-full bg-[#003087] hover:bg-[#002266] text-white flex items-center gap-1.5 transition-all cursor-pointer shadow-[0_2px_10px_rgba(0,48,135,0.2)] active:scale-98"
               title="Open deliverable code and test review modal"
             >
               <ExternalLink className="w-3.5 h-3.5 text-white" />
@@ -90,7 +93,7 @@ export const CodeInspector: React.FC<CodeInspectorProps> = ({
           {onOpenPolicyModal && (
             <button
               onClick={onOpenPolicyModal}
-              className="text-xs font-semibold px-2.5 py-1 rounded-full text-slate-700 hover:text-[#003087] bg-slate-100 hover:bg-[#F0F5FA] border border-slate-200 hover:border-[#D0E2F2] flex items-center gap-1 transition-colors cursor-pointer"
+              className="text-xs font-semibold px-2.5 py-1.5 rounded-full text-slate-700 hover:text-[#003087] bg-slate-100 hover:bg-[#F0F5FA] border border-slate-200 hover:border-[#D0E2F2] flex items-center gap-1.5 transition-colors cursor-pointer"
               title="Inspect Security & Governance Policy"
             >
               <ShieldCheck className="w-3.5 h-3.5 text-[#0070BA]" />
@@ -100,26 +103,26 @@ export const CodeInspector: React.FC<CodeInspectorProps> = ({
         </div>
       </div>
 
-      {/* Top Telemetry Card: Clean Neutral Slate with PayPal Accents */}
-      <div className="bg-[#F8FAFC] border border-slate-200 rounded-xl p-3.5 flex flex-col gap-2 mb-3">
-        <div className="flex items-center justify-between text-xs pb-1 border-b border-slate-200/60">
-          <span className="font-bold text-slate-900 flex items-center gap-1.5">
-            <Cpu className="w-3.5 h-3.5 text-[#0070BA]" /> Isolated Execution Environment
+      {/* Top Telemetry Card: High-Tech Deep Navy Gradient */}
+      <div className="bg-gradient-to-r from-[#001f54] via-[#003087] to-[#0040a8] text-white rounded-xl p-4 flex flex-col gap-2.5 mb-3.5 shadow-xs border border-[#0070BA]/30">
+        <div className="flex items-center justify-between text-xs pb-1.5 border-b border-white/10">
+          <span className="font-bold text-white flex items-center gap-1.5 tracking-tight">
+            <Cpu className="w-3.5 h-3.5 text-sky-300" /> Isolated Execution Environment
           </span>
-          <span className="text-emerald-700 bg-emerald-50 border border-emerald-200 font-bold px-2 py-0.5 rounded-full text-[10px]">
-            SECCOMP Active
+          <span className="text-emerald-300 bg-emerald-950/80 border border-emerald-500/40 font-mono font-bold px-2 py-0.5 rounded-full text-[10px]">
+            SECCOMP ACTIVE
           </span>
         </div>
 
-        <div className="grid grid-cols-2 gap-2 text-xs">
+        <div className="grid grid-cols-2 gap-3 text-xs">
           <div>
-            <span className="text-slate-500 block text-[11px]">Network Isolation</span>
-            <span className="font-semibold text-slate-900">Zero Egress (No Exfiltration)</span>
+            <span className="text-slate-300 block text-[10px] uppercase font-mono tracking-wider">Network Isolation</span>
+            <span className="font-semibold text-white text-xs">Zero Egress (No Exfiltration)</span>
           </div>
           <div>
-            <span className="text-slate-500 block text-[11px]">Escrow Link</span>
-            <span className="font-bold text-[#003087]">
-              {contract.paypalMetadata.authorizationId ? 'Vault Locked' : 'Awaiting Auth'}
+            <span className="text-slate-300 block text-[10px] uppercase font-mono tracking-wider">Escrow Link</span>
+            <span className="font-mono font-bold text-sky-300 text-xs">
+              {contract.paypalMetadata.authorizationId ? 'Vault Locked (Authorized)' : 'Awaiting Auth Hold'}
             </span>
           </div>
         </div>
